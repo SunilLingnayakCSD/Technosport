@@ -1,0 +1,68 @@
+<template>
+    <c-visit-component recordid={recordId}></c-visit-component>
+
+    <lightning-tabset>
+        <lightning-tab label="Store Check" >
+            <c-visit-activity-form recordid={recordId}></c-visit-activity-form>
+        </lightning-tab>
+        <lightning-tab label="Product Survey" >
+            <c-survey-component recordid={recordId}></c-survey-component>
+        </lightning-tab>
+        <lightning-tab label="Create Order" >
+            <div>
+            <!-- <P>Uploading Image</p> -->
+           <template if:true={questions.length}>
+        <template for:each={questions} for:item="question">
+            <div key={question.Id} class="slds-box slds-m-around_medium">
+                <label class="slds-form-element__label">
+                    {question.Name}
+                    <template if:true={question.Take_Picture__c}>
+                        <lightning-icon
+                            icon-name="utility:photo"
+                            alternative-text="Take Photo"
+                            onclick={handlePhotoCapture}
+                            data-id={question.Id}
+                            size="small"
+                            class="slds-m-left_x-small"
+                        ></lightning-icon>
+                    </template>
+                </label>
+                <div class="upload">
+                    <div class="inputDiv">
+                        <input type="text"
+                       class="slds-input"
+                       data-id={question.Id}
+                       value={question.selectedValue}
+                       onchange={handleInputChange} />
+                    </div>
+                    <div class="slds-m-around_medium">
+                        <lightning-button label="Submit"
+                                          class="btn"
+                                          variant="brand"
+                                          onclick={handleSubmit}>
+                        </lightning-button>
+                    </div>
+                </div>
+                
+            </div>
+        </template>
+
+        
+    </template>
+</div>
+<div>
+
+</div>
+<div>
+    <template if:false={showportal}>
+        <button onclick={handlebuttonclick} class="portalbtn">Visit Portal And Place Order</button>
+    </template>
+    <template if:true={showportal}>
+        <c-mbl-create-order recordid={recordId}></c-mbl-create-order>
+    </template>
+</div>
+            
+            
+        </lightning-tab>
+    </lightning-tabset>
+</template>

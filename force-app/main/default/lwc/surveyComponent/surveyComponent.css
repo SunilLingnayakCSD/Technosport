@@ -1,0 +1,129 @@
+/* .display{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+}
+.feedback{
+    margin-bottom: 100px;
+}
+.img{
+    height: 200px;
+    width: 200px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); 
+}
+.btn1{
+    color: white;
+    background-color: blue;
+    padding: 10px;
+    width: 100px;
+    border: none;
+    border-radius: 6px;
+} */
+
+.display {
+    display: flex;
+    flex-direction: row; /* Keep the items in a row on desktop */
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for desktop */
+    padding: 20px; /* Add more padding for desktop view */
+}
+
+/* Product Information Section */
+.display > div:first-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Adjust the feedback section for desktop */
+.feedback {
+    margin-bottom: 20px; 
+    width: 100%;
+}
+
+/* Button styling for desktop */
+.btn1 {
+    color: white;
+    background-color: blue;
+    padding: 12px 24px; /* Increased padding for a larger button */
+    width: auto; /* Auto width for better flexibility */
+    border: none;
+    border-radius: 6px;
+}
+
+/* Image styling for desktop */
+.img {
+    height: 200px;
+    width: 200px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for desktop */
+}
+
+.paragragh {
+    font-size: 16px; /* Larger font size for desktop */
+    margin-left: 5px;
+}
+
+
+@media screen and (max-width: 600px) {
+    .display {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between; 
+        gap: 24px;
+        padding: 10px; 
+        box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
+        margin-bottom: 20px; /* Add space between items */
+    }
+
+    .display > div:first-child {
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+    }
+
+    .feedback {
+        width: 100%;
+        padding-top: 0;
+        margin-bottom: 30px;
+    }
+
+    .btn1 {
+        color: white;
+        background-color: blue;
+        padding: 10px;
+        width: 100%; /* Make the button span full width */
+        border: none;
+        border-radius: 6px;
+        margin-bottom: 50px;
+    }
+
+    .img {
+        height: 200px;
+        width: 180px;
+        margin-left: 5px;
+        margin-bottom: 15px;
+        object-fit: cover;
+    }
+
+    .paragragh {
+        font-size: 14px;
+        margin-left: 5px;
+        margin-top: 25px;
+    }
+
+    /* Add a bottom border between products */
+    .display > div {
+        /* border-bottom: 1px solid grey;  */
+        padding-bottom: 20px; /* Ensure enough spacing for the border */
+    }
+
+    /* Remove shadow between items */
+    .display > div:last-child {
+        border-bottom: none; /* Remove the border for the last product */
+    }
+}

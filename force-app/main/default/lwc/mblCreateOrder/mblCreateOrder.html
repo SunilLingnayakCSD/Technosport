@@ -1,0 +1,376 @@
+<template>
+    <template if:true={isLoading}>
+
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+
+    </template>
+    <div onscroll={handleScroll} style="height: 1600px; overflow-y:auto;" class="main">
+        <template if:true={products}>
+            <div class="mainDiv">
+                <div class="category-list">
+                    <div class="topNavDiv">
+
+
+                        <div class="topNav" onclick={handleCategoryChange}>
+                            <div class="hamburger-menu" onclick={toggleHamburgerMenu}>
+                                <span class="bar"></span>
+                                <span class="bar"></span>
+                                <span class="bar"></span>
+                            </div>
+                            <div class="category-links">
+                                <a href="#" class="category-link" data-category="Men">Men</a>
+                                <a href="#" class="category-link" data-category="Women">Women</a>
+                                <a href="#" class="category-link" data-category="Boys">Boys</a>
+                                <a href="#" class="category-link" data-category="Accessories">Accessories</a>
+                                <a href="#" class="category-link" data-category="Plus Size">Plus Size</a>
+                            </div>
+
+                            <div class="searchNav">
+                                <div class="icon">
+                                    <input type="search" class="search-input" placeholder="Search"
+                                        onkeyup={searchProduct} />
+                                    <div class="dropdown-container">
+                                        <select class="productdropdown" onchange={handleFilterChange}>
+                                            <option value="CATALOUGE PRODUCT">Catalogue Products</option>
+                                            <option value="BLANKS PRODUCT">Blank Products</option>
+                                        </select>
+                                    </div>
+                                    <div class="cart-container">
+                                        <lightning-button-icon icon-name="utility:cart" alternative-text="Cart"
+                                            onclick={handleCartClick} style="margin-left: 0px;"></lightning-button-icon>
+                                        <span
+                                            style="color: red;margin-left: 0px;right: 18px; bottom: 10px;position: relative;">{selectedProductsVarient.length}</span>
+                                        <template if:true={ViewOnProductvarient}>
+                                            <img src={BackIcon} class="qty" onclick={goBackToProductList}
+                                                style="color: red;height:30px;width:30px;margin-left: 3px;" />
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+
+            <template if:false={isLoading}>
+
+                <template if:false={isVariantView}>
+                    <div class="slds-grid slds-wrap">
+                        <template for:each={products} for:item="product">
+                            <div key={product.Id} class="slds-col slds-size_1-of-4 slds-p-around_small content">
+
+                                <img src={product.ImageUrl} data-id={product.Id} class="product-image"
+                                    onclick={handleProductClick} loading="lazy" />
+                                <h3 style="color: white;text-align:center;max-height: 40px">{product.Name}</h3>
+
+                                <template if:true={showsizes1}>
+                                    <div style="border:1px solid;display:flex;justify-content:space-evenly">
+                                        <div>
+                                            <lightning-combobox name="size" label="" value={selectedSize}
+                                                placeholder="Color" options={options}></lightning-combobox>
+                                        </div>
+                                        <div class="accordion-container;">
+                                            <button class="accordion">Select Sizes and Bundle<img src={DownArrow}
+                                                    height="20px" width="20px" /></button>
+                                            <div class="panel">
+                                                <table class="size-table">
+
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Size</th>
+                                                            <th>Quantity</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <template if:true={product.varients}>
+                                                            <template for:each={product.varients} for:item="item">
+                                                                <tr key={item.Id}>
+                                                                    <td>{item.Size__c}</td>
+                                                                    <td>
+                                                                        <input type="number" class="size-input"
+                                                                            data-size={item.Size__c}
+                                                                            data-id={product.Id}
+                                                                            onchange={handleSizeInput}
+                                                                            data-varid={item.Id} min="0" />
+                                                                    </td>
+                                                                </tr>
+                                                            </template>
+                                                        </template>
+
+                                                    </tbody>
+                                                    <tbody>
+
+                                                        <tr>
+                                                            <td>No of Pieces in Box
+
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="size-input"
+                                                                    value={product.Boxes} data-id={product.Id}
+                                                                    oninput={handleSizeInput} min="0" />
+                                                            </td>
+                                                        </tr>
+
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <input type="number" />
+                                    </div>
+                                </template>
+
+                                <template if:true={showsizes}>
+                                    <div class="accordion-container">
+                                        <button class="accordion">Select Sizes and Bundle<img src={DownArrow}
+                                                height="20px" width="20px" /></button>
+                                        <div class="panel">
+                                            <table class="size-table">
+
+                                                <thead>
+                                                    <tr>
+                                                        <th>Size</th>
+                                                        <th>Quantity</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <template if:true={product.varients}>
+                                                        <template for:each={product.varients} for:item="item">
+                                                            <tr key={item.Id}>
+                                                                <td>{item.Size__c}</td>
+                                                                <td>
+                                                                    <input type="number" class="size-input"
+                                                                        data-size={item.Size__c} data-id={product.Id}
+                                                                        oninput={handleSizeInput} data-varid={item.Id}
+                                                                        min="0" />
+                                                                </td>
+                                                            </tr>
+                                                        </template>
+                                                    </template>
+
+                                                </tbody>
+                                                <tbody>
+
+                                                    <tr>
+                                                        <td>No of Box In Bundle</td>
+                                                        <td>
+                                                            {product.total}/ {product.boxes}
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>No of Pieces In Box</td>
+                                                        <td>
+                                                            {product.noofpieces}
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>MRP</td>
+                                                        <td>
+                                                            {product.Price}
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Retailer Price</td>
+                                                        <td>
+                                                            {product.retailerPrice}
+
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Bundle Quantity</td>
+                                                        <td>
+
+                                                            <input type="number" class="size-input" data-id={product.Id}
+                                                                value={product.quantity} oninput={handleQuantityInput}
+                                                                min="0" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </template>
+                                <template if:true={showblank}>
+                                    <div class="accordion-container">
+                                        <button class="accordion" data-id={product.Id} data-imageurl={product.ImageUrl}
+                                            data-name={product.Name} data-price={product.retailerPrice}
+                                            data-boxes={product.boxes} data-priceentryid={product.pricebookEntryId}
+                                            onclick={openModal}>Select Sizes and Bundle<img src={DownArrow}
+                                                height="20px" width="20px" /></button>
+
+                                        <div class="panel">
+                                            <table class="size-table" >
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 20%;font-size:16px;">Color</th>
+                                                        <th style="font-size:16px;">Sizes</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <template for:each={groupedVariants} for:item="colorGroup">
+                                                        <tr key={colorGroup.color}>
+                                                            <td
+                                                                style="vertical-align: top; width: 20%; padding-left: 0;">
+                                                                {colorGroup.color}
+                                                            </td>
+                                                            <td style="padding: 0;">
+                                                                <div
+                                                                    style="display: flex; flex-wrap: wrap; gap: 10px; padding: 5px;">
+                                                                    <template for:each={colorGroup.sizes}
+                                                                        for:item="sizeItem">
+                                                                        <div key={sizeItem.size}
+                                                                            style="text-align: center; min-width: 60px; padding: 5px;">
+                                                                            {sizeItem.size} <br>
+                                                                            <input type="number" class="size-input"
+                                                                                data-size={sizeItem.size}
+                                                                                data-id={sizeItem.productTemplateId}
+                                                                                data-varid={sizeItem.id}
+                                                                                data-color={colorGroup.color}
+                                                                                oninput={handleQuantityAndSize} min="0"
+                                                                                style="width: 100%; max-width: 60px;" />
+                                                                        </div>
+                                                                    </template>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        </div>
+                                </template>
+                                <div class="buttondiv">
+                                    <!-- <template if:true={selectingProducts}>
+                                    <button class="btn" data-id={product.Id} data-imageurl={product.ImageUrl}
+                                        data-name={product.Name} data-price={product.retailerPrice} data-boxes={product.boxes}
+                                        data-priceentryid={product.pricebookEntryId} onclick={openModal}>Details
+                                    </button>
+                                </template> -->
+                                    <template if:true={selectingProducts}>
+                                        <button class="btn" onclick={addToCart}>Add to Cart</button>
+                                    </template>
+                                    <template if:true={showCatalogueButton}>
+                                        <button class="btn" data-id={product.Id} data-name={product.Name}
+                                            data-price={product.retailerPrice}
+                                            data-priceentryid={product.pricebookEntryId}
+                                            data-imageurl={product.ImageUrl} onclick={catalougeproductSelected}
+                                            data-boxes={product.boxes} data-qty={product.quantity}
+                                            data-total={product.total}>Add To Cart
+                                        </button>
+                                    </template>
+                                    <template if:true={removeCatalogueButton}>
+                                        <button class="btn1" data-id={product.Id} data-name={product.Name}
+                                            data-price={product.retailerPrice} onclick={catalougeproductRemoved}>Remove
+                                            Cart
+                                        </button>
+                                    </template>
+                                </div>
+
+                            </div>
+
+
+                        </template>
+
+                    </div>
+
+                </template>
+
+
+
+            </template>
+
+        </template>
+
+    </div>
+
+    <template if:true={cart}>
+        <c-cart selected-products={selectedProductsVarient} distributoroptions={DistributorOptions}
+            ondeleteselectedinparent={handleDeleteSelectedInParent} recordid={recordid}
+            onnavigateback={handleNavigateBack}></c-cart>
+    </template>
+
+    <!-- <template if:true={ismodalopen}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+            class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container modelMainContainer">
+                <button class="slds-button slds-button_icon slds-modal__close" onclick={closeModal}>
+                    <lightning-icon icon-name='utility:close' alternative-text='close' variant='error' size='small'
+                        title='close'></lightning-icon>
+                    <span class="slds-assistive-text">Cancel and close</span>
+                </button>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate" tabindex="-1">Product Details
+                    </h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="containerModal">
+                        <div class="image">
+                            <img src={selectedProduct.imageUrl} alt={selectedProduct.name} style="max-width: 100%;">
+                        </div>
+                        <div class="details">
+                            <div class="headertitle">{selectedProduct.name}</div>
+                            <div>
+                                <div class="slds-p-around_medium" style="overflow-x: auto;">
+                                    <table class="size-table" style="min-width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 20%;font-size:16px;">Color</th>
+                                                <th style="font-size:16px;">Sizes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template for:each={groupedVariants} for:item="colorGroup">
+                                                <tr key={colorGroup.color}>
+                                                    <td style="vertical-align: top; width: 20%; padding-left: 0;">
+                                                        {colorGroup.color}
+                                                    </td>
+                                                    <td style="padding: 0;">
+                                                        <div
+                                                            style="display: flex; flex-wrap: wrap; gap: 10px; padding: 5px;">
+                                                            <template for:each={colorGroup.sizes} for:item="sizeItem">
+                                                                <div key={sizeItem.size}
+                                                                    style="text-align: center; min-width: 60px; padding: 5px;">
+                                                                    {sizeItem.size} <br>
+                                                                    <input type="number" class="size-input"
+                                                                        data-size={sizeItem.size}
+                                                                        data-id={sizeItem.productTemplateId}
+                                                                        data-varid={sizeItem.id}
+                                                                        data-color={colorGroup.color}
+                                                                        oninput={handleQuantityAndSize} min="0"
+                                                                        style="width: 100%; max-width: 60px;" />
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral add custbtn" onclick={addToCart}>Add to Cart</button>
+                </div>
+            </div>
+        </section>
+
+    </template> -->
+
+
+</template>

@@ -1,0 +1,19 @@
+<template>
+    <template if:false={records}>
+        <button class="btn" onclick={handleCheckIn}>Check-in</button>
+    </template>
+
+
+    <template if:true={records}>
+        <div class="timer-container">
+            <div class="timer-display">
+                <span class="time-box">{formattedHours}</span>:
+                <span class="time-box">{formattedMinutes}</span>:
+                <span class="time-box">{formattedSeconds}</span>
+            </div>
+            <div>
+            <button class="btn1" onclick={handleCheckOut}>Check-out</button>
+        </div>
+        </div>
+</template>
+</template>

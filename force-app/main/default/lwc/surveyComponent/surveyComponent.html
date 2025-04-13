@@ -1,0 +1,62 @@
+<template>
+    <lightning-card title="Survey Activities with Products">
+        <div class="slds-p-around_medium">
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+            
+            <!-- Error Message -->
+            <template if:true={error}>
+                <div class="slds-notify slds-notify_alert slds-theme_error">
+                    {error}
+                </div>
+            </template>
+            
+            <!-- Survey Activities List -->
+            <template if:false={isLoading}>
+                <template if:true={surveyActivities.length}>
+                    <template for:each={surveyActivities} for:item="activity">
+                        <div key={activity.Id} class="display">
+                            <!-- Product Information -->
+                            <div style="display: flex; flex-direction:row;">
+                            <div>
+                                <img src={activity.Product__r.URL__c} class="img"/>
+                            </div>
+                           
+                            </div>
+                            <div style="display: flex; flex-direction:column;">
+                                <div>
+                                    <p class="paragragh"><b>{activity.Product__r.Name}</b></p>
+                                    </div>
+                               <div>  
+                                <lightning-textarea 
+                                name="input1" 
+                                placeholder="Feedback" 
+                                class="feedback" 
+                                onchange={handleChange} 
+                                data-activity-id={activity.Id} 
+                                data-product-id={activity.Product__r.Id}>
+                            </lightning-textarea> 
+                            </div>
+                            <div>
+                                <button class="btn1" onclick={handleSubmit} 
+                                        data-id={activity.Id} 
+                                        data-product-id={activity.Product__r.Id} 
+                                        data-product-name={activity.Product__r.Name}>
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                        </div>
+                    </template>
+                </template>
+
+                <!-- No Activities Found -->
+                <template if:false={surveyActivities.length}>
+                    <p>No survey activities with products found for this visit template.</p>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>
