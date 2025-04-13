@@ -1,0 +1,181 @@
+/* Custom styles for the form container */
+.form-container {
+    padding: 20px;
+    /* background-color: #f4f6f9; */
+    border-radius: 8px;
+    /* box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); */
+    max-width: 500px; /* Control the width of the form */
+    margin: 0 auto; /* Center align the form horizontally */
+    text-align: left; /* Align all contents to the left, except heading and button */
+}
+
+/* Custom heading for the form */
+.custom-heading {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-align: center; /* Centering the Heading */
+}
+
+/* Styling for form elements (Combobox, Input fields) */
+.form-element {
+    margin-bottom: 16px;
+    width: 100%; /* Ensures the inputs take up full available width */
+}
+
+/* Left-align labels for the form fields */
+lightning-combobox label,
+lightning-input label {
+    text-align: left;
+    width: 100%;
+    display: block;
+    font-weight: 500; /* Optional: Make labels slightly bold */
+    margin-bottom: 5px; /* Space between label and input field */
+}
+
+/* Save button custom styling */
+.save-button {
+    margin-top: 16px;
+    display: block;
+    width: auto; /* Automatically adjusts the button width */
+    margin-left: auto; /* Center the button horizontally */
+    margin-right: auto; /* Center the button horizontally */
+    font-size: 14px; /* Smaller font size */
+    height: auto; /* Ensure button height adjusts accordingly */
+    min-width: 100px; /* Optionally set a minimum width for the button */
+}
+
+/* Centering the spinner */
+lightning-spinner {
+    display: block;
+    margin: 20px auto;
+}
+
+/* Style the card to give it more space around edges */
+lightning-card {
+    margin: 20px;
+    padding: 0;
+}
+
+
+
+/* Custom Card Styling */
+.custom-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.custom-card-header {
+    background-color: #f4f6f9;
+    padding: 15px;
+    border-bottom: 1px solid #e3e7ed;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+/* Center the Heading */
+.custom-heading {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-align: center; /* Centering the Heading */
+}
+
+/* Flexbox for the form container */
+.form-container {
+    /* display: flex; */
+    flex-direction: column;
+    gap: 20px; /* Space between form elements */
+    padding: 20px;
+}
+
+/* Custom Form Element Styling */
+.custom-form-element {
+    margin-bottom: 15px;
+    width: 100%; /* Ensure the elements take up full width */
+}
+
+/* Custom Form Element Label */
+.custom-form-element-label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+.custom-form-element-control input {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.custom-form-element-control input:focus {
+    border-color: #4c89f1;
+    outline: none;
+}
+
+/* Custom Button Styling */
+.custom-button {
+    
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
+}
+
+.custom-button-brand {
+    background-color: #0070d2;
+    color: white;
+}
+
+.custom-button:hover {
+    background-color: #005bb5;
+}
+
+/* Center the Save Button */
+.custom-button-container {
+    display: flex;
+    justify-content: center;
+}
+
+/* Error Message Styling */
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Error Styling for Input Fields */
+.custom-input:invalid {
+    border: 1px solid red;
+}
+
+/* Error messages under combobox */
+.custom-form-element div[style*="color:red"] {
+    font-size: 12px;
+    color: red;
+    margin-top: 5px;
+}
+
+/* Styling for thresholds input fields */
+.custom-form-element lightning-input {
+    width: 100%;
+    font-size: 14px;
+}
+
+/* Align form inputs for High, Medium, Low Thresholds */
+.custom-form-element lightning-input[type="number"] {
+    max-width: 100%;
+}
+
+/* Adjust the flex layout for smaller screen sizes */
+@media (max-width: 768px) {
+    .form-container {
+        gap: 15px; /* Reduced gap for smaller screens */
+    }
+}

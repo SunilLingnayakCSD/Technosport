@@ -1,0 +1,220 @@
+<template>
+    <lightning-spinner if:true={isLoading}></lightning-spinner>
+    <div style="display: flex;">
+        <div style="width:90%">
+            <marquee width="100%" behavior="scroll">
+                <p style="font-size: 24px; color:white;"><b>Our latest product launches are here, offering innovative
+                        solutions
+                        designed to meet your needs.</b></p>
+            </marquee>
+        </div>
+        <div style="width:10%;width: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;">
+            <lightning-button-icon icon-name="utility:cart" alternative-text="Cart" onclick={handleCartClick}
+                style="margin-left: 3px;"></lightning-button-icon>
+            <span style="color: red;margin-left: 3px;">{selectedProductsVarient.length}</span>
+            <template if:true={ViewOnProductvarient}>
+                <img src={BackIcon} onclick={goBackToProductList}
+                    style="color: red;height:30px;width:30px;margin-left: 3px;" />
+            </template>
+        </div>
+    </div>
+
+    <template if:true={displaymain}>
+        <div class="mainDiv" onscroll={handleScroll}>
+
+            <template if:true={products}>
+                <template for:each={products} for:item="product">
+                    <div key={product.Id}>
+
+                        <div class="imgDiv">
+                            <img class="mainimg" src={product.ImageUrl} alt="">
+                            <p style="font-size: 16px; font-weight:bold; text-align:center;color:white;max-height: 40px">{product.Name}
+                            </p>
+                            <!-- <button class="btn" data-id={product.Id} data-imageurl={product.ImageUrl}
+                        data-name={product.Name} data-price={product.Price} data-boxes={product.boxes}
+                        data-priceentryid={product.pricebookEntryId} onclick={openModal} >Details</button> -->
+                            <template if:true={showsizes}>
+                                <div class="accordion-container" key={product.Id}>
+                                    <button class="accordion">Select Sizes and Bundle<img class="im" src={DownArrow}
+                                            height="20px" width="20px" /></button>
+                                    <div class="panel">
+                                        <table class="size-table">
+
+                                            <thead>
+                                                <tr>
+                                                    <th>Size</th>
+                                                    <th>Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template if:true={product.varients}>
+                                                    <template for:each={product.varients} for:item="item">
+                                                        <tr key={item.Id}>
+                                                            <td>{item.Size__c}</td>
+                                                            <td>
+                                                                <input type="number" class="size-input"
+                                                                    data-size={item.Size__c} data-id={product.Id}
+                                                                    oninput={handleSizeInput} data-varid={item.Id}
+                                                                    min="0" />
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </template>
+                                                <!-- <tr>
+                                                <td>S</td>
+                                                <td>
+                                                    <input type="number" class="size-input" data-size="S"
+                                                        data-id={product.Id} oninput={handleSizeInput}
+                                                        min="0" />
+                                                </td>
+                                            </tr>
+        
+                                            <tr>
+                                                <td>M</td>
+                                                <td>
+                                                    <input type="number" class="size-input" data-size="M"
+                                                        data-id={product.Id} oninput={handleSizeInput}
+                                                        min="0" />
+                                                </td>
+                                            </tr>
+        
+                                            <tr>
+                                                <td>L</td>
+                                                <td>
+                                                    <input type="number" class="size-input" data-size="L"
+                                                        data-id={product.Id} oninput={handleSizeInput}
+                                                        min="0" />
+                                                </td>
+                                            </tr>
+        
+                                            <tr>
+                                                <td>XL</td>
+                                                <td>
+                                                    <input type="number" class="size-input" data-size="XL"
+                                                        data-id={product.Id} oninput={handleSizeInput}
+                                                        min="0" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>XXL</td>
+                                                <td>
+                                                    <input type="number" class="size-input" data-size="XXL"
+                                                        data-id={product.Id} oninput={handleSizeInput}
+                                                        min="0" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>XXXL</td>
+                                                <td>
+                                                    <input type="number" class="size-input" data-size="XXXL"
+                                                        data-id={product.Id} oninput={handleSizeInput}
+                                                        min="0" />
+                                                </td>
+                                            </tr> -->
+                                            </tbody>
+                                            <tbody>
+
+                                                <tr>
+                                                    <td>No of Box In Bundle</td>
+                                                    <td>
+                                                        {product.total}/ {product.boxes}
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>No of Pieces In Box</td>
+                                                    <td>
+                                                        {product.noofpieces}
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>MRP</td>
+                                                    <td>
+                                                        {product.Price}
+
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Bundle Quantity</td>
+                                                    <td>
+                                                        <!-- <input type="number" class="size-input" data-size="M" 
+                                       data-id={variant.Id} oninput={handleSizeInput} min="0" />  -->
+                                                        <input type="number" class="size-input" data-id={product.Id}
+                                                            value={product.quantity} oninput={handleQuantityInput}
+                                                            min="0" />
+                                                    </td>
+                                                </tr>
+                                                <!-- <tr>
+                                                 <td>Reserve Bundle</td>
+                                                
+                                                   <td>
+                                                    <input type="number" class="size-input" 
+                                                        data-id={product.Id} oninput={handleQuantityInput}
+                                                        min="0" />
+                                                      </td>
+
+                                                 </tr> -->
+                                                <tr>
+                                                    <td>Are you intrested in this Product</td>
+                                                    <td>
+
+                                                        <lightning-radio-group name="radioGroup" label="Interested?"
+                                                            options={options} value={product.interested}
+                                                            onchange={handleInterested} data-id={product.Id} required>
+                                                        </lightning-radio-group>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <button class="btn" data-id={product.Id} data-name={product.Name}
+                                        data-price={product.Price} data-priceentryid={product.pricebookEntryId}
+                                        data-imageurl={product.ImageUrl} onclick={catalougeproductSelected}
+                                        data-boxes={product.boxes} data-qty={product.quantity}>Add to cart
+                                    </button>
+                                </div>
+
+
+                            </template>
+                        </div>
+                    </div>
+
+                </template>
+
+            </template>
+        </div>
+
+        <div style="border-top: 1px solid white;margin-top:35px;">
+            <h1 style="font-size: 28px; font-weight:bold;text-align:center;color:white;margin-top:25px;">WATCH AND BUY
+            </h1>
+        </div>
+        <div class="secondDiv" onscroll={handleScroll}>
+            <template for:each={products} for:item="product">
+                <template if:true={product.VideoUrl}>
+                    <div key={product.Id}>
+                        <div class="video-container">
+                            <video controls class="video">
+                                <source src={product.VideoUrl} type="video/mp4">
+                                <p style="font-size: 16px; font-weight: bold; text-align: center; color: white;">
+                                    {product.Name}</p>
+                                Your browser does not support the video tag.
+                            </video>
+
+                        </div>
+                    </div>
+                </template>
+
+            </template>
+
+        </div>
+        </template>
+        <template if:true={cart}>
+            <c-cart selected-products={selectedProductsVarient} ondeleteselectedinparent={handleDeleteSelectedInParent}
+                onnavigateback={handleNavigateBack}></c-cart>
+        </template>
+    </template>

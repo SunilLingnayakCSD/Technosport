@@ -1,0 +1,117 @@
+<!-- <template>
+    <lightning-card title="Product Details" icon-name="standard:product">
+        <div class="slds-p-around_medium">
+         
+            <h1 class="slds-text-heading_large slds-m-bottom_medium">{productName}</h1>
+
+           
+            <div class="slds-m-bottom_medium">
+                <img src={imageUrl} alt={productName} style="max-width: 100%; height: auto;" />
+            </div>
+
+          
+            <div class="slds-text-body_regular">
+                <p><strong>Product Category:</strong> {productCategory}</p>
+                <p><strong>Product Type:</strong> {productState}</p>
+                <p><strong>State:</strong> {productStatus}</p>
+            </div>
+        </div>
+    </lightning-card>
+</template> -->
+
+<!-- <template>
+    <div if:true={products}>
+        <lightning-card>
+             <div class="maindiv">
+            <template if:true={products.Image_URL__c}>
+              
+                <div class="imgdiv">
+                <img src={products.Image_URL__c} alt="Product Image">
+                </div>
+            </template>
+            <div class="productname">
+                <b>{products.Name}</b>
+            </div>
+            </div>
+        </lightning-card>
+    </div>
+</template> -->
+
+
+
+<!-- <template>
+    <lightning-card title="Product Details">
+        <div class="product-container">
+            <template if:true={products}>
+                    <div class="product-image"> 
+                        <img src={imageUrl} alt="Product Image" />
+                    </div>
+                <div class="product-info">
+                    <h2>{products.Name}</h2>
+                    <p><strong>Category:</strong> {products.Product_Category__c}</p>
+                    <p><strong>Type:</strong> {products.Product_Type__c}</p>
+                    <p><strong>State:</strong> {products.cgcloud__State__c}</p>
+                </div>
+            </template>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template> -->
+
+
+<template>
+    <lightning-card title="Product Details">
+        <div class="product-container">
+            <template if:true={oneProduct}>
+                <div class="product-image">
+                    <template if:true={imageUrl}>
+                    <img src={imageUrl} alt="Product Image" />
+                    </template>
+                </div>
+                <template if:true={isActive}>
+                    <div class="active-label">Active</div>
+                </template>
+                <div class="product-info">
+                    <h2>{oneProduct.Name}</h2>
+                    <p><strong>Category:</strong> {oneProduct.Product_Category__c}</p>
+                    <p><strong>Type:</strong> {oneProduct.Product_Type__c}</p>
+                   <p><strong>State:</strong> {stateName}</p>
+                </div>
+            </template>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>
+
+
+<!-- <template>
+    <lightning-card title="Product Details">
+        <div class="product-container">
+            <template if:true={oneProduct}>
+                <div class="product-image">
+                   
+                    <template if:true={imageUrl}>
+                    <img src={imageUrl} alt="Product Image" />
+                    </template>
+                </div>
+                <template if:true={isActive}>
+                    <div class="active-label">Active</div>
+                </template>
+                <div class="product-info">
+                    <h2>{oneProduct.Name}</h2>
+                    <p><strong>Category:</strong> {oneProduct.Product_Category__c}</p>
+                    <p><strong>Type:</strong> {oneProduct.Product_Type__c}</p>
+                   
+                    <p><strong>State:</strong> {stateName}</p>
+                </div>
+            </template>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template> -->

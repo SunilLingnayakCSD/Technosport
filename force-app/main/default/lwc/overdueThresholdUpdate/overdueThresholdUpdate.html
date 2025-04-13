@@ -1,0 +1,22 @@
+<template>
+    <div class="custom-card">
+         <div class="custom-card-header">
+          <h2 class="custom-heading" >Overdue Limit for Orders</h2>
+        <div >
+              </div>
+            <lightning-input 
+                label="Overdue Threshold Limit" 
+                value={overdueThreshold} 
+                onchange={handleInputChange} 
+                type="number">
+            </lightning-input>
+             <div class="custom-margin-top custom-button-container">
+            <button 
+               
+                onclick={handleSave}
+                class="custom-button">Save
+            </button>
+                </div>
+        </div>
+   </div>
+</template>

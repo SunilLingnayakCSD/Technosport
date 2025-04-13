@@ -1,0 +1,79 @@
+<template>
+    <lightning-card title="Visit Jobs" icon-name="custom:custom63">
+        <div class="slds-p-horizontal_medium">
+            <!-- Display the Questions Table -->
+            <template if:true={questions}>
+                <h3 class="header ">
+    <lightning-icon icon-name="standard:question_feed" size="small" class="slds-m-right_small"></lightning-icon> 
+                                   
+                    Questions</h3>
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-box slds-theme_default custom-table-border">
+                    <thead class="slds-text-heading_medium slds-text-color_inverse slds-background_color_opaque">
+                        <tr>
+                            <th scope="col">
+                                <div class="header ">
+                                 Question</div>
+                            </th>
+                            <th scope="col">
+                                <div class="header ">Answer</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={questions} for:item="job">
+                            <tr key={job.Id}>
+                                <!-- Apply color to the Question column -->
+                                <td data-label="Question" class="question-column">
+                                    <div class="slds-truncate">{job.Question_Name__c}</div>
+                                </td>
+                                <!-- Standard styling for Answer column -->
+                                <td data-label="Answer" class="slds-text-color_weak slds-background_color_lightest">
+                                    <div class="slds-truncate">{job.cgcloud__Display_Value__c}</div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+
+            <!-- Display the Surveys Table -->
+            <template if:true={surveys}>
+                <h3 class="header ">
+                 <lightning-icon icon-name="standard:survey" size="small" class="slds-m-right_small"></lightning-icon>
+
+                    Surveys</h3>
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer custom-table-border survey">
+                    <thead class="slds-text-heading_medium slds-text-color_inverse slds-background_color_opaque">
+                        <tr>
+                            <th scope="col">
+                                <div class="header ">Question</div>
+                            </th>
+                            <th scope="col">
+                                <div class="header ">Answer</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={surveys} for:item="job">
+                            <tr key={job.Id}>
+                                <!-- Apply color to the Question column -->
+                                <td data-label="Question" class="question-column">
+                                    <div class="slds-truncate">{job.Question_Name__c}</div>
+                                </td>
+                                <!-- Standard styling for Answer column -->
+                                <td data-label="Answer" class="slds-text-color_weak slds-background_color_lightest">
+                                    <div class="slds-truncate">{job.cgcloud__Display_Value__c}</div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+
+            <!-- Display error message if any -->
+            <template if:true={error}>
+                <div class="slds-text-color_error">{error}</div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

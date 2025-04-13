@@ -1,0 +1,51 @@
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Creates a 4-column layout */
+    gap: 20px; /* Adds space between the cards */
+    padding: 40px; /* Adds padding around the container */
+}
+
+.custom-card {
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0.4, 0.4, 0.5);
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 200px;
+    width: 100%;
+    transition: transform 0.3s ease;
+}
+.custom-card img {
+    width: 100px;
+    height: 90px;
+    margin-top: 12px;
+    align-items: center;
+    align-content: center;
+    margin-left: 90px;
+}
+
+.custom-card:hover {
+    transform: translateY(-10px); /* Slight lift effect on hover */
+}
+
+.custom-card lightning-icon {
+    margin-bottom: 1rem;
+}
+
+.custom-card button {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: #ff7f32;
+    color: white;
+    border: none;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.custom-card button:hover {
+    background-color: #e66627; /* Darker orange on hover */
+}

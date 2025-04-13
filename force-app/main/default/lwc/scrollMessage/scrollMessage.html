@@ -1,0 +1,25 @@
+<template>
+     <div class="custom-card">
+          <div class="custom-card-header">
+        <h2 class="custom-heading" >Special Offers</h2>
+        </div>
+        <div class="slds-p-around_medium">
+            <lightning-input 
+                label="Scrolling Message for Distributor Portal" 
+                value={message} 
+                onchange={handleMessageChange} 
+                placeholder="Type your message here">
+            </lightning-input>
+        </div>
+        
+        <div class="custom-margin-top custom-button-container">
+         <button 
+                   onclick={saveMessage} 
+                  class="custom-button">Save Message</button>
+        </div>
+
+        <div class="scroll-container">
+            <p class="scroll-message">{message}</p>
+        </div>
+     </div>
+</template>

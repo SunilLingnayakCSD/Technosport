@@ -1,0 +1,44 @@
+<template>
+    <div class="card-container">
+        <div class="custom-card">
+            <img src={Overview} />
+            <!-- <lightning-icon icon-name="utility:warning" size="large" alternative-text="Warning!" title="Warning"></lightning-icon> -->
+            <button onclick={handleOverview}>Overview</button>
+        </div>
+        <div class="custom-card">
+            <img src={Newlaunches} />
+            <!-- <lightning-icon icon-name="utility:announcement" size="large" alternative-text="New" title="New Launches"></lightning-icon> -->
+            <button onclick={handleNewLaunches}>New Launches</button>
+        </div>
+        <div class="custom-card">
+            <img src={Place_order} />
+            <!-- <lightning-button-icon icon-name="utility:cart" size="large" alternative-text="Place Order"></lightning-button-icon> -->
+            <button onclick={handleOrder}>Place Order</button>
+        </div>
+        <div class="custom-card">
+            <img src={Invoices} />
+            <!-- <lightning-icon icon-name="standard:invoice" size="large" alternative-text="Invoice Icon"></lightning-icon> -->
+            <button onclick={handleInvoices}>Invoices</button>
+        </div>
+        <div class="custom-card">
+            <img src={products} />
+            <!-- <lightning-icon icon-name="standard:product" size="large" alternative-text="Product Icon"></lightning-icon> -->
+            <button onclick={handleInventory}>Inventory</button>
+        </div>
+        <div class="custom-card">
+            <img src={customers} />
+            <!-- <lightning-icon icon-name="standard:contact" size="large" alternative-text="Customers"></lightning-icon> -->
+            <button onclick={handleOrderTracking}>Order Tracking</button>
+        </div>
+        <div class="custom-card">
+            <img src={support} />
+            <!-- <lightning-icon icon-name="standard:case" size="large" alternative-text="Support"></lightning-icon> -->
+            <button onclick={handleSupport}>Support</button>
+        </div>
+        <div class="custom-card">
+            <img src={lead} />
+            <!-- <lightning-icon icon-name="standard:case" size="large" alternative-text="Support"></lightning-icon> -->
+            <button onclick={handleLead}>Lead</button>
+        </div>
+    </div>
+</template>

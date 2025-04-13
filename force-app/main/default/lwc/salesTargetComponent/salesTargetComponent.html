@@ -1,0 +1,130 @@
+<!-- <template>
+    <lightning-card title="Distributor Overdue Threshold">
+        <template if:true={distributors}>
+            <div class="slds-p-horizontal_medium">
+               
+                <lightning-combobox
+                    label="Select Distributor"
+                    value={selectedDistributorId}
+                    options={distributorsOptions}
+                    onchange={handleDistributorChange}
+                >
+                </lightning-combobox>
+
+               
+                <lightning-input
+                    label="Overdue Threshold"
+                    type="number"
+                    value={overdueThreshold}
+                    onchange={handleThresholdChange}
+                    >
+                </lightning-input>
+
+              
+                <lightning-button 
+                    variant="brand" 
+                    label="Save" 
+                    onclick={handleSave} 
+                    disabled={isLoading}>
+                </lightning-button>
+            </div>
+        </template>
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+    </lightning-card>
+</template> -->
+
+
+<!-- <template>
+
+    <lightning-card>
+        <div class="form-container">
+
+            <h2 class="custom-heading">Sales Target Assignment</h2>
+
+            <lightning-combobox
+                label="Select Distributor"
+                value={selectedDistributorId}
+                options={distributorsOptions}
+                onchange={handleDistributorChange}
+                class="form-element"
+            >
+            </lightning-combobox>
+
+
+            <lightning-input
+                label="Sales Target"
+                type="number"
+                value={salesTarget}
+                onchange={handleSalesTargetChange}
+                class="form-element"
+            >
+            </lightning-input>
+
+
+            <lightning-button 
+                variant="brand" 
+                label="Save" 
+                onclick={handleSave} 
+                disabled={isLoading}
+                class="save-button"
+            >
+            </lightning-button>
+
+
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template> -->
+
+<template>
+    <!-- Card for the form -->
+    <lightning-card class="custom-card">
+        <div class="custom-card-header">
+            <!-- Custom Heading inside the form -->
+            <h2 class="custom-heading">Sales Target Assignment</h2>
+        </div>
+        <div class="form-container">
+            <!-- Combobox for selecting Distributor -->
+            <lightning-combobox
+                label="Select Distributor"
+                value={selectedDistributorId}
+                options={distributorsOptions}
+                onchange={handleDistributorChange}
+                class="custom-form-element"
+            >
+            </lightning-combobox>
+
+            <!-- Input field for Overdue Threshold -->
+            <lightning-input
+                label="Sales Target"
+                type="number"
+                value={salesTarget}
+                onchange={handleSalesTargetChange}
+                class="custom-form-element"
+            >
+            </lightning-input>
+
+            <!-- Flex container for the Save button -->
+            <div class="custom-button-container">
+                <lightning-button 
+                    variant="brand" 
+                    label="Save" 
+                    onclick={handleSave} 
+                    disabled={isLoading}
+                    class="custom-button custom-button-brand"
+                >
+                </lightning-button>
+            </div>
+
+            <!-- Loading spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>

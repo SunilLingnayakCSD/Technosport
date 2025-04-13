@@ -1,0 +1,40 @@
+.inventory tr:nth-child(even){background-color: #ffff;}
+ 
+.inventory tr:hover {background-color: #f3f3f4;}
+ 
+.inventory th {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  text-align: left;
+  background-color: rgb(3, 45, 96);
+  color: white;
+ 
+  /* width: 15%; */
+}
+.th ,.td{
+  min-width: 15%;
+  width: 15%;
+}
+.inputInside{
+  width: 60%;
+}
+.inventory td, .inventory th {
+  border: 1px solid #f3f3f4;
+  padding: 0px 4px;
+  text-align: left;
+  /* min-width: 15%; */
+ 
+}
+.inventory {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  padding: 6px 12px;
+  margin: 16px 0px;
+  background-image: linear-gradient(to bottom, #FFFFFF, #F0F0F0);
+}
+.cl{
+height: 15px;
+width: 15px;
+border-radius: 100%;
+}

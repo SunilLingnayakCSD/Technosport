@@ -1,0 +1,158 @@
+<template>
+    <div class="form-page">
+        <!-- <img src={BackgroundImg} class="background-image" alt="BackgroundImg"> -->
+
+        <div class="form-container">
+            <div class="content-wrapper">
+                <div class="header" style="text-align: center">
+                    <img src={ftdinfocompng} alt="Logoimage" class="logo-image"/>
+                </div>
+
+                <!-- Success Message after Form Submission -->
+                <template if:true={showThankYouMessage}>
+                    <div class="thank-you-message">
+                        <strong>Thank you! Your lead has been successfully created.</strong>
+                    </div>
+                </template>
+
+<template if:true={duplicatePhoneMessage}>
+    <div class="thank-you-message">{duplicatePhoneMessage}</div>
+</template>
+<template if:true={duplicateEmailMessage}>
+    <div class="thank-you-message">{duplicateEmailMessage}</div>
+</template>
+
+                <!-- Form Fields (Display if no thank you message) -->
+                <template if:false={showThankYouMessage}>
+                    <div class="form-grid">
+                        <!-- First Column Section -->
+                        <div class="form-column">
+                            <h3>Personal Information</h3>
+
+                            <!-- Name Field -->
+                            <lightning-input label="Name" class="custom-label-size" name="Name" value={Name} placeholder="Enter your name"
+                                variant="standard" onchange={LeadChangeVal} required
+                                message-when-value-missing="Please enter your name">
+                            </lightning-input>
+
+                            <!-- Lead Status Dropdown -->
+                            <lightning-combobox label="Lead Status" name="LeadStatus" value={LeadStatus}
+                                options={LeadStatusOptions} placeholder="Select Lead Status" required variant="standard"
+                                onchange={LeadChangeVal} message-when-value-missing="Please select Lead Status">
+                            </lightning-combobox>
+
+                            <!-- Phone Field -->
+                            <lightning-input label="Phone" name="Phone" value={phoneNo}
+                                placeholder="Enter your phone number" variant="standard" required
+                                onchange={LeadChangeVal} type="tel" pattern="^[0-9]{10}$"
+                                message-when-value-missing="Please enter your phone number">
+                            </lightning-input>
+
+                            <!-- Email Field -->
+                            <lightning-input label="Email" name="Email" value={emailId} placeholder="Email"
+                                variant="standard" required onchange={LeadChangeVal}
+                                pattern="[A-Za-z0-9._-]+@[a-z0-9-]+\.[a-z]{2,}"
+                                message-when-value-missing="Please enter your email"
+                                message-when-pattern-mismatch="Please enter a valid email address">
+                            </lightning-input>
+
+                            <!-- City Field -->
+                            <lightning-input label="City" name="City" value={City} placeholder="City" required
+                                variant="standard" onchange={LeadChangeVal}
+                                message-when-value-missing="Please enter your city">
+                            </lightning-input>
+
+                            <!-- Pincode Field -->
+                            <lightning-input label="Pincode" name="Pincode" value={Pincode} placeholder="Pincode"
+                                required variant="standard" onchange={LeadChangeVal}
+                                message-when-value-missing="Please enter your pincode">
+                            </lightning-input>
+
+                            <!-- Store Name/Company Field -->
+                            <lightning-input label="Store Name" name="Company" value={Company} placeholder="Store Name"
+                                required variant="standard" onchange={LeadChangeVal}
+                                message-when-value-missing="Please enter the store name">
+                            </lightning-input>
+
+                        </div>
+
+                        <!-- Second Column Section -->
+                        <div class="form-column">
+                            <h3>Business Details</h3>
+
+                            <!-- Retailer or Wholesaler -->
+                            <lightning-combobox label="Are you a retailer or wholesaler?" name="RetailerOrWholesaler"
+                                value={RetailerOrWholesaler} options={RetailerWholesalerOptions} placeholder="Select"
+                                onchange={LeadChangeVal}>
+                            </lightning-combobox>
+
+                            <!-- GST Field -->
+                            <lightning-combobox label="Do you have a GST?" name="GST" value={GST} options={GSTOptions}
+                                placeholder="Select" onchange={LeadChangeVal}>
+                            </lightning-combobox>
+
+                            <!-- Sold Technosport Products -->
+                            <lightning-combobox label="Have you sold Technosport products before?"
+                                name="SoldTechnoSport" value={SoldTechnoSport} options={SoldTechnoSportOptions}
+                                placeholder="Select" onchange={LeadChangeVal}>
+                            </lightning-combobox>
+
+                            <!-- Own a Store -->
+                            <lightning-combobox label="Do you own a store?" name="OwnStore" value={OwnStore}
+                                options={OwnStoreOptions} placeholder="Select" onchange={LeadChangeVal}>
+                            </lightning-combobox>
+
+                            <!-- Walk-ins Field -->
+                            <lightning-combobox label="Average Walk-ins per Day" name="Walkins" value={Walkins}
+                                options={WalkinOptions} placeholder="Select" onchange={LeadChangeVal}>
+                            </lightning-combobox>
+
+                            <!-- Category of Store -->
+                            <lightning-combobox label="Category of store you are dealing with" name="StoreCategory"
+                                value={StoreCategory} options={StoreCategoryOptions} placeholder="Select Store Category"
+                                required variant="standard" onchange={LeadChangeVal}
+                                message-when-value-missing="Please select a store category">
+                            </lightning-combobox>
+
+                            <!-- Additional Options for Uniforms -->
+                            <template if:true={isUniformCategorySelected}>
+                                <lightning-combobox label="Select Uniform Type" name="UniformCategory"
+                                    value={UniformCategory} options={additionalUniformOptions}
+                                    placeholder="Select Uniform Type" onchange={LeadChangeVal}>
+                                </lightning-combobox>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Centered Section for Brands and Submit Button -->
+                    <div class="centered-section">
+                        <h3 class="Brand">Brands You Are Handling Currently</h3>
+
+                        <!-- Brands Dual Listbox -->
+                        <div class="centered-dual-listbox">
+                            <lightning-dual-listbox name="Brands" value={Brands} options={BrandOptions}
+                                onchange={LeadChangeVal}>
+                            </lightning-dual-listbox>
+                        </div>
+
+                        <!-- Error Message Display 
+                        <div class="error-message">{error}</div-->
+
+                        <!-- Submit Button -->
+                        <div class="submit-button">
+                            <button class="submit_button" type="button" onclick={handleSubmit}>Submit</button>
+                        </div>
+                    </div>
+
+                    <!-- Duplicate Error Messages -->
+                    <template if:true={duplicatePhoneMessage}>
+                        <div class="duplicateerror">{duplicatePhoneMessage}</div>
+                    </template>
+                    <template if:true={duplicateEmailMessage}>
+                        <div class="duplicateerror">{duplicateEmailMessage}</div>
+                    </template>
+                </template>
+            </div>
+        </div>
+    </div>
+</template>

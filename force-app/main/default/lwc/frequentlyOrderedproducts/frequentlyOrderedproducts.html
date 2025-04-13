@@ -1,0 +1,57 @@
+<template>
+    <lightning-card title="Frequently Ordered Products">
+        <div class="slds-box">
+            <template if:true={orderedProducts}>
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Product Name">Product Name</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Order Date">Order Date</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Product Image">Product Image</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Action">Action</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={orderedProducts} for:item="product">
+                            <tr key={product.Id}>
+                                <td>
+                                    <div class="slds-truncate">{product.productName}</div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">{product.orderDate}</div>
+                                </td>
+                                <td>
+                                    <!-- Only display image if URL exists, otherwise show placeholder -->
+                                    <template if:true={product.productImageUrl}>
+                                        <img src={product.Image_url__c} alt={product.productName} class="imgDiv"/>
+                                    </template>
+                                    <template if:false={product.productImageUrl}>
+                                        <img src="https://via.placeholder.com/150" alt="No image available" class="imgDiv"/>
+                                    </template>
+                                </td>
+                                <td>
+                                    <button label="Add+" class="slds-button_icon" onclick={handleAddClick} data-id={product.Id}>
+                                        <span class="slds-assistive-text">Add to Cart</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+            <template if:true={error}>
+                <div class="slds-text-color_error">Error loading products: {error.message}</div>
+            </template>
+        </div>
+       <!--c-distributor-portal onproductadded={handleProductAdded}></c-distributor-portal -->
+   
+    </lightning-card>
+</template>

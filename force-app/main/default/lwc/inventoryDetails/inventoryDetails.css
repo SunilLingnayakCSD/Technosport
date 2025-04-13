@@ -1,0 +1,97 @@
+.inventory tr:nth-child(even){background-color: #ffff;}
+ 
+.inventory tr:hover {background-color: #f3f3f4;}
+ 
+.inventory th {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  text-align: left;
+  background-color: #083d82;
+  color: white;
+ 
+  /* width: 15%; */
+}
+.th ,.td{
+  min-width: 15%;
+  width: 15%;
+}
+.inputInside{
+  width: 60%;
+}
+.inventory td, .inventory th {
+  border: 1px solid #f3f3f4;
+  padding: 0px 4px;
+  text-align: left;
+  /* min-width: 15%; */
+ 
+}
+.inventory {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  padding: 6px 12px;
+  margin: 16px 0px;
+ 
+    overflow-y: auto; /* Enable vertical scroll */
+
+   }
+.cl{
+height: 15px;
+width: 15px;
+border-radius: 100%;
+}
+
+.search-input {
+    margin-bottom: 20px; /* Adds space between the search box and table */
+    width: 100%; /* Makes input field stretch across the container */
+}
+/* Filter Row Container */
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end; /* This aligns all items at the bottom */
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+/* Combo Box Styling */
+.filter-combobox {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Clear Filter Button Styling */
+.filter-actions {
+    background-color: #0176d3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 44px; /* Match combobox height */
+    line-height: 44px; /* Center text vertically */
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-bottom: 1px; /* Minor visual adjustment */
+}
+
+/* Responsive Behavior */
+@media (max-width: 768px) {
+    .filter-row {
+        gap: 12px;
+    }
+    
+    .filter-combobox {
+        min-width: 100%;
+    }
+    
+    .filter-actions {
+        width: 100%;
+        justify-content: center;
+    }
+}

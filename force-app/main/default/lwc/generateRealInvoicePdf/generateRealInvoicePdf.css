@@ -1,0 +1,19 @@
+.custom-container{
+    color : black;
+}
+.btndiv{
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    margin: 10px 8px;
+}
+.orderbtn{
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin: 10px 10px;
+   
+}
+.orderbtn lightning-button {
+    margin-left: 10px;
+}

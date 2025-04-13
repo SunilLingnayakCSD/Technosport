@@ -1,0 +1,181 @@
+<template >
+    <!-- Start Date and End Date Section -->
+  <!-- Inputs and Button Section -->
+  <div class ="custombcg">
+    <div style="display: flex; gap: 20px; align-items: center;">
+        <div style="flex: 1;">
+           <lightning-input type="date" label="Order Created Date - Start" value={startDate} onchange={handleStartDateChange}
+                 style="min-width: 200px; height: 40px;font-weight: bold" placeholder="DD/MMM/YYYY"></lightning-input>
+
+        </div>
+        <div style="flex: 1;">
+            <lightning-input type="date" label="Order Created Date - End" value={endDate} onchange={handleEndDateChange}
+                             style="min-width: 200px; height: 40px;font-weight: bold" placeholder="DD/MMM/YYYY"></lightning-input>
+        </div>
+          <!-- Product Filter Dropdown -->
+            <div style="flex: 1;">
+                <lightning-combobox 
+                    label="Product Filter"
+                    value={selectedProductFilter} 
+                    options={productFilterOptions} 
+                    onchange={handleProductFilterChange}
+                    style="min-width: 200px; height: 40px;font-weight: bold">
+                </lightning-combobox>
+            </div>
+        <div>
+            <button onclick={handleFetchQuotes} class="fetch-button">Fetch Order Details</button>
+        </div>
+    </div>
+
+
+
+
+  <!-- Status Path Section -->
+<div class="status-path-container" style="display: flex; flex-direction: column; gap: 20px;">
+    <!-- Grey & Blue Line connecting statuses -->
+    <div class="status-line" style="display: flex; align-items: center;">
+        <!-- Grey/Blue Line (for illustration purposes) -->
+        <div class="status-line-segment" style="flex-grow: 1;"></div>
+        <div class="status-line-segment" style="flex-grow: 1;"></div>
+    </div>
+
+        <!-- Status Icons with Labels -->
+        <div class="status-path">
+            <!-- Draft Status -->
+            <div class="status-stage">
+                <div class="status-icon-container">
+                    <img src={draftIcon} alt="Draft" class="status-icon" />
+                </div>
+                <span>Draft</span>
+            </div>
+
+            <!-- Sales Order Status -->
+            <div class="status-stage">
+                <div class="status-icon-container">
+                    <img src={salesOrderIcon} alt="Sales Order" class="status-icon" />
+                </div>
+                <span>Sales Order</span>
+            </div>
+
+            <!-- Invoice Status -->
+            <div class="status-stage">
+                <div class="status-icon-container">
+                    <img src={invoiceIcon} alt="Invoice" class="status-icon" />
+                </div>
+                <span>Invoice</span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Results Section -->
+    <div class="results-section">
+        <!-- No Quotes Found -->
+        <template if:true={noQuotesFound}>
+            <p>No quotes found for the selected date range.</p>
+        </template>
+
+        <!-- Wrapper for all tables -->
+        <div class="quotes-wrapper">
+            <!-- Draft Quotes Section -->
+            <template if:true={draftQuotes.length}>
+                <div class="quotes-section draft-bg">
+                    <h3>Draft </h3>
+                    <table class="quotes-table">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={draftQuotes} for:item="quote">
+                                <template for:each={quote.quoteLineItems} for:item="lineItem">
+                                    <tr key={lineItem.itemName}>
+                                        <td>{lineItem.itemName}</td>
+                                        <td>{lineItem.quantity}</td>
+                                       
+                                    </tr>
+                                </template>
+                            </template>
+                            <template if:false={draftQuotes.length}>
+                                <tr>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+
+            <!-- Sales Order Quotes Section -->
+            <template if:true={salesQuotes.length}>
+                <div class="quotes-section salesorder-bg">
+                    <h3>Sales Order </h3>
+                    <table class="quotes-table">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={salesQuotes} for:item="quote">
+                                <template for:each={quote.quoteLineItems} for:item="lineItem">
+                                    <tr key={lineItem.itemName}>
+                                        <td>{lineItem.itemName}</td>
+                                        <td>{lineItem.quantity}</td>
+                                        
+                                    </tr>
+                                </template>
+                            </template>
+                            <template if:false={salesQuotes.length}>
+                                <tr>
+                                    <td colspan="2"></td>
+                                     <td colspan="2"></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+
+            <!-- Invoice Quotes Section -->
+            <template if:true={invoiceQuotes.length}>
+                <div class="quotes-section invoice-bg">
+                    <h3>Invoice </h3>
+                    <table class="quotes-table">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={invoiceQuotes} for:item="quote">
+                                <template for:each={quote.quoteLineItems} for:item="lineItem">
+                                    <tr key={lineItem.itemName}>
+                                        <td>{lineItem.itemName}</td>
+                                        <td>{lineItem.quantity}</td>
+                                        
+                                    </tr>
+                                </template>
+                            </template>
+                             <template if:false={invoiceQuotes.length}>
+                                <tr>
+                                    <td colspan="2">No Quotes available</td>
+                                 
+                                 
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+        </div>
+    </div>  </div>
+</template>

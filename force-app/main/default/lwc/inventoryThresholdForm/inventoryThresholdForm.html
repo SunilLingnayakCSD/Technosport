@@ -1,0 +1,128 @@
+<template>
+    <div class="custom-card">
+        <div class="custom-card-header">
+            <h2 class="custom-heading">Inventory Threshold Settings</h2>
+        </div>
+        <div class="custom-card-body custom-padding">
+            <!-- Product Category Dropdown -->
+            <div class="custom-form-element">
+                <lightning-combobox 
+                    label="Section"
+                    value={productCategory}
+                    options={productCategoryOptions}
+                    onchange={handleProductCategory}
+                    required>
+                </lightning-combobox>
+                <template if:true={categoryError}>
+                    <div style="color:red;">{categoryError}</div>
+                </template>
+            </div>
+
+            <!-- Product Category1 Dropdown -->
+            <div class="custom-form-element">
+                <lightning-combobox 
+                    label="Product Category"
+                    value={productCategory1}
+                    options={productCategory1Options}
+                    onchange={handleProductCategory1}
+                    required>
+                </lightning-combobox>
+                <template if:true={categoryError1}>
+                    <div style="color:red;">{categoryError1}</div>
+                </template>
+            </div>
+
+            <!-- Threshold Fields (High, Medium, Low Quantity) -->
+            <template if:true={showThresholdFields}>
+                <!-- High Quantity Threshold (Side by Side) -->
+                <div class="custom-form-row">
+                    <div class="custom-form-element">
+                        <lightning-input 
+                            label="High Quantity Threshold Min" 
+                            value={highQuantityThresholdMin} 
+                            onchange={handlehighQuantityThresholdMin} 
+                            required
+                            type="number">
+                        </lightning-input>
+                        <template if:true={fieldErrors.highQuantityThresholdMin}>
+                            <div style="color:red;">{fieldErrors.highQuantityThresholdMin}</div>
+                        </template>
+                    </div>
+                    <div class="custom-form-element">
+                        <lightning-input 
+                            label="High Quantity Threshold Max" 
+                            value={highQuantityThresholdMax} 
+                            onchange={handlehighQuantityThresholdMax} 
+                            required
+                            type="number">
+                        </lightning-input>
+                        <template if:true={fieldErrors.highQuantityThresholdMax}>
+                            <div style="color:red;">{fieldErrors.highQuantityThresholdMax}</div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Medium Quantity Threshold (Side by Side) -->
+                <div class="custom-form-row">
+                    <div class="custom-form-element">
+                        <lightning-input 
+                            label="Medium Quantity Threshold Min" 
+                            value={mediumQuantityThresholdMin} 
+                            onchange={handlemediumQuantityThresholdMin} 
+                            required
+                            type="number">
+                        </lightning-input>
+                        <template if:true={fieldErrors.mediumQuantityThresholdMin}>
+                            <div style="color:red;">{fieldErrors.mediumQuantityThresholdMin}</div>
+                        </template>
+                    </div>
+                    <div class="custom-form-element">
+                        <lightning-input 
+                            label="Medium Quantity Threshold Max" 
+                            value={mediumQuantityThresholdMax} 
+                            onchange={handlemediumQuantityThresholdMax} 
+                            required
+                            type="number">
+                        </lightning-input>
+                        <template if:true={fieldErrors.mediumQuantityThresholdMax}>
+                            <div style="color:red;">{fieldErrors.mediumQuantityThresholdMax}</div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Low Quantity Threshold (Side by Side) -->
+                <div class="custom-form-row">
+                    <div class="custom-form-element">
+                        <lightning-input 
+                            label="Low Quantity Threshold Min" 
+                            value={lowQuantityThresholdMin} 
+                            onchange={handlelowQuantityThresholdMin} 
+                            required
+                            type="number">
+                        </lightning-input>
+                        <template if:true={fieldErrors.lowQuantityThresholdMin}>
+                            <div style="color:red;">{fieldErrors.lowQuantityThresholdMin}</div>
+                        </template>
+                    </div>
+                    <div class="custom-form-element">
+                        <lightning-input 
+                            label="Low Quantity Threshold Max" 
+                            value={lowQuantityThresholdMax} 
+                            onchange={handlelowQuantityThresholdMax} 
+                            required
+                            type="number">
+                        </lightning-input>
+                        <template if:true={fieldErrors.lowQuantityThresholdMax}>
+                            <div style="color:red;">{fieldErrors.lowQuantityThresholdMax}</div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="custom-margin-top custom-button-container">
+                    <button class="custom-button custom-button-brand" onclick={handleSave}>Save</button>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

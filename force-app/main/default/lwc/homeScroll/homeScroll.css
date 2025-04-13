@@ -1,0 +1,29 @@
+.scroll-container {
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    color: black;
+    background-color: #f0f0f0;  /* Light gray background for visibility */
+    padding: 10px 20px;  /* Add padding for better spacing around the text */
+    min-height: 40px;  /* Ensures the container is tall enough for the message */
+    width: 100%;  /* Ensure the container takes up the full width of the parent element */
+}
+
+.scroll-container a {
+    position: absolute;
+    font-size: 24px;
+    color: black;  /* Set the text color to black */
+    text-decoration: none;
+    white-space: nowrap;  /* Prevents line breaks in the message */
+    animation: scrollMessage 30s linear infinite;  /* Adjust the animation speed if needed */
+    top: 0; /* Ensure the anchor starts at the top of the container */
+}
+
+@keyframes scrollMessage {
+    0% {
+        left: 100%;  /* Start from the right of the container */
+    }
+    100% {
+        left: -100%;  /* End at the left of the container */
+    }
+}

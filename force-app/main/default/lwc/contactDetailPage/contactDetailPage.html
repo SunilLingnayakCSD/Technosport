@@ -1,0 +1,72 @@
+<template>
+    <div class="container" if:true={contactInfo}>
+        <div class="nameContainer">
+            <!-- <div class="imagecontainer">
+                 <img src={contactInfo.Picture__c} alt="Profile Image">
+            </div> -->
+            <div class="namingContainer">
+                <div style="font-size: 24px; font-weight: 600; color:#FFFFFF;">
+                  <!--  <div> Mr. Rose Gonzalez </div> -->
+                    <div>{contactInfo.Name}</div> 
+                </div>
+            </div>
+        </div>
+        <div class="detailsContainer">
+            <div class="detail">
+                <div class="icon">
+                   <div class="ic"><lightning-icon icon-name='utility:contact' class="custom-icon" alternative-text='contact' size='small' title='contact' style="width: 40px; height: 40px; fill:#fff; "></lightning-icon></div>
+                    <div style="width: 70%; color:#FFFFFF;"><b>Account :</b></div>
+                </div>
+                <div class="value">
+                    {accountname}
+                </div>
+            </div>
+            <div class="detail">
+                <div class="icon">
+                    <div class="ic"><lightning-icon icon-name='utility:email' class="custom-icon" alternative-text='email' size='small' title='email' style="width: 40px; height: 40px; fill:#fff;"></lightning-icon></div>
+                    <div style="width: 70%; color:#FFFFFF;"><b>Email Address :</b></div>
+                </div>
+                <div class="value">
+                  <!--  rose@edge.com -->
+                   {contactInfo.Email} 
+                </div>
+            </div>
+            <div class="detail">
+                <div class="icon">
+                    <div class="ic"><lightning-icon icon-name='utility:phone_portrait' class="custom-icon" alternative-text='phone' size='small' title='phone' style="width: 40px; height: 40px; fill:#fff;"></lightning-icon></div>
+                    <div style="width: 70%; color:#FFFFFF;"><b>Phone Number :</b></div>
+                </div>
+                <div class="value">
+                  <!--  (512) 757-6000  -->
+                    {contactInfo.Phone} 
+                </div>
+            </div>
+            <div class="detail">
+                <div class="icon">
+                    <div class="ic"><lightning-icon icon-name='utility:checkin' class="custom-icon" alternative-text='checkin' size='small' title='address' style="width: 40px; height: 40px; fill:#fff;"></lightning-icon></div>
+                    <div style="width: 70%; color:#FFFFFF;"><b>Address :</b></div>
+                </div>
+                <div class="value">
+                {contactInfo.MailingStreet}  {contactInfo.MailingCity}  {contactInfo.MailingState}  {contactInfo.MailingPostalCode}  {contactInfo.MailingCountry} 
+                 <!-- 313 Constitution Place, Austin, TX 78767, USA -->
+                </div>
+            </div>
+        </div>
+        
+       
+           
+            
+         
+
+
+            <!-- <div class="slds-progress-bar slds-progress-bar_small" aria-valuemin="0" aria-valuemax="100" aria-valuenow={contactInfo.CSAT__c} aria-label="Placeholder for description of progress bar" role="progressbar">
+                <span class="slds-progress-bar__value" style="width: 75%; background-color: rgb(52, 152, 219);">
+                    <span class="slds-assistive-text">Progress: {contactInfo.CSAT__c}</span>
+                </span>
+            </div> -->
+        
+    </div>
+    <template if:true={error}>
+        <p>Error loading contact data: {error.message}</p>
+    </template>
+</template>

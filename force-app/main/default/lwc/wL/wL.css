@@ -1,0 +1,255 @@
+/* General page styles */
+.form-page {
+    /* background-image: url('/resource/BackgroundImg');  */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color:black;
+    display: flex;
+    justify-content: center; /* Horizontally centers the form-container */
+    align-items: center;     /* Vertically centers the form-container */
+    height: 100vh;           /* Full viewport height */
+    color: #333;
+    font-family: 'Merriweather', serif;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+
+ /* .background-image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+     /* If this class is needed, it is kept hidden 
+}  */
+
+ 
+/* Centered Section for Brands and Submit Button */
+.centered-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 40px;
+}
+
+/* Optional: Style the dual-listbox for better appearance */
+.centered-dual-listbox lightning-dual-listbox {
+    width: 80%;
+    max-width: 600px;
+    margin-bottom: 20px;
+}
+
+/* Form container */
+.form-container {
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 1100px;
+    justify-content: center; /* Horizontally centers the form-container */
+    align-items: center; 
+    box-sizing: border-box;
+    border: 1px solid #D1B5A1;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    background-color: rgb(213, 209, 209) /* Adjusted alpha for opacity */
+}
+
+/* Header Styling */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-image {
+    max-height: 150px;
+    max-width: 150px;
+}
+
+/* Grid Layout for Form Elements (2 columns) */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px; 
+    margin-top: 30px;
+}
+
+/* Form column styling */
+.form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; 
+}
+
+/* Heading inside form columns */
+.form-column h3, .Brand {
+    color: #5A3D4A;
+    font-size: 16px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Apply styles to all labels inside lightning-input and lightning-combobox */
+lightning-input .slds-form-element__label,
+lightning-combobox .slds-form-element__label {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333333; 
+    margin-bottom: 8px; 
+}
+
+
+
+
+/* Styling input fields */
+.lightning-input, .lightning-combobox, .lightning-dual-listbox {
+    width: 100%;
+    padding: 16px; 
+    font-size: 20px;
+    border-radius: 8px;
+    border: 1px solid #D1B5A1;
+    background-color: #f9f7f1;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Input focus effect */
+/* Input focus effect */
+.lightning-input:focus, .lightning-combobox:focus, .lightning-dual-listbox:focus {
+    border-color: #9b4d96;
+    outline: none;
+    box-shadow: 0 0 8px rgba(155, 77, 150, 0.3);
+}
+
+/* Input field hover effect */
+.lightning-input:hover, .lightning-combobox:hover, .lightning-dual-listbox:hover {
+    border-color: #9b4d96;
+}
+
+/* Submit Button */
+.submit-button {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Royal looking submit button */
+.submit_button {
+    background: linear-gradient(135deg, #9b4d96, #5A3D4A); /* Purple gradient */
+    color: white;
+    font-size: 16px; 
+    padding: 12px 30px; 
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto; 
+}
+
+
+.submit_button:hover {
+    background: linear-gradient(135deg, #7a307e, #4f2d44);
+    transform: translateY(-5px); 
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); 
+}
+
+.submit_button:active {
+    transform: translateY(2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* For styling the duplicate error messages */
+.duplicate-error-message {
+    color: #d9534f; 
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+/* Content Wrapper (ensure it doesn't overflow the container) */
+.content-wrapper {
+    max-height: 90vh;
+    overflow-y: auto;
+    width: 100%;
+    padding: 15px;
+}
+
+/* Centered Dual Listbox */
+.centered-dual-listbox {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.centered-dual-listbox lightning-dual-listbox {
+    max-width: 600px; 
+    width: 100%;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr; 
+    }
+
+    .form-container {
+        padding: 20px;
+    }
+
+    .logo-image {
+        max-height: 120px;
+        max-width: 120px;
+    }
+
+    .submit_button {
+        font-size: 18px; 
+        padding: 14px 32px;
+    }
+}
+
+.thank-you-message {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* Error Message Styling */
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 0;
+    border-radius: 5px;
+    font-size: 0;
+    margin-top: 10px; 
+    width: auto;
+    max-width: 80%;
+    text-align: center;
+    box-sizing: border-box;
+    margin: 10px auto;
+    height: 2px;
+    overflow: hidden;
+    display: block; 
+    transition: all 0.3s ease-in-out; 
+}
+
+/* When the error message contains content (e.g., text), expand it */
+.error-message:not(:empty) {
+    font-size: 14px;
+    padding: 10px; 
+    height: auto;
+}
+
+
+.font-size{
+    font-size: 14px;
+}

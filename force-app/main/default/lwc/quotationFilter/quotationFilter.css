@@ -1,0 +1,159 @@
+/* Ensure the wrapper containing all the tables is set to a flex container */
+.date-filter-section {
+    display: flex;
+    gap: 20px; /* space between date input and button */
+    margin-bottom: 20px;
+    min-height: 50px;
+}
+.fetch-button {
+    margin-top: 43px;
+    background-color: #2b4f70 !important;
+    color: white !important;
+    border-radius: 7px;
+    position: relative;
+    padding: 5px;
+    border: none;
+}
+
+.quotes-wrapper {
+    width: 100%; /* Ensure table takes full width of its container */
+    display: flex; /* Set the wrapper as a flex container */
+    gap: 20px; /* Add space between columns */
+    margin-bottom: 20px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap; /* Allow wrapping if needed for smaller screens */
+}
+
+/* Style for individual quote sections */
+.quotes-section {
+   flex: 1 1 30%; /* This ensures each section takes up 33% of the container width */
+    box-sizing: border-box; /* Ensure padding and margin don't affect width */
+    background: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative; /* Added for alignment */
+}
+
+/* Style for each table */
+.quotes-table {
+    width: 100%; /* Ensure table takes full width of its container */
+    border-collapse: collapse; /* Collapse table borders */
+}
+
+/* Styling for the table cells */
+.quotes-table th,
+.quotes-table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd; /* Add a border to the cells */
+    text-align: left;
+}
+
+/* Optional: Add different background colors for each section */
+.draft-bg {
+    background-color: #e3f1f7; /* Light grey background for Draft Quotes */
+/* background-image: linear-gradient(to bottom, #f9f4e7, #e1d7b8);*/
+/*background-image: linear-gradient(to bottom, #df7c47, #ffb295);
+background-image: linear-gradient(to bottom, #FFF2AF, #3e5f84);
+background-color:#FFF2AF ;#98C1D9;*/
+
+background-color:#A2D8D8; 
+   
+}
+
+.salesorder-bg {
+    background-color: #e3f2fd; /* Light blue background for Sales Order Quotes */
+  /*background-image: linear-gradient(to bottom, #e1d4f4, #9f82c3);*/
+  /*background-image: linear-gradient(to bottom, #FFA09B, #d509f9);
+background-color:#FFA09B ;008080*/
+background-color:#66B2B2;
+
+
+}
+
+.invoice-bg {
+    background-color: #008080; 
+    /*background-image: linear-gradient(to bottom, #ffd0b6, #ffb295);*/
+
+}
+
+
+
+.status-line {
+    position: absolute;
+    padding-top: 65px;  
+    width:95%;  
+    display: flex;
+    justify-content: space-between;
+    z-index: 1;
+
+}
+.status-line-segment {
+    flex: 1;
+    height: 4px;
+    background: lightgray;
+    transition: background 0.3s ease-in-out;
+   
+}
+
+/* Active status 
+.status-line-active {
+    background: blue !important;
+}*/
+
+/* Status Path */
+.status-path {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    padding-bottom: 15px;
+}
+
+.status-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding-top: 40px;
+}
+
+.status-icon-container {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 2px 4px #0000001a;
+    transition: border 0.3s ease-in-out;
+   
+}
+
+/* Optional Hover */
+.status-icon-container:hover {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+/* Status Icon */
+.status-icon {
+    width: 40px;
+    height: 40px;
+    
+}
+.custombcg{
+//background-image: linear-gradient(to bottom, #A9B5DF, #7886C7);
+/*background-image: linear-gradient(to bottom, #a1c9f4, #3e5f84);*/
+ background-image: linear-gradient(to bottom, #FFFFFF, #F0F0F0);
+
+ border: 1px solid #3f6aa1;/* A subtle border that complements the yellow tones */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+  padding: 20px;
+  border-radius: 8px;
+}

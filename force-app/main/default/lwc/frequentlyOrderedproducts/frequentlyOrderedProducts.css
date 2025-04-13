@@ -1,0 +1,41 @@
+.slds-button_icon{
+background-color:blue;
+padding: 12px;
+border-radius: 4px;
+}
+
+
+.slds-scrollable_x {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.slds-card {
+    display: inline-block;
+    margin-right: 15px;
+    width: 250px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.slds-card__image {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+}
+
+.slds-card__header h3 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.slds-card__footer {
+    text-align: center;
+    padding: 10px;
+}
+.imgDiv {
+    min-width: 30px;
+    min-height: 30px;
+    margin: 6px;
+    /* transition: transform 0.3s ease;  */
+}

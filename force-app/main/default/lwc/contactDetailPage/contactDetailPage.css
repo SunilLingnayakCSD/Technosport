@@ -1,0 +1,95 @@
+.container {
+    width: 100%;
+    background-color: gradient;
+    background-image: linear-gradient(to bottom,#003366,#0f52ba);  /*#817bf5*/
+    border-radius: 7px;
+    color: #fff;
+    font-size: 12px;
+    padding: 16px;
+}
+
+.nameContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* padding: 0px 12px; */
+}
+.personSection{
+    padding: 18px 0px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+.imagecontainer {
+    width: 80px; 
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    /* border: 2px solid #fbfbfb; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 16px;
+}
+
+.imagecontainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.namingContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 8px;
+}
+
+.detailsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0px; 
+    padding: 18px 0px;
+}
+
+.detail {
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+}
+.ic{
+    padding: 0px;
+    width: 20%;
+    margin-top: 14px;
+    margin-right: 12px;
+}
+
+.icon img, .icon lightning-icon {
+    width: 40px;
+    height: 40px;
+    --sds-c-icon-color-foreground-default: white;
+}
+
+.value {
+   flex-grow: 1;
+    padding-left: 0px;
+    width: 100%;
+    font-size: 14px;
+    color: #FFFFFF;
+}
+.score{
+    padding: 18px 0px;
+    margin-bottom: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+.custom-progress-bar .slds-progress-bar__value {
+    background-color: #ba9731; 
+}
+.custom-icon .slds-icon {
+    fill: #fff; 
+}

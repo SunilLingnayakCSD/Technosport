@@ -1,0 +1,27 @@
+<template>
+    <lightning-card title="Most Frequently Ordered Products">
+        <template if:true={orders}>
+            <table class="inventory">
+               
+                    <tr>
+                      <th> Product
+                        </th>
+                        <th >Total Quantity
+                        </th>
+                    </tr>
+              
+              
+                    <template for:each={orders} for:item="order">
+                        <tr key={order.productName}>
+                            <td>{order.productName}</td>
+                            <td>{order.totalQuantity}</td>
+                        </tr>
+                    </template>
+              
+            </table>
+        </template>
+        <template if:true={error}>
+            <div class="slds-text-color_error">{error.message}</div>
+        </template>
+    </lightning-card>
+</template>

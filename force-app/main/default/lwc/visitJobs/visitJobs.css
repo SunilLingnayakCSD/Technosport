@@ -1,0 +1,42 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td, th {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f3f3f3;
+  
+}
+
+button {
+    padding: 6px 12px;
+}
+/* .question-column {
+    background-color: #f3f309b7;  
+    color: #333333;  
+
+    padding: 0.5rem;  
+} */
+.col{
+    background-color: antiquewhite;
+}
+.header{
+    text-align: left;
+    font-size: 18px;
+   
+}
+
+
+.custom-table-border {
+    border-radius: 8px; /* This will round the corners with 8px radius */
+    border: 1px solid #d8dde6; /* Border color */
+    overflow: hidden; /* Ensures the border-radius works properly */
+}
+.survey{
+    margin-top: 20px;
+}
