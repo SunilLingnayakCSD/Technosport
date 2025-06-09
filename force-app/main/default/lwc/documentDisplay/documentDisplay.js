@@ -83,7 +83,7 @@ export default class FilePreviewDownload extends LightningElement {
     }
 
     get filesURL(){
-        let fileUrl = 'https://speed-ruby-8553--devsandbox.sandbox.my.site.com/'+this.fileToPreview.url;
+        let fileUrl = 'https://speed-ruby-8553.my.site.com/'+this.fileToPreview.url;
         //return 'https://docs.google.com/viewer?url='+this.fileToPreview.url;
         return `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(fileUrl)}`;
         //return `https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`;

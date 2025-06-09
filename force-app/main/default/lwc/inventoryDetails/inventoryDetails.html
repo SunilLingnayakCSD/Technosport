@@ -1,6 +1,6 @@
 <template>
 
-    <!-- Search Bar -->
+   
     <lightning-input 
         label="Search by Product Name" 
         value={searchTerm} 
@@ -11,7 +11,6 @@
     </lightning-input>
 
 
-    <!-- Filter Section -->
     <div class="filter-row">
         <div class="filter-combobox">
             <lightning-combobox
@@ -41,7 +40,7 @@
             </lightning-combobox>
         </div>
 
-          <!-- Clear Filters Button -->
+       
            
                 <button
                     onclick={clearFilters}
@@ -55,21 +54,17 @@
                         <tr>
                             <th>Stock Level Indicator</th>
                             <th>Product</th>
-                            <!--th>Available Quantity</th>
-                            <th>Free Quantity</th>
-                            <th>Avg Cost</th-->
+                          
                           
                         </tr>
                         
              <template for:each={records} for:item="record">
            <tr key={record.Id}>
-                            <!-- Adding checkboxes for each product row -->
+                           
 
                <td> <div class="cl" style={record.stockLevelStyle}> </div></td>
                           <td>{record.Product_Name__c}</td>
-                            <!--td >{record.Available_Quantity__c} </td>
-                            <td>{record.Free_Quantity__c} </td>
-                            <td>{record.Avg_Cost__c}</td-->                          
+                                               
                         </tr>
              </template>
                     </table>

@@ -15,136 +15,23 @@
 *{
   font-family: Times, "Times New Roman", Georgia, serif;
 }
-/* {
-    box-sizing: border-box;
+p{
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  max-height: 40px;
 }
-    
-
-body {
-    font-family: Verdana, sans-serif;
-}
-
-.mySlides {
-    display: none;
-}
-
-img {
-    vertical-align: middle;
-} */
-
-/* .slideshow-container {
-    max-width: 1000px;
-    position: relative;
-    margin: auto;
-    background-color: cadetblue;
-}
-
-.text {
-    color: #f2f2f2;
-    font-size: 15px;
-  
-    position: absolute;
-    bottom: 8px;
-    left:20px;
-    width: 100%;
-    text-align: center;
-}
-
-.numbertext {
-    color: #f2f2f2;
-    font-size: 12px;
-    padding: 8px 12px;
-    position: absolute;
-    top: 2;
-}
-
-.dot {
-    height: 15px;
-    width: 15px;
-    margin: 0 2px;
-    background-color: #bbb;
-    border-radius: 50%;
-    display: inline-block;
-    transition: background-color 0.6s ease;
-    cursor: pointer;
-}
-
-.active {
-    background-color: #717171;
-}
-
-.splide__slide img {
-    width: 100%;
-    height: auto;
+@media screen and (max-width: 500px) {
+  .video {
+    height: 300px;
+    width: 541px;
+    margin-top: 50px;
+    margin-left: 10px;
+    background-color: #f5f5f5;
   }
-
-.fade {
-    animation-name: fade;
-    animation-duration: 1.5s;
 }
 
-@keyframes fade {
-    from { opacity: .4 }
-    to { opacity: 1 }
-}
-
-@media only screen and (max-width: 300px) {
-    .text {
-        font-size: 11px;
-    }
-}
-
-.video-section .item{
-    opacity:0.4;
-    transition:.4s ease all;
-    margin:0 20px;
-    transform:scale(.8);
-  }
-  
-  @media(max-width:1000px){
-    .video-section .item{margin:0; transform:scale(.9)}
-  }
-  
-  .video-section .active .item{
-    opacity:1;
-    transform:scale(1);
-  } 
-  
-  body{
-    margin:80px 0 0 0;
-  }
-  
-  .video-section .owl-item {
-      -webkit-backface-visibility: hidden;
-      -webkit-transform: translateZ(0) scale(1.0, 1.0);
-  }
-  
-  .video-section video{
-    max-width:100%;
-    height:auto;
-  } */
-
-  /* .mainDiv{
-    max-width: 1000px;
-    display: flex;
-    justify-content: space-between;
-    margin: 0 auto;
-    
-  } */
-  /* .subDiv{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  } */
-  /* .imgDiv{
-    width: 900px;
-  } */
-  /* .imgDiv div{
-    height: 400px;
-    width: 300px; */
-    /* border: 1px solid; */
-    /* background-color: #f5f5f5;; */
-   /* }  */
 
    .mainDiv {
     display: flex;
@@ -152,6 +39,7 @@ img {
     scroll-behavior: auto;
     width: 100%;
     margin: auto;
+   min-height: 400px;
     /* border: 1px solid #ccc; */
     position: relative;
   }
@@ -174,9 +62,7 @@ img {
     /* transition: transform 0.3s ease;  */
 }
 
-/* .imgDiv:hover {
-    transform: scale(1.1); 
-} */
+
 
 /* Optional: To ensure content inside .imgDiv scales */
 .mainimg{

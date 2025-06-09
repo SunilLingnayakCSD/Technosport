@@ -1,0 +1,29 @@
+<template>
+    <lightning-card title="Lead Qualification" icon-name="standard:task">
+        
+        <template if:false={isshow}>
+            <lightning-button 
+                style="margin:6px 12px"
+                label="Qualify" 
+                onclick={launchQualify} 
+                variant="brand">
+            </lightning-button>
+
+            <lightning-button 
+                style="margin:6px 12px"
+                label="Unqualify" 
+                onclick={launchUnqualify} 
+                variant="destructive">
+            </lightning-button>
+        </template>
+
+        <template if:true={isshow}>
+            <lightning-flow
+                flow-api-name={flowName}
+                flow-input-variables={flowInputVariables}
+                onstatuschange={handleFlowStatusChange}>
+            </lightning-flow>
+        </template>
+
+    </lightning-card>
+</template>

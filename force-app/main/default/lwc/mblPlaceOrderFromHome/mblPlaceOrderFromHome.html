@@ -1,0 +1,109 @@
+<template>
+    <lightning-card title="Create Order">
+        <div class="slds-box slds-m-around_medium">
+
+            <!-- <lightning-combobox
+                name="retailer"
+                label="Retailer Account"
+                placeholder="Select Retailer"
+            
+                options={AccountOptions}
+                value={selectedRetailerId}
+                onchange={handleretailerChange}
+                >
+            </lightning-combobox> -->
+
+            <template if:true={isLoading}>
+    <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+</template>
+             <label class="slds-form-element__label" for="retailerLookup">
+        <abbr class="slds-required" title="required">*</abbr> Retailer
+    </label>
+                <lightning-record-edit-form object-api-name="Order" >
+                    <lightning-input-field class="look" field-name="AccountId" variant="label-hidden" onchange={handleretailerChange} required>
+                     </lightning-input-field>
+                </lightning-record-edit-form>
+            <lightning-input
+                    type="date"
+                    label="Last Visit Date"
+                    value={lastVisitDate}
+                    disabled>
+            </lightning-input>
+            <lightning-input
+                    type="Phone"
+                    label="Contact Number"
+                    value={selectedRetailerPhone}
+                    disabled>
+            </lightning-input>
+            <lightning-combobox
+                name="distributor"
+                label="Assigned Distributor"
+                placeholder="Select Distributor"
+                options={DistributorOptions}
+                value={selectedDistributorId}
+                required
+                onchange={handleDistributorChange}>
+            </lightning-combobox>
+            <lightning-input
+                type="text"
+                label="Order Value"
+                value={orderValue}
+                onchange={handleOrderChange}
+                required
+                >
+            </lightning-input>
+
+            <lightning-combobox
+                name="Order"
+                label="Order Type"
+                placeholder="Order Type"
+                options={OrderTypeOptions}
+                value={orderTypeValue}
+                required
+                onchange={handleOrderTypeChange}>
+            </lightning-combobox>
+
+            <div class="slds-m-top_medium">
+                <label class="slds-form-element__label" for="upload-file"><span class="required">*</span>
+                                        Upload a Image
+                                    </label>
+                <input type="file" 
+       key={fileUploadKey}
+       class="slds-input" 
+       accept="image/*"
+       onchange={handleFileUpload} 
+       required
+/>
+
+            </div>
+            <!-- <div class="slds-m-top_medium">
+                <label class="slds-form-element__label" for="upload-file"><span class="required">*</span>
+                                        Upload a Image2
+                                    </label>
+                <input type="file" 
+                       id="upload-file2" 
+                       class="slds-input" 
+                       accept="image/*"
+                       onchange={handleFileUpload} 
+                       required
+                       />
+            </div> -->
+        
+
+            <template if:true={uploadedFileName}>
+                <div class="slds-m-top_medium">
+                    <p><strong>Uploaded File:</strong> {uploadedFileName}</p>
+                </div>
+            </template>
+
+            <div class="slds-m-top_medium">
+                <lightning-button
+                    label="Submit"
+                    variant="brand"
+                    onclick={handleSubmit}>
+                </lightning-button>
+            </div>
+
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,20 @@
+<template>
+    <lightning-card title="Distributor Account Files">
+        <template if:true={files}>
+            <ul class="file-list">
+                <!-- Loop through files and display them -->
+                <template for:each={files} for:item="file">
+                    <li key={file.id} class="file-item">
+                        <lightning-button-icon icon-name="utility:delete" alternative-text="Delete" size="small" onclick={handleDelete} data-id={file.id}></lightning-button-icon>
+                        <a href={file.url} target="_blank" class="file-link">
+                            {file.name} ({file.fileExtension})
+                        </a>
+                    </li>
+                </template>
+            </ul>
+        </template>
+        <template if:false={files}>
+            <p>No files available for display.</p>
+        </template>
+    </lightning-card>
+</template>

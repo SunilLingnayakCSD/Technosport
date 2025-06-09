@@ -1,23 +1,23 @@
 import { LightningElement } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import products from '@salesforce/resourceUrl/products';
+import ordertracking from '@salesforce/resourceUrl/ordertracking';
 import Place_order from '@salesforce/resourceUrl/Place_order';
 import Overview from '@salesforce/resourceUrl/Overview';
 import Newlaunches from '@salesforce/resourceUrl/Newlaunches';
 import Invoices from '@salesforce/resourceUrl/Invoices';
-import customers from '@salesforce/resourceUrl/customers';
+import reserveBundle from '@salesforce/resourceUrl/reserveBundle';
 import support from '@salesforce/resourceUrl/support';
 import lead from '@salesforce/resourceUrl/lead';
 
 
 export default class HomeCard extends NavigationMixin(LightningElement)  {
 
-    products=products
+    ordertracking=ordertracking
     Place_order=Place_order
     Overview=Overview
     Newlaunches=Newlaunches
     Invoices=Invoices
-    customers=	customers
+    reserveBundle=reserveBundle
     support=support
     lead=lead
 
@@ -58,19 +58,19 @@ export default class HomeCard extends NavigationMixin(LightningElement)  {
         });
     }
 
-    handleInventory() {
+    handleProducts() {
         this[NavigationMixin.Navigate]({
-         type: 'standard__webPage',
-             attributes: {
-                url: '/inventory-tracking' // Use the URL path for the page
+            type: 'standard__webPage',
+            attributes: {
+                url: '/reservebundle' // Use the URL path for the page
             }
         });
     }
 
-    handleOrderTracking() {
+    handleDashboard() {
         this[NavigationMixin.Navigate]({
             type: 'standard__webPage',
-             attributes: {
+            attributes: {
                 url: '/order-tracking' // Use the URL path for the page
             }
         });
@@ -94,5 +94,4 @@ export default class HomeCard extends NavigationMixin(LightningElement)  {
             }
         });
     }
-   
 }

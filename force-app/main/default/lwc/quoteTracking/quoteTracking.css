@@ -1,0 +1,199 @@
+/* General Styling */
+.order-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+/* Order Card Styling */
+.order-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: calc(33.33% - 20px);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Light Blue Order Number Section */
+.order-card-header {
+    background-color: #b3d9ff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+/* Product and Quantity Table */
+.order-items {
+    margin-top: 10px;
+    padding: 10px 0;
+}
+.order-status{
+    padding-top: 20px;
+padding-bottom: 20px;
+
+}
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    padding-bottom: 8px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    /* word-wrap: break-word; */
+}
+
+/* Status Path Styling */
+.status-path-container {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+/* Status Line Connecting Icons */
+.status-line {
+    position: absolute;
+    top: 65px;
+    left: 10%;
+    width: 80%;
+    height: 4px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 1;
+}
+
+/* Status Line Segments */
+.status-line-segment {
+    flex: 1;
+    height: 4px;
+    padding-top: 40 px;
+    background: lightgray;
+    transition: background 0.3s ease-in-out;
+}
+
+/* Make completed segments blue */
+.status-line-active {
+    background: blue !important;
+}
+
+/* Status Icons Row */
+.status-path {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+/* Styling for Each Status Icon */
+.status-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding-top: 40px;
+}
+
+/* Status Icon Container Styling */
+.status-icon-container {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border 0.3s ease-in-out;
+}
+
+/* Status Icon */
+.status-icon {
+    width: 40px;
+    height: 40px;
+}
+
+/* Optional styling for better appearance when highlighted */
+.status-icon-container[style*="background-color:blue"] {
+    border: 2px solid blue;
+}
+
+
+.order-tracking-container {
+    font-family: Arial, sans-serif;
+}
+
+.slds-table th, .slds-table td {
+    /* white-space: nowrap; */
+    padding: 0.5rem;
+}
+
+.slds-table thead tr:first-child th {
+    border-bottom: none;
+}
+
+.slds-table thead tr:last-child th {
+    font-weight: normal;
+    font-size: 0.875rem;
+    color: #706e6b;
+}
+.scroll{
+    overflow-x: scroll;
+    max-height: 500px;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .slds-col {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+
+    .order-tracking-container {
+        padding: 1rem !important;
+    }
+
+    .slds-text-heading_large {
+        font-size: 1.25rem;
+    }
+
+    .slds-m-bottom_medium {
+        margin-bottom: 0.75rem;
+    }
+
+    lightning-input,
+    lightning-button {
+        width: 100%;
+    }
+
+    .slds-m-bottom_medium,
+    .slds-p-around_medium {
+        margin-bottom: 1rem;
+        padding: 1rem;
+    }
+
+    .fetch-button-container {
+        margin: 0 !important;
+        padding-top: 0.5rem;
+    }
+    .slds-truncate1{
+            white-space: normal;
+            word-wrap: break-word;
+            /* word-break: break-word; */
+            max-width: 100px; /* optional: restrict width for balanced break */
+            line-height: 1.2;  
+            font-weight: bold;   
+    }
+    .no{
+        white-space: normal; 
+    }
+}

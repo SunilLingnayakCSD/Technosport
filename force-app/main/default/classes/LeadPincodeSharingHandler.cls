@@ -1,101 +1,202 @@
-public class LeadPincodeSharingHandler {
+public with sharing class LeadPincodeSharingHandler {
 
-    // Method for non-sharing functionality (before insert)
-    public static void handleLeadBeforeInsert(Lead__c newLead) {
-        // Step 1: Extract the pincode from the lead
-        String leadPincode = newLead.Address__PostalCode__s;
+    /* -------------------------------------------------
+     * BEFORE INSERT  — choose distributor for each lead
+     * ------------------------------------------------- */
+    public static void prepareDistributorAssignment(List<Lead__c> newLeads) {
 
-        // Debug: Log the pincode from the lead
-        System.debug('Pincode extracted from lead: ' + leadPincode);
+        /* 1. Distinct pincodes in incoming leads */
+        Set<String> pincodes = new Set<String>();
+        for (Lead__c l : newLeads)
+            if (String.isNotBlank(l.Address__PostalCode__s))
+                pincodes.add(l.Address__PostalCode__s);
+        if (pincodes.isEmpty()) return;
 
-        // Step 2: Query distributor accounts with matching shipping postal codes
-        List<Account> distributorAccounts = [SELECT Id, ShippingPostalCode, RecordTypeId 
-                                              FROM Account 
-                                              WHERE RecordType.Name = 'Distributor'
-                                              AND ShippingPostalCode != NULL
-                                              AND ShippingPostalCode = :leadPincode];
-        System.debug('distributorAccounts--->'+distributorAccounts);
+        /* 2. All distributors across those pincodes */
+        List<Account> distributorList = [
+            SELECT Id, ShippingPostalCode
+            FROM Account
+            WHERE RecordType.Name = 'Distributor'
+            AND ShippingPostalCode IN :pincodes
+        ];
 
-        // Step 2.1: If no distributor accounts are found, exit early
-        if (distributorAccounts.isEmpty()) {
-            System.debug('No distributors found for the given pincode: ' + leadPincode);
-            return;
+        /* 3. Map<pincode, List<Distributor>> */
+        Map<String, List<Account>> pinToDists = new Map<String, List<Account>>();
+        Set<Id> distributorIds = new Set<Id>();
+        for (Account d : distributorList) {
+            List<Account> lst = pinToDists.get(d.ShippingPostalCode);
+            if (lst == null) {
+                lst = new List<Account>();
+                pinToDists.put(d.ShippingPostalCode, lst);
+            }
+            lst.add(d);
+            distributorIds.add(d.Id);
+        }
+        if (pinToDists.isEmpty()) return;
+
+        /* 4. Existing‐lead counts per distributor */
+        Map<Id, Integer> distLeadCount = new Map<Id, Integer>();
+        for (AggregateResult ar : [
+            SELECT Assigned_Distributor__c did, COUNT(Id) cnt
+            FROM Lead__c
+            WHERE Assigned_Distributor__c IN :distributorIds
+            GROUP BY Assigned_Distributor__c
+        ]) {
+            distLeadCount.put(
+                (Id) ar.get('did'),
+                (Integer) ar.get('cnt')
+            );
         }
 
-        Map<Id, Integer> distributorLeadCountMap = new Map<Id, Integer>();
-        for(Account acc: distributorAccounts){
-            distributorLeadCountMap.put(acc.Id, 0);
-        }
+        /* 5. Assign least‑busy distributor per pincode */
+        for (Lead__c l : newLeads) {
+            if (String.isBlank(l.Address__PostalCode__s)) continue;
 
-        Id assigneeId;
-        System.debug('distributorAccounts size-->'+distributorAccounts.size());
+            List<Account> choices = pinToDists.get(l.Address__PostalCode__s);
+            if (choices == null) continue;
 
-        if(!distributorAccounts.isEmpty()){
-            if(distributorAccounts.size() > 1){
-                List<Lead__c> existingLeads = [SELECT Id, Assigned_Distributor__c FROM Lead__c WHERE Assigned_Distributor__c IN :distributorAccounts];
-                System.debug('Existing leads-->' + existingLeads);
-                
-                for(Lead__c ll : existingLeads){
-                    Integer currentCount = distributorLeadCountMap.get(ll.Assigned_Distributor__c);
-                    distributorLeadCountMap.put(ll.Assigned_Distributor__c, currentCount + 1);
+            Id best;
+            Integer min = 2147483647;   // INT max
+
+            for (Account d : choices) {
+                Integer c = distLeadCount.containsKey(d.Id) ? distLeadCount.get(d.Id) : 0;
+                if (c < min) {
+                    min = c;
+                    best = d.Id;
                 }
-
-                Integer maxRemLoad = 2147483647;
-                for (Id uId : distributorLeadCountMap.keySet()){
-                    System.debug('distributorLeadCountMap--->'+distributorLeadCountMap.get(uId));
-                    if (distributorLeadCountMap.get(uId) < maxRemLoad){
-                        assigneeId = uId;
-                        maxRemLoad = distributorLeadCountMap.get(uId);
-                        System.debug('assigneeId-->'+assigneeId);
-                    }
-                }
-                newLead.Assigned_Distributor__c = assigneeId;
-                System.debug('Assigned Distributor to the new lead: ' + assigneeId);
-            } else {
-                assigneeId = distributorAccounts[0].Id;
-                newLead.Assigned_Distributor__c = distributorAccounts[0].Id;
-                System.debug('Assigned Distributor to the new lead: ' + assigneeId);
+            }
+            if (best != null) {
+                l.Assigned_Distributor__c = best;
+                distLeadCount.put(best, min + 1);   // increment live counter
             }
         }
     }
 
-    // Method for sharing functionality (after insert)
-    public static void handleLeadAfterInsert(Lead__c newLead) {
-        List<Lead__share> leadShareRecords = new List<Lead__share>();
+    /* -------------------------------------------------
+     * AFTER INSERT — owner assignment to Sales Reps
+     * ------------------------------------------------- */
+    public static void assignOwners(List<Lead__c> insertedLeads) {
 
-        // Step 1: Get the assigned distributor for the lead
-        Id assigneeId = newLead.Assigned_Distributor__c;
+        /* 1. Distinct pincodes */
+        Set<String> pincodes = new Set<String>();
+        for (Lead__c l : insertedLeads)
+            if (String.isNotBlank(l.Address__PostalCode__s))
+                pincodes.add(l.Address__PostalCode__s);
+        if (pincodes.isEmpty()) return;
 
-        // Step 2: Assign the lead to the selected distributor if assigneeId is not null
-        if (assigneeId != null) {
-            // Query all active users for the selected distributor
-            List<User> distributorUsers = [SELECT Id FROM User WHERE AccountId = :assigneeId AND IsActive = TRUE];
-            System.debug('distributorUsers--->' + distributorUsers);
+        /* 2. Sales reps in those pincodes */
+        List<User> repList = [
+            SELECT Id, PostalCode
+            FROM User
+            WHERE IsActive = true
+            AND Profile.Name = 'Sales Representative'
+            AND PostalCode IN :pincodes
+        ];
 
-            // Create sharing records for each active user associated with the selected distributor
-            for (User u : distributorUsers) {
-                Lead__share leadShare = new Lead__share();
-                leadShare.ParentId = newLead.Id;  // The Lead__c Id to share
-                leadShare.UserOrGroupId = u.Id;  // User Id to share the Lead__c with
-                leadShare.AccessLevel = 'Edit';  // Access Level for sharing (Read or Edit)
-
-                // Add the share record to the list
-                leadShareRecords.add(leadShare);
+        Map<String, List<User>> pinToReps = new Map<String, List<User>>();
+        Set<Id> repIds = new Set<Id>();
+        for (User u : repList) {
+            List<User> lst = pinToReps.get(u.PostalCode);
+            if (lst == null) {
+                lst = new List<User>();
+                pinToReps.put(u.PostalCode, lst);
             }
-
-            // Step 3: Insert sharing records
-            if (!leadShareRecords.isEmpty()) {
-                try {
-                    insert leadShareRecords; // Insert sharing records
-                    System.debug('Successfully inserted sharing records for Lead ID: ' + newLead.Id);
-                } catch (DmlException e) {
-                    System.debug('Error creating sharing records: ' + e.getMessage());
-                }
-            } else {
-                System.debug('No sharing records to insert.');
-            }
-        } else {
-            System.debug('No distributor found to assign the lead.');
+            lst.add(u);
+            repIds.add(u.Id);
         }
+        if (pinToReps.isEmpty()) return;
+
+        /* 3. Current workload per rep */
+        Map<Id, Integer> repLoad = new Map<Id, Integer>();
+        for (AggregateResult ar : [
+            SELECT OwnerId oid, COUNT(Id) cnt
+            FROM Lead__c
+            WHERE OwnerId IN :repIds
+            AND Lead_Status__c NOT IN ('Converted', 'Not Converted')
+            GROUP BY OwnerId
+        ]) {
+            repLoad.put(
+                (Id) ar.get('oid'),
+                (Integer) ar.get('cnt')
+            );
+        }
+
+        /* 4. Pick least‑busy rep for each lead */
+        List<Lead__c> updates = new List<Lead__c>();
+
+        for (Lead__c l : insertedLeads) {
+            if (String.isBlank(l.Address__PostalCode__s)) continue;
+
+            List<User> choices = pinToReps.get(l.Address__PostalCode__s);
+            if (choices == null) continue;
+
+            User pick;
+            Integer min = 2147483647;
+
+            for (User u : choices) {
+                Integer c = repLoad.containsKey(u.Id) ? repLoad.get(u.Id) : 0;
+                if (c < min) { min = c; pick = u; }
+            }
+            if (pick != null) {
+                updates.add(new Lead__c(
+                    Id = l.Id,
+                    OwnerId = pick.Id,
+                    Lead_assigned_to_ASM__c = true
+                ));
+                repLoad.put(pick.Id, min + 1);
+            }
+        }
+        if (!updates.isEmpty()) update updates;
+    }
+
+    /* -------------------------------------------------
+     * AFTER INSERT — share with distributor users
+     * ------------------------------------------------- */
+    public static void shareWithDistributors(List<Lead__c> insertedLeads) {
+
+        /* 1. Distinct distributor Ids */
+        Set<Id> distIds = new Set<Id>();
+        for (Lead__c l : insertedLeads)
+            if (l.Assigned_Distributor__c != null)
+                distIds.add(l.Assigned_Distributor__c);
+        if (distIds.isEmpty()) return;
+
+        /* 2. Users under those distributors */
+        List<User> userList = [
+            SELECT Id, AccountId
+            FROM User
+            WHERE IsActive = true
+            AND AccountId IN :distIds
+        ];
+
+        Map<Id, List<User>> distToUsers = new Map<Id, List<User>>();
+        for (User u : userList) {
+            List<User> lst = distToUsers.get(u.AccountId);
+            if (lst == null) {
+                lst = new List<User>();
+                distToUsers.put(u.AccountId, lst);
+            }
+            lst.add(u);
+        }
+
+        /* 3. Build share records */
+        List<Lead__share> shares = new List<Lead__share>();
+
+        for (Lead__c l : insertedLeads) {
+            if (l.Assigned_Distributor__c == null) continue;
+
+            List<User> uList = distToUsers.get(l.Assigned_Distributor__c);
+            if (uList == null) continue;
+
+            for (User u : uList) {
+                shares.add(new Lead__share(
+                    ParentId      = l.Id,
+                    UserOrGroupId = u.Id,
+                    AccessLevel   = 'Edit',
+                    RowCause      = Schema.Lead__share.RowCause.Manual
+                ));
+            }
+        }
+        if (!shares.isEmpty()) insert shares;
     }
 }

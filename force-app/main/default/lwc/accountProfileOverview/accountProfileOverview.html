@@ -1,0 +1,61 @@
+<template>
+    <lightning-card title="User Profile">
+        <div class="slds-m-around_medium">
+            <!-- Display User's Profile Image -->
+            <lightning-avatar image-url={userPhotoUrl} size="large" alternative-text="User Profile Picture"></lightning-avatar>
+            
+            <!-- Display User's Name -->
+            <p class="slds-text-align_center"><strong>{userName}</strong></p>
+            
+            <!-- Vertical Tabs for Orders, Quotations, and Invoices -->
+            <div class="slds-vertical-tabs">
+                <ul class="slds-vertical-tabs__nav" role="tablist" aria-orientation="vertical">
+                    <!-- Orders Tab -->
+                    <li class="slds-vertical-tabs__nav-item" title="Orders" role="presentation">
+                        <a class="slds-vertical-tabs__link" href="#" role="tab" tabindex="0" aria-selected="true" aria-controls="orders-tab">
+                            <span class="slds-truncate" title="Orders">Orders</span>
+                        </a>
+                    </li>
+
+                    <!-- Quotations Tab -->
+                    <li class="slds-vertical-tabs__nav-item" title="Quotations" role="presentation">
+                        <a class="slds-vertical-tabs__link" href="#" role="tab" tabindex="-1" aria-selected="false" aria-controls="quotations-tab">
+                            <span class="slds-truncate" title="Quotations">Quotations</span>
+                        </a>
+                    </li>
+
+                    <!-- Invoices Tab -->
+                    <li class="slds-vertical-tabs__nav-item" title="Invoices" role="presentation">
+                        <a class="slds-vertical-tabs__link" href="#" role="tab" tabindex="-1" aria-selected="false" aria-controls="invoices-tab">
+                            <span class="slds-truncate" title="Invoices">Invoices</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Content for Orders Tab -->
+                <div class="slds-vertical-tabs__content" id="orders-tab" role="tabpanel" aria-labelledby="orders-tab-nav">
+                    <div class="slds-text-longform">
+                        <h3 class="slds-text-heading_medium">Orders</h3>
+                        <p>Content for Orders Tab</p>
+                    </div>
+                </div>
+
+                <!-- Content for Quotations Tab -->
+                <div class="slds-vertical-tabs__content slds-hide" id="quotations-tab" role="tabpanel" aria-labelledby="quotations-tab-nav">
+                    <div class="slds-text-longform">
+                        <h3 class="slds-text-heading_medium">Quotations</h3>
+                        <p>Content for Quotations Tab</p>
+                    </div>
+                </div>
+
+                <!-- Content for Invoices Tab -->
+                <div class="slds-vertical-tabs__content slds-hide" id="invoices-tab" role="tabpanel" aria-labelledby="invoices-tab-nav">
+                    <div class="slds-text-longform">
+                        <h3 class="slds-text-heading_medium">Invoices</h3>
+                        <p>Content for Invoices Tab</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>

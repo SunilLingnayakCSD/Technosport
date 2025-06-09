@@ -56,7 +56,7 @@ public class OdooIntegrationTest {
             IsActive = true
         );
         insert customPricebookEntry;
-Account acc=new Account(Name='Test',External_Id__c='21233');
+Account acc=new Account(Name='Test',External_Id__c='21233',BillingPostalCode='273747',BillingCity='xys',BillingStreet='Karnataka');
 		insert acc;        
 
         // Create Quote with a reference to the custom Pricebook
@@ -105,7 +105,7 @@ Account acc=new Account(Name='Test',External_Id__c='21233');
         // Prepare mock data for Quote and Quote Line Items
         Product2 testProduct = new Product2(Name = 'Test Product for Send', ProductCode = 'TEST123');
         insert testProduct;
-		Account acc=new Account(Name='Test',External_Id__c='21233');
+		Account acc=new Account(Name='Test',External_Id__c='21233',BillingPostalCode='273747',BillingCity='xys',BillingStreet='Karnataka');
 		insert acc;        
         // Create Standard Pricebook (if not already present)
         Id standardPricebookId = Test.getStandardPricebookId();

@@ -1,0 +1,20 @@
+.file-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.file-link {
+    margin-left: 10px;
+    color: #0f52ba;
+    text-decoration: none;
+}
+
+.file-link:hover {
+    color: #003366;
+}

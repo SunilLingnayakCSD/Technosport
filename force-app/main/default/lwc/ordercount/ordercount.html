@@ -1,0 +1,70 @@
+<template>
+    <div class="slds-m-around_medium responsive-table-container">
+        <h1 class="slds-text-heading_large slds-m-bottom_medium">Reserved Bundle</h1>
+        <div class="slds-p-horizontal_medium">
+            <lightning-input 
+                type="search" 
+                label="Search" 
+                placeholder="Type to search..." 
+                value={searchKey}
+                onchange={handleSearch}>
+            </lightning-input>
+        </div>
+        <div class="mobile-scroll-wrapper alldata">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_responsive">
+                 <thead>
+                    <tr class="slds-line-height_reset compact-header">
+                        <th class="order-number-col"><h2 class="header-bold">Order Date</h2></th>
+                        <th class="order-number-col"><h2 class="header-bold">Order Number</h2></th>
+                          <th class="order-number-col"><h2 class="header-bold">Pending Age</h2></th>
+                        <th class="order-products-col"><h2 class="header-bold">Order Products</h2></th>
+                        <th class="bundles-col"><h2 class="header-bold">Reserved Bundles</h2></th>
+                        <!-- <th class="invoice-count-col"><h2 class="header-bold">Invoice Count</h2></th> -->
+                        <th class="dispatch-count-col"><h2 class="header-bold">Dispatch No of Bundles</h2></th>
+                        <th class="dispatch-action-col"><h2 class="header-bold">Action</h2></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={orderData} for:item="order">
+                        <tr key={order.orderNumber} class={order.orderclass} >
+                            <td data-label="Order Date" class="order-number-col">
+                                <div class="mobile-value">{order.orderdate}</div>
+                            </td>
+                            <td data-label="Order Number" class="order-number-col">
+                                <div class="mobile-value">{order.orderNumber}</div>
+                            </td>
+                            <td data-label="Order Age" class="order-number-col"><div class="mobile-value">{order.orderAge}</div></td>
+                            <td data-label="Order Products" class="order-products-col" style="text-wrap: auto;">
+                                {order.productNamesHtml}
+                            </td>
+                            <td data-label="Reserved Bundles" class="bundles-col mobile-value">{order.totalQuantity}</td>
+                            <!-- <td data-label="Invoice Count" class="invoice-count-col mobile-value">{order.invoiceCount}</td> -->
+                            <td data-label="Dispatch Count" class="dispatch-count-col">
+                                <lightning-input 
+                                    class="dispatch-input"
+                                    type="number"
+                                    value={order.dispatchCount}
+                                    style="color: black;"
+                                    data-id={order.orderId}
+                                    data-bundle={order.totalQuantity}
+                                    data-field="dispatchCount"
+                                    onchange={handleInputChange}
+                                    placeholder="Enter">
+                                </lightning-input>
+                            </td>
+                            <td data-label="" class="dispatch-action-col">
+                                <lightning-button 
+                                    label="Dispatch"
+                                    variant="brand"
+                                    class="mobile-button"
+                                    data-id={order.orderId}
+                                    onclick={handleDispatch}>
+                                </lightning-button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>

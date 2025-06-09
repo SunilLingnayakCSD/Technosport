@@ -1,76 +1,181 @@
 <template>
-        <div class="main">
-                        
-                        <img src={BackIcon}  onclick={goBackToParent} style="color:red;height:30px;width:30px;"/>
-                        <div class="sub">
-                            <div class="div2"><h1 style="font-size: 16px; font-weight: 500; color:white;">Image</h1></div>
-                            <div class="div3"><h1 style="font-size: 16px; font-weight: 500; color:white;">Product Name</h1></div>
-                            
-                            <div class="div4"><h1 style="font-size: 16px; font-weight: 500; color:white;">MRP</h1></div>
-                            <div class="div2"><h1 style="font-size: 16px; font-weight: 500; color:white;">No of Boxes/Pieces In Bundle</h1></div>
-                            <div class="div5"><h1 style="font-size: 16px; font-weight: 500; color:white;">Sizes</h1></div>
-                            <div class="div6"><h1 style="font-size: 16px; font-weight: 500; color:white;">Bundle Quantity</h1></div>
-                            <div class="div6"><h1 style="font-size: 16px; font-weight: 500; color:white;">Delete</h1></div>
-                        </div>
-                
-                        <template for:each={selectedProducts} for:item="item">
-                            <div key={item.Id} class="sub">
-                                <div class="div2"><img src={item.imageUrl} alt="Product Image" /></div>
-                                <div class="div3">{item.name}</div>
-                               
-                                <div class="div4">{item.price}</div>
-                                <div class="div2">{item.boxes}</div>
-                                
-                                <div class="div5">
-                                    <div class="accordion-container;">
-                                        <button class="accordion">Selected Sizes<img src={DownArrow} height="20px" width="20px"/></button>
-                                <div class="panel">
-                                    <table class="size-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Size</th>
-                                                <th>Quantity</th>
-                                                <th>Color</th>
+    <div class="main">
+        <img src={BackIcon} onclick={goBackToParent} style="color:red;height:30px;width:30px;" />
+        <div class="sub">
+            <div class="div2">
+                <h1 style="font-size: 16px; font-weight: 500; color:white;">Image</h1>
+            </div>
+            <div class="div3">
+                <h1 style="font-size: 16px; font-weight: 500; color:white;">Product Name</h1>
+            </div>
+
+            <div class="div4">
+                <h1 style="font-size: 16px; font-weight: 500; color:white;">MRP</h1>
+            </div>
+            <div class="div2">
+                <h1 style="font-size: 16px; font-weight: 500; color:white;">No of Boxes/Pieces In Bundle</h1>
+            </div>
+            <div class="div5">
+                <h1 style="font-size: 16px; font-weight: 500; color:white;">Sizes</h1>
+            </div>
+            <div class="div6">
+                <h1 style="font-size: 16px; font-weight: 500; color:white;">Bundle Quantity</h1>
+            </div>
+            <div class="div6">
+                <h1 style="font-size: 16px; font-weight: 500; color:white;">Delete</h1>
+            </div>
+        </div>
+
+        <template for:each={selectedProducts} for:item="item">
+            <div key={item.Id} class="sub">
+                <div class="div2"><img src={item.imageUrl} alt="Product Image" /></div>
+                <div class="div3">{item.name}</div>
+
+                <div class="div4">{item.price}</div>
+                <div class="div2">{item.boxes}</div>
+
+                <div class="div5">
+                    <div class="accordion-container;">
+                        <button class="accordion">Selected Sizes<img src={DownArrow} height="20px"
+                                width="20px" /></button>
+                        <div class="panel">
+                            <table class="size-table">
+                                <thead>
+                                    <tr>
+                                        <th>Size</th>
+                                        <th>Quantity</th>
+                                        <th>Color</th>
+                                        <th>isUpcoming varient</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template if:true={item.sizes}>
+                                        <template for:each={item.sizes} for:item="sizeData">
+                                            <tr key={sizeData.Id}>
+                                                <td>{sizeData.Size__c}</td>
+                                                <td>{sizeData.Quantity__c}</td>
+                                                <td>{sizeData.Color__c}</td>
+                                                <td>{sizeData.statusLabel}</td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            <template if:true={item.sizes}>
-                                            <template for:each={item.sizes} for:item="sizeData">
-                                                <tr key={sizeData.Id}>
-                                                    <td>{sizeData.Size__c}</td>
-                                                    <td>{sizeData.Quantity__c}</td>
+                                        </template>
+                                    </template>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="div6">
+                    <input type="number" value={item.quantity} data-id={item.cartId} placeholder=""
+                        onchange={handleBundleQuantitychange} />
+
+                </div>
+                <div class="div6">
+                    <lightning-icon icon-name="utility:delete" size="small" style="cursor: pointer;"
+                        onclick={handleDeleteRow} width="16px" height="16px" data-id={item.cartId}
+                        data-key={item.key}></lightning-icon>
+                </div>
+            </div>
+        </template>
+
+        <div class="btndiv">
+            <button class="btn" onclick={handleSave}>Create Order</button>
+        </div>
+    </div>
+    <div class="mblcontainer">
+        <!-- Back Icon -->
+        <img src={BackIcon} onclick={goBackToParent} style="cursor: pointer; height: 30px; width: 30px; color: red;" />
+        <div class="cart-container">
+            <template for:each={selectedProducts} for:item="item">
+                <div key={item.id} class="cart-item">
+
+                    <div class="item-image">
+                        <div class="imgage">
+                            <img src={item.imageUrl} alt="Product Image" />
+                        </div>
+                        <div class="pricing">
+                            <div class="item-name">{item.name}</div>
+                            <div class="item-price">Retailer Price - <b>{item.price}</b></div>
+                            
+                        </div>
+                        
+                    </div>
+                    <div>
+                        <div class="accordion-container;">
+                            <button class="accordion">Selected Sizes
+                                <img src={DownArrow} class="down" style="margin-left: 60px;" />
+                            </button>
+                            <div class="panel">
+                                <!-- <table class="size-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Size</th>
+                                            <th>Quantity</th>
+                                            <th>Color</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody> -->
+                                <template if:true={item.sizes}>
+                                    <template for:each={item.sizes} for:item="sizeData">
+                                        <div key={sizeData.Id} class="maincart">
+                                            <div class="size">
+                                                {sizeData.Size__c}
+                                            </div>
+                                            <div class="qty">
+                                                <div class="in">
+                                                    <div class="incre"></div>
+                                                    <div class="sizeQty">{sizeData.Quantity__c}</div>
+                                                    <div class="decre"></div>
+                                                </div>
+                                            </div>
+                                            <div class="color">
+                                                {sizeData.Color__c}
+                                            </div>
+                                           
+                                        </div>
+                                        <!-- <tr key={sizeData.Id}>
+                                                    <td></td>
+                                                    <td><input type="number" value={sizeData.Quantity__c} class="size" data-id={sizeData.Id} data-cart={item.cartId} onchange={handleqtychange} />
+                                                    </td>
                                                     <td>{sizeData.Color__c}</td>
-                                                </tr>
-                                            </template>
-                                            </template>
-                                            
-                                        </tbody>
-                                    </table>
-                               
+
+                                                </tr> -->
+                                    </template>
+                                </template>
+
+                                <!-- </tbody>
+                                </table> -->
+
                             </div>
-                                </div>
-                                </div>
-                                <div class="div6">
-                                    <input 
-                                        type="number"
-                                        value={item.quantity} 
-                                        data-id={item.cartId} 
-                                        
-                                        placeholder=""
-                                        onchange={handleBundleQuantitychange}
-                                    />
-                                  
-                                </div>
-                                <div class="div6">
-                                    <lightning-icon icon-name="utility:delete" size="small" style="cursor: pointer;" onclick={handleDeleteRow} width="16px" height="16px" data-id={item.cartId} data-key={item.key}></lightning-icon>
-                                </div>
-                            </div>
-                        </template>
-                
-                        <div class="btndiv">
-                            <button class="btn" onclick={handleSave}>Create Order</button>
                         </div>
                     </div>
 
-                  
-                </template>
+                    <div class="item-quantity">
+                        <div class="bdlqty">
+                            <label>Bundle Quantity</label>
+                            <input type="number" value={item.quantity} data-id={item.cartId} placeholder=""
+                            onchange={handleBundleQuantitychange} />
+    
+                        </div>
+                        <div class="item-delete">
+                            <button onclick={handleDeleteRow} data-id={item.cartId} data-key={item.key}
+                                class="remove">Remove</button>
+
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <div class="btndiv">
+
+            <div style="width: 100%;">
+                <!-- <div class="cbtn">Total Amount - Rs: {totalAmount}</div> -->
+                <button class="btn" onclick={handleSave}>Create Order</button>
+            </div>
+        </div>
+
+    </div>
+
+
+</template>

@@ -1,0 +1,108 @@
+<template>
+    <lightning-card title="Retailer Loyalty Program3">
+        <div style="display:flex;">
+            <div>
+            <lightning-input
+                type="search"
+                label="Search Retailer"
+                placeholder="Type retailer name..."
+                onchange={handleRetailerSearch}
+                style="margin-left:18px;">
+            </lightning-input>
+            </div>
+            <div style="padding:0px 10px; width:10%">
+             <lightning-combobox
+                name="yearFilter"
+                label="Select Year"
+                placeholder="Select Year"
+                options={yearOptions}
+                value={yearInputField}
+                onchange={handleYearChange}
+                filterable>
+            </lightning-combobox>
+            </div>
+        </div>
+
+        <div class="slds-p-around_medium">
+            <!-- Tier Filter -->
+            <lightning-combobox
+                name="tierFilter"
+                label="Select Tier"
+                value={selectedTier}
+                placeholder="Select Tier"
+                options={tierOptions}
+                onchange={handleTierChange}>
+            </lightning-combobox>
+
+            <!-- Quarter Filter -->
+            <lightning-combobox
+                name="quarterFilter"
+                label="Select Quarter"
+                value={selectedQuarter}
+                placeholder="Select Quarter"
+                options={quarterOptions}
+                onchange={handleQuarterChange}>
+            </lightning-combobox>
+        </div>
+
+        <!-- Data Table -->
+        <template if:true={tableData}>
+<div style="height: 400px; overflow-y: auto;">
+            <lightning-datatable
+                key-field="id"
+                data={filteredTableData}
+                columns={columns}
+                draft-values={draftValues}
+                onsave={handleSave}
+                oncellchange={handleCellChange}
+                hide-checkbox-column
+                show-row-number-column>
+            </lightning-datatable>
+</div>
+        </template>
+  
+  
+
+        <template if:true={ismodalopen}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+                class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container modelMainContainer">
+                    <!-- <button class="slds-button slds-button_icon slds-modal__close" onclick={closeModal}>
+        <lightning-icon icon-name='utility:close' alternative-text='close' variant='error' size='small'
+                                title='close'></lightning-icon>
+        <span class="slds-assistive-text">Cancel and close</span>
+        </button> -->
+                    <div class="slds-modal__header">
+                        <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate" tabindex="-1">Loyality Program
+                        </h1>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div class="containerModal center-content">
+                             <lightning-input 
+                                type="text" 
+                                label="Enter details" 
+                                value={modalInputValue} 
+                                onchange={handleInputFieldChange}
+                                required>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral add custbtn" onclick={submit}>Submit</button>
+                        </div>
+                </div>
+            </div>
+            </section>
+        </template>
+        <div class="slds-grid slds-grid_align-end slds-m-top_medium">
+        <lightning-button
+            label="Export to Excel"
+            title="Export current table to Excel"
+            onclick={exportToExcel}
+            class="slds-m-left_medium">
+        </lightning-button>
+    </div>
+    </lightning-card>
+        
+    
+
+</template>

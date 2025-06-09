@@ -13,7 +13,8 @@ import userId from '@salesforce/user/Id'
 import deleteFromCart from '@salesforce/apex/CartController.deleteFromCart'
 import insertCarts from '@salesforce/apex/CartController.insertCarts'
 import getAllCartItems from '@salesforce/apex/CartController.getAllCartItems'
-import getInvoicesForLoggedInUser from '@salesforce/apex/InvoiceControllerForPortal.getInvoicesForLoggedInUser';
+import getInvoicesForLoggedInUserdue from '@salesforce/apex/InvoiceControllerForPortal.getInvoicesForLoggedInUserdue';
+import LightningAlert from 'lightning/alert';
 
 
 import DownArrow from '@salesforce/resourceUrl/DownArrow';
@@ -37,7 +38,14 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
         { label: 'Yes', value: 'Yes' },
         { label: 'No', value: 'No' },
     ];
-
+    connectedCallback() {
+        this.fetchInvoices();
+        this.fetchRecentProducts()
+        this.getAllcartDetailsFromAccount()
+        this.getAccountsForLoggedInUsermethod();
+        
+        
+    }
     @track accountDetails
     @track threshholdAmount;
     @track totalResidualAmount
@@ -53,8 +61,16 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
             let number = this.threshholddays.match(/\d+/);
              this.dayss=number !=null?number[0]:0
             console.log('===================days=================');
-            console.log(this.dayss);
+            console.log(this.dayss,this.threshholdAmount, this.totalResidualAmount);
             console.log('====================================');
+            if (this.totalResidualAmount>=this.threshholdAmount &&this.getDueDate() > this.getDatePlus15Days()){
+                LightningAlert.open({
+                    message: 'Your invoice is overdue. Please make the payment.',
+                    theme: 'warning', // Possible values: 'info', 'success', 'error', 'warning'
+                    label: 'Overdue Invoice'
+                   
+                });
+            }
         }).catch(error => {
             console.log(error);
 
@@ -96,7 +112,7 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
         }
         else if(this.threshholdAmount >= this.totalResidualAmount){
            return true;
-       }else if(this.getDueDate() < this.getDatePlus15Days()){
+       }else if(this.getDueDate() > this.getDatePlus15Days()){
            return true
        }
           return false
@@ -105,13 +121,23 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
     @track duedateForLastInvoice
 
     fetchInvoices() {
-        getInvoicesForLoggedInUser()
+        getInvoicesForLoggedInUserdue()
             .then((data) => {
                 if (data && data.length > 0) {
+                    console.log('=============invoice method=======================');
+                    console.log(data);
+                    console.log('====================================');
                     this.duedateForLastInvoice = data[0]?.Due_Date__c || null;
                     console.log('==============duedateForLastInvoice======================');
                     console.log(this.duedateForLastInvoice);
                     console.log('====================================');
+                    console.log('================this.threshholdAmount ====================');
+                    console.log(this.threshholdAmount );
+                    console.log('====================================');
+                    console.log('=============this.totalResidualAmount=======================');
+                    console.log(this.totalResidualAmount);
+                    console.log('====================================');
+                   
                     this.error = undefined;
                 } else {
                     console.warn('No invoices returned');
@@ -125,12 +151,7 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
                 console.error('Error fetching invoices:', JSON.stringify(error));
             });
     }
-    connectedCallback() {
-        this.fetchInvoices();
-        this.fetchRecentProducts()
-        this.getAllcartDetailsFromAccount()
-        this.getAccountsForLoggedInUsermethod()
-    }
+  
     getAllcartDetailsFromAccount() {
         getAllCartItems({ recordId: this.userid }).then(result => {
             this.selectedProductsVarient = result.map(item => {
@@ -144,7 +165,12 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
                     quantity: item.Bundle_Quantity__c != null ? item.Bundle_Quantity__c : 0,
                     type: item.Product_type__c != null ? item.Product_type__c : '',
                     total: item.Total__c != null ? item.Total__c : 0,
-                    sizes: item.Cart_Items__r != null ? item.Cart_Items__r : []
+                    sizes: item.Cart_Items__r != null ? item.Cart_Items__r.map(size => ({
+                        ...size,
+                        statusLabel: size.isUpcomingVarient__c ? 'Upcoming' : 'Current'
+                    })) : [], 
+                    isFutureProduct: item.isFutureProduct__c,
+                    isFutureQuoShouuldteCreate: item.isFutureQuoShouuldteCreate__c
                 }
             })
             console.log('===========defaultcart=========================');
@@ -374,7 +400,9 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
                     boxes: productBoxes,
                     quantity: Number(quantity),
                     pricebookEntryId: pricebookEntryId,
-                    type: 'Catalogue'
+                    type: 'Catalogue',
+                    isFutureProduct: false,
+                isFutureQuoShouuldteCreate: false
 
                 };
 
@@ -394,7 +422,7 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
 
                         if (quantityForVariant > 0) {
                             total += quantityForVariant;
-                            variant.sizes[size][varId] = { quantity: quantityForVariant, color: '' };
+                            variant.sizes[size][varId] = { quantity: quantityForVariant, color: '',isUpcomingVariant: false };
                             variant.quantity = Number(quantity)
                             variant.total = total
                             console.log('==============total======================');
@@ -436,6 +464,11 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
                                     variant: 'success',
                                 })
                             );
+                            const recivedres=result != null ? result.sizes.map(size => ({
+                                ...size,
+                                statusLabel: size.isUpcomingVarient__c ? 'Upcoming' : 'Current'
+                            })) : []
+                            result.sizes=recivedres;
                             this.selectedProductsVarient.push(result)
                             console.log('===============this.cartlength=====================');
                             console.log(this.cartlength);
@@ -528,7 +561,25 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
                         ? product.PricebookEntries[0].Id
                         : '';
                     const productBoxes = product.Boxes__c !== null ? product.Boxes__c : 0
-                    const varients = product.Products1__r && product.Products1__r.length > 0 ? product.Products1__r : []
+                    const availabledate = product.Next_Available_Date__c
+                    let varients = product.Products1__r && product.Products1__r.length > 0 ? product.Products1__r : []
+                    varients = varients.map((item) => {
+                        let invfreeqty = 0;
+                        if (item.Inventories__r && item.Inventories__r.length > 0) {
+                            invfreeqty = item.Inventories__r[0].Free_Quantity__c >= 50 
+                                ? 50 
+                                : item.Inventories__r[0].Free_Quantity__c;
+                        }
+                    
+                        return {
+                            ...item,
+                            freeqty: invfreeqty
+                        };
+                    });
+                    const baseUrl = window.location.origin;
+                    const pdfurl=product.pdfUrls !=null?product.pdfUrls[0] :null;
+                    console.log('pdfurl',pdfurl);
+                    
                     return {
                         Id: product.Id,
                         Name: product.Name,
@@ -543,7 +594,10 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
                         interested: null,
                         varients: varients,
                         total: 0,
-                        noofpieces: product.Number_of_pieces_in_Box__c
+                        noofpieces: product.Number_of_pieces_in_Box__c,
+                        availabledate: availabledate,
+                        isFutureProduct: false,
+                        pdfurl:String(baseUrl+pdfurl)
                     };
                 });
                 console.log('============insisdeeeeeeeeeeeeee========================');

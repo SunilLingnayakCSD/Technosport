@@ -1,0 +1,67 @@
+<template>
+    <lightning-card title="Bulk Order Tracking" icon-name="custom:custom63">
+        <div class="order-list">
+            <template for:each={orders} for:item="order">
+                <div key={order.orderId} class="order-card">
+                    <!-- Order Number in Light Blue Section -->
+                    <div class="order-card-header">
+                        <div class="order-number">#{order.orderNumber}</div>
+                    </div>
+
+     <!-- Order Status Path -->
+                    <div class="status-path-container">
+                        <!-- Grey & Blue Line connecting statuses -->
+                        <div class="status-line">
+                            <template for:each={order.statusPath} for:item="stage">
+                                <div key={stage.name} class="status-line-segment {stage.isActive ? 'status-line-active' : ''}"></div>
+                            </template>
+                        </div>
+ <!-- Status Icons with Labels -->
+         <div class="status-path">
+                            <template for:each={order.statusPath} for:item="stage">
+                                <div key={stage.name} class="status-stage">
+                                    <!-- Status Icon Container with Conditional Color -->
+                                    <div class="status-icon-container" style={stage.statusColor}>
+                                        <img src={stage.icon} alt={stage.name} class="status-icon" />
+                                    </div>
+                                    <span>{stage.name}</span>
+                                </div>
+                            </template>
+                        </div>
+
+
+  <!-- Order Status Display -->
+                    <div class="order-status">
+                       Status: <strong>{order.formattedStatus}</strong>
+                    </div>
+
+               
+                    <!-- Product and Quantity Table -->
+                  <table class="order-items">
+    <thead>
+        <tr class="item-header">
+            <th class="item-product">Product</th>
+            <th class="item-quantity">Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        <template for:each={order.orderItems} for:item="item">
+            <tr key={item.itemName} class="order-item">
+                <td class="item-name">{item.itemName}</td>
+                <td class="item-quantity">{item.quantity}</td>
+            </tr>
+        </template>
+    </tbody>
+</table>
+
+
+                  
+
+                      
+                  
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

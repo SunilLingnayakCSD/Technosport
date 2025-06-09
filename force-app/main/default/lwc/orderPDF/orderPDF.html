@@ -1,0 +1,24 @@
+<template>
+    <lightning-card variant="narrow">
+        <template if:true={isLoading}>
+            <div class="slds-p-around_medium slds-text-align_center">
+                <lightning-spinner alternative-text="Generating PDF..." size="medium"></lightning-spinner>
+                <p>Generating your Order PDF, please wait...</p>
+            </div>
+        </template>
+
+        <template if:true={isSuccess}>
+            <div class="slds-p-around_medium slds-text-align_center slds-text-color_success">
+                <lightning-icon icon-name="utility:success" size="large"></lightning-icon>
+                <p>PDF generated and attached successfully!</p>
+            </div>
+        </template>
+
+        <template if:true={errorMsg}>
+            <div class="slds-p-around_medium slds-text-align_center slds-text-color_error">
+                <lightning-icon icon-name="utility:error" size="large"></lightning-icon>
+                <p>{errorMsg}</p>
+            </div>
+        </template>
+    </lightning-card>
+</template>

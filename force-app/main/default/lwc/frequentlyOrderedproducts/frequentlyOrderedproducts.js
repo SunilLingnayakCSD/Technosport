@@ -8,7 +8,7 @@ export default class FrequentlyOrderedProducts extends LightningElement {
     @wire(getFrequentlyOrderedProducts)
     wiredProducts({ error, data }) {
         if (data) {
-            // console.log('Product Image URL:', data[0].productImageUrl);
+             console.log('Product Image URL:', data[0].productImageUrl);
             this.orderedProducts = data;
             console.log('this.orderedProducts'+ JSON.stringify(this.orderedProducts,null,2));
         } else if (error) {

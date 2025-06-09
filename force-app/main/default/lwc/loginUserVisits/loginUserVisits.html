@@ -1,0 +1,46 @@
+<template>
+    <lightning-card title="Visits" icon-name="standard:event">
+        <div class="slds-m-around_medium">
+            <lightning-button-group>
+                <lightning-button 
+                    label="Daily View" 
+                    onclick={showDailyView} 
+                    variant={dailyButtonVariant}>
+                </lightning-button>
+                <lightning-button 
+                    label="Weekly View" 
+                    onclick={showWeeklyView} 
+                    variant={weeklyButtonVariant}>
+                </lightning-button>
+            </lightning-button-group>
+
+            <template if:false={dailySelected}>
+                <lightning-input type="date" label="From" value={fromDate} onchange={handleFromChange}></lightning-input>
+                <lightning-input type="date" label="To" value={toDate} onchange={handleToChange}></lightning-input><br>
+                <lightning-button label="Search" onclick={loadVisits} class="slds-m-top_small"></lightning-button>
+            </template>
+
+            <template if:true={visits.length}>
+                <ul class="slds-m-top_medium">
+                    <template for:each={visits} for:item="visit">
+                        <li key={visit.Id} class="slds-box slds-m-bottom_small slds-p-around_small" 
+                            onclick={navigateToRecord} data-id={visit.Id} style="cursor:pointer;">
+                            <div style="display:flex;">
+                                <div style="width: 10%;"><lightning-icon icon-name="standard:event" alternative-text="Event" size="small" class="icon"></lightning-icon></div>
+                                <div style="width: 90%;">
+                                    <p><strong>{visit.Account.Name}</strong></p>
+                            <p>Start Date: {visit.formattedVisitDate}</p>
+                            <!-- <p>Account: {visit.Account.Name}</p> -->
+                                </div>
+                            </div>
+                            
+                        </li>
+                    </template>
+                </ul>
+            </template>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading..."></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>

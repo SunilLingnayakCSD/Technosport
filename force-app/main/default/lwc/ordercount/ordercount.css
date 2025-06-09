@@ -1,0 +1,222 @@
+/* Desktop Styles */
+.slds-table {
+    width: 100%;
+    margin-top: 0.5rem;
+    table-layout: fixed;
+    border-collapse: collapse;
+    color: #ffff;
+}
+
+.compact-header th {
+    background-color: #f3f2f2;
+    padding: 12px 8px;
+    border: 1px solid #dddbda;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+}
+.highlight-background {
+    background-color: green;
+}
+.highlightyellow-background{
+    background-color: yellow;
+    color: black;
+}
+.highlightred-background{
+    background-color: red;
+}
+.alldata{
+    max-height: 600px;
+    overflow-y: scroll;
+}
+
+
+td {
+    padding: 12px 8px;
+    border: 1px solid #dddbda;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.product-names {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.dispatch-input{
+    margin-bottom: 16px;
+}
+
+
+/* Mobile Responsive Styles with Scroll */
+@media (max-width: 768px) {
+    /* .responsive-table-container {
+        position: relative;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #dddbda;
+        border-radius: 4px;
+    }
+
+    .mobile-scroll-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0 0.5rem;
+    }
+
+    .slds-table_responsive {
+        min-width: 600px; 
+        margin: 0;
+        border: none;
+    }
+
+    .slds-table_responsive thead {
+        display: none;
+    }
+
+    .slds-table_responsive tr {
+        display: table;
+        width: 100%;
+        border: 1px solid #dddbda;
+        margin-bottom: 1rem;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .slds-table_responsive td {
+        display: table-cell;
+        padding: 10px;
+        border-bottom: 1px solid #dddbda;
+        vertical-align: middle;
+        font-size: 13px;
+    }
+
+    .slds-table_responsive td:before {
+        content: attr(data-label);
+        display: none;
+    }
+
+    .order-number-col {
+        min-width: 100px;
+    }
+    
+    .order-products-col {
+        min-width: 150px;
+        max-width: 150px;
+        word-break: break-word;
+    }
+
+    .bundles-col, .invoice-count-col {
+        min-width: 80px;
+    }
+
+    .dispatch-count-col {
+        min-width: 120px;
+    }
+
+    .dispatch-action-col {
+        min-width: 100px;
+    }
+
+    .dispatch-input {
+        width: 100% !important;
+        min-width: 80px;
+    }
+    .mobile-button {
+        width: 100%;
+        padding: 0 8px;
+    }
+
+    .mobile-scroll-wrapper::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .mobile-scroll-wrapper::-webkit-scrollbar-thumb {
+        background: #dddbda;
+        border-radius: 4px;
+    }
+
+    .mobile-scroll-wrapper::-webkit-scrollbar-track {
+        background: #f3f2f2;
+    }
+    .pagination-container {
+        flex-wrap: wrap;
+        padding: 0.5rem;
+    }
+    
+    .slds-button-group {
+        margin-bottom: 0.5rem;
+    } */
+    /* .header-bold {
+        margin: 0;
+        padding: 0;
+    }*/
+
+
+
+
+    /* card mobile view  */
+
+    /* .slds-table {
+        border: 0;
+    }
+
+    .slds-table thead {
+        display: none;
+    }
+
+    .slds-table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dddbda;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        padding: 10px;
+    }
+
+    .slds-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 10px;
+        border: none;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+    }
+
+    .slds-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        flex-basis: 40%;
+        color: #444;
+    }
+
+    .slds-table td:last-child {
+        border-bottom: none;
+    }
+
+    .product-names {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    } */
+
+
+    .mobile-scroll-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .slds-table {
+        min-width: 700px; /* Adjust based on total column width */
+    }
+
+    .mobile-scroll-wrapper::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .mobile-scroll-wrapper::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 3px;
+    }
+}

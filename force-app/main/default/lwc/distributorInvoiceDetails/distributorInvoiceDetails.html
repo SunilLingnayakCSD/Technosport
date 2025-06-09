@@ -1,125 +1,9 @@
-<!-- <template>
-    <lightning-card title="Invoices" icon-name="custom:custom63">
-        <template if:true={invoices}>
-            <lightning-datatable 
-                data={invoices} 
-                columns={columns} 
-                 key-field="id" 
-                hide-checkbox-column="true">
-            </lightning-datatable>
-        </template>
-
-        <template if:true={error}>
-            <p class="slds-text-color_error">Error fetching invoices: {error}</p>
-        </template>
-    </lightning-card>
-</template> -->
-
-
-
-<!-- <template>
-    <lightning-card title="Invoices" icon-name="custom:custom63">
-        <template if:true={invoices}>
-            <div class="invoice-table-container">
-                 <div class="slds-scrollable_y" >
-                 <div class="slds-scrollable--x">
-                <lightning-datatable 
-                    data={invoices} 
-                    columns={columns} 
-                    key-field="id" 
-                    hide-checkbox-column="true">
-                </lightning-datatable>
-                 </div>
-                 </div>
-            </div>
-        </template>
-
-        <template if:true={error}>
-            <p class="slds-text-color_error">Error fetching invoices: {error}</p>
-        </template>
-    </lightning-card>
-</template> -->
-
-
-<!-- <template>
-    <lightning-card title="Invoices" icon-name="custom:custom63">
-        <template if:true={invoices}>
-            <div class="slds-table--header-fixed_container" style="height:150px;">
-                <div class="slds-scrollable_y" style="height:250%;">
-                    <lightning-datatable 
-                        data={invoices} 
-                        columns={columns} 
-                        key-field="id" 
-                        hide-checkbox-column="true">
-                    </lightning-datatable>
-                </div>
-            </div>
-        </template>
-        <template if:true={error}>
-            <p class="slds-text-color_error">Error fetching invoices: {error}</p>
-        </template>
-    </lightning-card>
-</template> -->
-
-
-<!-- <template>
-    <lightning-card title="Invoices" icon-name="custom:custom63">
-        <template if:true={invoices}>
-            <div class="slds-p-around_medium">
-                <p><strong>Total Invoices: </strong>{invoiceCount}</p>
-            </div>
-            <div class="slds-table--header-fixed_container" style="height:150px;">
-                <div class="slds-scrollable_y" style="height:100%;">
-                    <lightning-datatable 
-                        data={invoices} 
-                        columns={columns} 
-                        key-field="id" 
-                        hide-checkbox-column="true">
-                    </lightning-datatable>
-                </div>
-            </div>
-        </template>
-
-        <template if:true={error}>
-            <p class="slds-text-color_error">Error fetching invoices: {error}</p>
-        </template>
-    </lightning-card>
-</template> -->
-
-
-
-<!-- <template>
-    <lightning-card title="Invoices" icon-name="custom:custom63">
-        <template if:true={invoices}>
-            <div class="slds-p-around_medium">
-                <p><strong>Total Invoices: </strong>{invoiceCount}</p>
-            </div>
-            <div class="slds-table--header-fixed_container" style="height:250px;">
-                <div class="slds-scrollable_y" style="height:100%;">
-                    <div class="slds-scrollable_x">
-                        <lightning-datatable 
-                            data={invoices} 
-                            columns={columns} 
-                            key-field="id" 
-                            hide-checkbox-column="true">
-                        </lightning-datatable>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        <template if:true={error}>
-            <p class="slds-text-color_error">Error fetching invoices: {error}</p>
-        </template>
-    </lightning-card>
-</template> -->
-
 <template>
-    <lightning-card title="Invoices" icon-name="custom:custom63">
-        <template if:true={invoices}>
+    <lightning-card title="Partner Ledgers" icon-name="custom:custom63">
+        <template if:true={ledgers}>
             <!-- Display the invoice count -->
             <div class="slds-p-around_medium" style="margin-bottom: 0px;">
-                <p><strong>Total Invoices: </strong>{invoiceCount}</p>
+                <p><strong>Total Ledger Count: </strong>{invoiceCount}</p>
             </div>
 
             <!-- Scrollable Table Container with both vertical and horizontal scrolling -->
@@ -129,7 +13,7 @@
                     <!-- Horizontal scroll container -->
                     <div class="slds-scrollable_x">
                         <lightning-datatable 
-                            data={invoices} 
+                            data={ledgers} 
                             columns={columns} 
                             key-field="id" 
                             hide-checkbox-column="true">

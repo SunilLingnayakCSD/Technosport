@@ -1,0 +1,34 @@
+.custom-container{
+	color : black;
+}
+.btn{
+  margin: auto;
+  left: 100px;
+  padding: 10px;
+}
+.modelMainContainer{
+  max-width: 100%;
+  width: 90%;
+} 
+.slds-modal__container{
+   width: 60%;
+   max-width: 100%;
+   height: auto;
+}
+.center-content {
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    height: 70%; 
+    background-color: aliceblue;
+}
+lightning-input {
+   width: 200px;    
+}
+.slds-modal__content {
+    height: 300px;
+}
+.datatable-container {
+  max-height: 500px; /* or any height you want */
+  overflow-y: auto;
+}

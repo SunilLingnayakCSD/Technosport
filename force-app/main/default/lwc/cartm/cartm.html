@@ -1,0 +1,101 @@
+<template>
+    <div class="mblcontainer">
+        <!-- Back Icon -->
+        <img src={BackIcon} onclick={goBackToParent} style="cursor: pointer; height: 30px; width: 30px; color: red;" />
+
+        <lightning-combobox name="progress" label="Distributors" value={value} placeholder="Select Distributor"
+            options={distributoroptions} onchange={handleChange}></lightning-combobox>
+
+
+        <div class="cart-container">
+            <template for:each={selectedProducts} for:item="item">
+                <div key={item.id} class="cart-item">
+
+                    <div class="item-image">
+                        <div class="imgage">
+                            <img src={item.imageUrl} alt="Product Image" />
+                        </div>
+                        <div class="pricing">
+                            <div class="item-name">{item.name}</div>
+                            <div class="item-price">Retailer Price - <b>{item.price}</b></div>
+                            
+                        </div>
+                        
+                    </div>
+                    <div>
+                        <div class="accordion-container;">
+                            <button class="accordion">Selected Sizes
+                                <img src={DownArrow} class="down" style="margin-left: 60px;" />
+                            </button>
+                            <div class="panel">
+                                <!-- <table class="size-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Size</th>
+                                            <th>Quantity</th>
+                                            <th>Color</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody> -->
+                                <template if:true={item.sizes}>
+                                    <template for:each={item.sizes} for:item="sizeData">
+                                        <div key={sizeData.Id} class="maincart">
+                                            <div class="size">
+                                                {sizeData.Size__c}
+                                            </div>
+                                            <div class="qty">
+                                                <div class="in">
+                                                    <div class="incre" onclick={handleDecrement}
+                                                        data-id={sizeData.Id} data-cart={item.cartId}
+                                                        data-qty={sizeData.Quantity__c} data-type={item.type} data-box={item.noofpieces}>-</div>
+                                                    <div class="sizeQty">{sizeData.Quantity__c}</div>
+                                                    <div class="decre" onclick={handleIncrement}
+                                                        data-id={sizeData.Id} data-cart={item.cartId}
+                                                        data-qty={sizeData.Quantity__c} data-type={item.type} data-box={item.noofpieces}>+</div>
+                                                </div>
+                                            </div>
+                                            <div class="color">
+                                                {sizeData.Color__c}
+                                            </div>
+                                        </div>
+                                        <!-- <tr key={sizeData.Id}>
+                                                    <td></td>
+                                                    <td><input type="number" value={sizeData.Quantity__c} class="size" data-id={sizeData.Id} data-cart={item.cartId} onchange={handleqtychange} />
+                                                    </td>
+                                                    <td>{sizeData.Color__c}</td>
+
+                                                </tr> -->
+                                    </template>
+                                </template>
+
+                                <!-- </tbody>
+                                </table> -->
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item-quantity">
+                        <div class="bdlqty">
+                            <label>Sub Total:</label>
+                            <input type="number" value={item.retailerPrice} data-id={item.cartId} readonly />
+                        </div>
+                        <div class="item-delete">
+                            <button onclick={handleDeleteRow} data-id={item.cartId} data-key={item.key}
+                                class="remove">Remove</button>
+
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <div class="btndiv">
+
+            <div style="width: 100%;">
+                <div class="cbtn">Total Amount - Rs: {totalAmount}</div>
+                <button class="btn" onclick={handleSave}>Create Order</button>
+            </div>
+        </div>
+
+    </div>
+</template>

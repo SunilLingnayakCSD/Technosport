@@ -1,0 +1,67 @@
+<template>
+    <!-- Search Bar -->
+    <lightning-input 
+        label="Search by Product Name" 
+        value={searchTerm} 
+        type="search"
+        onchange={handleSearchChange} 
+        placeholder="Enter product name"
+        class="search-input">
+    </lightning-input>
+
+    <!-- Filter Section -->
+    <div class="filter-row">
+        <div class="filter-combobox">
+            <lightning-combobox
+                label="Section"
+                value={productCategory}
+                options={productCategoryOptions}
+                onchange={handleProductCategoryChange}
+                placeholder="Select Section">
+            </lightning-combobox>
+        </div>
+        <div class="filter-combobox">
+            <lightning-combobox
+                label="Product Category"
+                value={productCategory1}
+                options={productCategory1Options}
+                onchange={handleProductCategory1Change}
+                placeholder="Select Product Category">
+            </lightning-combobox>
+        </div>
+
+        <!-- Clear Filters Button -->
+        <button onclick={clearFilters} class="filter-actions">Clear Filter</button>
+    </div>
+
+    <!-- Responsive Table Wrapper -->
+    <div class="table-responsive">
+        <table class="inventory">
+            <tr>
+               
+                <th class="product-col">Product</th>
+                <th>Stock Level Indicator</th>
+                 <!-- <th>Stock Level</th> -->
+                <!-- Optional Columns
+                <th>Available Quantity</th>
+                <th>Free Quantity</th>
+                <th>Avg Cost</th>
+                -->
+            </tr>
+
+            <template for:each={records} for:item="record">
+                <tr key={record.Id}>
+                   
+                    <td class="product-col">{record.Product_Name__c}</td>
+                    <td><div class="cl" style={record.stockLevelStyle}></div></td>
+                    <!-- <td class="free-qty">{record.Free_Quantity__c}</td> -->
+                    <!-- Optional Columns
+                    <td>{record.Available_Quantity__c}</td>
+                    <td>{record.Free_Quantity__c}</td>
+                    <td>{record.Avg_Cost__c}</td>
+                    -->
+                </tr>
+            </template>
+        </table>
+    </div>
+</template>

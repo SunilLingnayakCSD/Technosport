@@ -33,10 +33,10 @@
                                 <div class="ic"> <lightning-icon icon-name='utility:contact' class="custom-icon"
                                         alternative-text='contact' size='small' title='contact'
                                         style="width: 40px; height: 40px;fill:#fff;"></lightning-icon></div>
-                                <div style="width: 70%;">Pronouns</div>
+                                <div class="pro">Pronouns</div>
                             </div>
                             <div class="value">
-                                He/Him
+                                He/She
                             </div>
                         </div>
                         <div class="detail">
@@ -44,7 +44,7 @@
                                 <div class="ic"> <lightning-icon icon-name='utility:email' class="custom-icon"
                                         alternative-text='email' size='small' title='email'
                                         style="width: 40px; height: 40px;fill:#fff;"></lightning-icon></div>
-                                <div style="width: 70%;">Email Address</div>
+                                <div  class="label">Email Address</div>
                             </div>
                             <div class="value">
                                 {userEmail}
@@ -55,7 +55,7 @@
                                 <div class="ic"> <lightning-icon icon-name='utility:phone_portrait' class="custom-icon"
                                         alternative-text='phone' size='small' title='phone'
                                         style="width: 40px; height: 40px;fill:#fff;"></lightning-icon></div>
-                                <div style="width: 70%;">Phone Number</div>
+                                <div class="label">Phone Number</div>
                             </div>
                             <div class="value">
                                 {userPhone}
@@ -66,7 +66,7 @@
                                 <div class="ic"> <lightning-icon icon-name='utility:checkin' class="custom-icon"
                                         alternative-text='checkin' size='small' title='address'
                                         style="width: 40px; height: 40px;fill:#fff;"></lightning-icon></div>
-                                <div style="width: 70%;">Address</div>
+                                <div class="label">Address</div>
                             </div>
                             <div class="value">
                                 {userStreet}<br>{userCity}<br>{userPostal}<br>{userState}<br>{userCountry}
@@ -80,7 +80,7 @@
                                 <div class="ic"> <lightning-icon icon-name='utility:date_time' class="custom-icon"
                                         alternative-text='date_time' size='small' title='date_time'
                                         style="width: 40px; height: 40px;fill:#fff;"></lightning-icon></div>
-                                <div style="width: 70%;">UserName</div>
+                                <div class="label">UserName</div>
                             </div>
                             <div class="value">
                                 {usernameofuser}
@@ -150,29 +150,13 @@
                     </div>
 
                     <button class="accordion">
-                        <div>Account Invoice Details <span style="float: right;"><img src={DownArrow} height="20px"
+                        <div>Partner Ledger Details <span style="float: right;"><img src={DownArrow} height="20px"
                                     width="20px" /></span></div>
                     </button>
                     <div class="panel">
                         <c-distributor-invoice-details></c-distributor-invoice-details>
 
-                        <!-- <div style="display: flex;justify-content:space-around; ">
-                            <div
-                                style="display: flex; justify-content:space-between;padding: 10px 20px;height: 70px;width: 250px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-                                <div class="value">Available Credits <br><span
-                                        style="color: green;"><b>Rs.{acc.account.Credit__c}</b></span></div>
-                            </div>
-                            <div
-                                style="display: flex; justify-content:space-between;padding: 10px 20px;height: 70px;width: 250px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-                                <div class="value">Available debits <br><span
-                                        style="color: red;"><b>Rs.{acc.account.Debit__c}</b></span></div>
-                            </div>
-                            <div
-                                style="display: flex; justify-content:space-between;padding: 10px 20px;height: 70px;width: 250px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-                                <div class="value">Outstanding Invoices <br><span
-                                        style="color: orange;"><b>Rs.{acc.account.residual_amount__c}</b></span></div>
-                            </div>
-                        </div> -->
+                       
                     </div>
                 </div>
                 <div class="CardDiv">
@@ -180,7 +164,7 @@
                         <img src={Salesperformance} height="30px;" width="30px;">
                         <div><b>Purchase Performance</b></div><br>
                         <div>
-                            <!-- <span>No of Leads Converted : <b>5</b></span><br> -->
+                            
                             <span>Total Sales Current Month: <b>{acc.totalSalesCurrentMonth}</b></span><br>
                             <span>Total Sales Last Month : <b>{acc.totalSalesLastMonth}</b></span>
                         </div>
@@ -211,9 +195,6 @@
 
 
 
-            <!--<template if:true={error}>
-                <p class="slds-text-color_error">Error fetching account details: {error}</p>
-            </template> -->
 
 
         </div>

@@ -1,0 +1,26 @@
+<template>
+    <lightning-card title="Create New Visit" icon-name="standard:event">
+        
+           <template if:false={isshow}>
+            <lightning-button 
+            style="margin:6px 12px"
+            label="New" 
+            onclick={showpopup} 
+            variant="brand">
+        </lightning-button>
+            <!-- <lightning-button onclick={showpopup} class="slds-button slds-button_brand">New Visit</lightning-button> -->
+           </template>
+      
+<template if:true={isshow}>
+    
+    <lightning-flow  if:true={isshow}
+    flow-api-name='Create_Visit'   
+>
+</lightning-flow>
+
+
+</template>
+</lightning-card>
+        
+      
+</template>

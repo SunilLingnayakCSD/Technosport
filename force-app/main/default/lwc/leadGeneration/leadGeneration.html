@@ -1,0 +1,65 @@
+<template>
+    <div class="background-container" style={backgroundStyle}>
+        <img src={leadSoc} class="logoplacer" alt="Lead Soc" height="50px" width="50px">
+
+        <div class="packagecontainer">
+            <div class="enquirynow">Please Fill the Form</div>
+            <div class="form">
+                <div class="saltitle"> Saluation</div>
+                <div class="form-fields">
+                    <!-- custom radio button  -->
+                    <div class="rdio" title="Saluation">
+                   
+                        <input id="option-one" name="Saluation" value="one" checked="checked" type="radio">
+                        <label for="option-one">
+                            <span></span>
+                            Mr.
+                        </label>
+ 
+                        <input id="option-two" name="Saluation" value="two" type="radio">
+                        <label for="option-two">
+                            <span></span>
+                            Ms.
+                        </label>
+ 
+                        <input id="option-three" name="Saluation" value="three" type="radio">
+                        <label for="option-three">
+                            <span></span>
+                            Mrs.
+                        </label>
+                    </div>
+ 
+ 
+                    <input type="text" name="firstName" placeholder="First Name" value={firstName}
+                        onchange={LeadChangeVal} class="form-input" />
+                    <input type="text" name="lastName" placeholder="Last Name" value={lastName} onchange={LeadChangeVal}
+                        class="form-input" />
+ 
+                    <input type="email" name="emailId" placeholder="Email" value={emailId} onchange={LeadChangeVal}
+                        class="form-input" />
+                    <input type="text" name="phoneNo" placeholder="Phone Number" value={phoneNo}
+                        onchange={LeadChangeVal} pattern="[0-9]{10}" title="Please enter a valid phone number"
+                        class="form-input" />
+                    <input type="text" name="company" placeholder="Company Name" value={company}
+                        onchange={LeadChangeVal} class="form-input" />
+                    <input type="number" name="Required Resource" placeholder="Required Resource" value={resource}
+                        onchange={LeadChangeVal} class="form-input" />
+
+                     <!-- <lightning-combobox name="BU" label="" value={unit} 
+                                options={optionArray} placeholder="Select Business Unit"
+                                onchange={LeadChangeVal}>
+            </lightning-combobox> -->
+
+                        
+                </div>
+ 
+            </div>
+            <div class="footer">
+                <button class="clippy_button" type="submit" onclick={insertLeadAction}>Submit</button>
+            </div>
+        </div>
+ 
+ 
+    </div>
+
+</template>

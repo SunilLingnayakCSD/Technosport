@@ -1,0 +1,19 @@
+<template>
+    <lightning-card title="Inventory Data" icon-name="standard:inventory">
+        <template if:true={inventoryData}>
+            <lightning-datatable
+                data={inventoryData}
+                columns={columns}
+                key-field="id"
+                onsort={handleSort}
+                sorted-direction={sortedDirection}
+                sorted-by={sortedBy}>
+            </lightning-datatable>
+        </template>
+        <template if:true={error}>
+            <div class="slds-text-color_error">
+                <p>Error retrieving data: {error}</p>
+            </div>
+        </template>
+    </lightning-card>
+</template>

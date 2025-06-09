@@ -1,0 +1,47 @@
+<template>
+    <div class="mblcontainer">
+        <!-- Back Icon -->
+        <img src={BackIcon} onclick={goBackToParent} style="cursor: pointer; height: 30px; width: 30px; color: red;" />
+
+        <lightning-combobox name="progress" label="Distributors" value={value} placeholder="Select Distributor"
+            options={distributoroptions} onchange={handleChange}></lightning-combobox>
+
+
+        <div class="cart-container">
+            <template for:each={selectedProducts} for:item="item">
+                <div key={item.id} class="cart-item">
+
+                    <div class="item-image">
+                        <div class="imgage">
+                            <img src={item.imageUrl} alt="Product Image" />
+                        </div>
+                        <div class="pricing">
+                            <div class="item-name">{item.name}</div>
+                            <div class="item-price">MRP - <b>{item.price}</b></div>
+                        </div>
+                    </div>
+
+                    <div class="item-quantity">
+                        <div class="bdlqty">
+                            <label>Bundle Qty:</label>
+                            <input type="number" value={item.quantity} data-id={item.cartId}
+                                onchange={handleBundleQuantitychange} />
+                        </div>
+                        <div class="item-delete">
+                            <button onclick={handleDeleteRow} data-id={item.cartId} data-key={item.key}
+                                class="remove">Remove</button>
+
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <div class="btndiv">
+
+            <div>
+                <button class="btn" onclick={handleSave}>Create Order</button>
+            </div>
+        </div>
+
+    </div>
+</template>

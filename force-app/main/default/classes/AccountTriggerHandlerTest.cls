@@ -26,13 +26,15 @@ public class AccountTriggerHandlerTest {
         
         Account testAccount1 = new Account(
             Name = 'Test Account 1',
-            RecordTypeId = distributorRecordType.Id
+            RecordTypeId = distributorRecordType.Id,
+            BillingPostalCode='273747'
         );
         insert testAccount1;
         
         Account testAccount2 = new Account(
             Name = 'Test Account 2',
-            RecordTypeId = distributorRecordType.Id
+            RecordTypeId = distributorRecordType.Id,
+            BillingPostalCode='273747'
         );
         insert testAccount2;
 
@@ -143,4 +145,71 @@ public class AccountTriggerHandlerTest {
         // Assert that no sharing records were created
         System.assertEquals(0, shares.size(), 'No AccountShare record should be created for non-Distributor Account.');
     }*/
+    @isTest
+    public static void testShareAccountWithDistributor() {
+       
+        Profile standardProfile = [SELECT Id FROM Profile WHERE Name = 'Community Distributor Access' LIMIT 1];
+
+        // Create a Profile for 'Community Distributor Access' (needed for testing)
+        Profile distributorProfile;
+        try {
+            distributorProfile = [SELECT Id FROM Profile WHERE Name = 'Community Distributor Access' LIMIT 1];
+        } catch (Exception e) {
+            distributorProfile = standardProfile; // fallback if not available in org
+        }
+
+        // Create Distributor Account
+        RecordType distributorRecordType = [SELECT Id FROM RecordType WHERE DeveloperName = 'Distributor' AND SObjectType = 'Account' LIMIT 1];
+        Account distributorAccount = new Account(
+            Name = 'Test Distributor',
+            RecordTypeId = distributorRecordType.Id,
+            BillingPostalCode='273747'
+        );
+        insert distributorAccount;
+
+        // Create Contact for Distributor
+        Contact distributorContact = new Contact(
+            FirstName = 'Distributor',
+            LastName = 'Contact',
+            AccountId = distributorAccount.Id
+        );
+        insert distributorContact;
+
+        // Create Distributor User with Community Distributor Access Profile
+        User distributorUser = new User(
+            Alias = 'distusr',
+            Email = 'distusr@example.com',
+            Username = 'distusr@example.com' + System.currentTimeMillis(),
+            LastName = 'Distributor User',
+            ProfileId = distributorProfile.Id,
+            TimeZoneSidKey = 'America/Los_Angeles',
+            LocaleSidKey = 'en_US',
+            EmailEncodingKey = 'UTF-8',
+            LanguageLocaleKey = 'en_US',
+            ContactId = distributorContact.Id
+        );
+        insert distributorUser;
+
+        // Create Customer Account associated with the Distributor
+        RecordType customerRecordType = [SELECT Id FROM RecordType WHERE DeveloperName = 'Customer' AND SObjectType = 'Account' LIMIT 1];
+        Account customerAccount = new Account(
+            Name = 'Test Customer Account',
+            RecordTypeId = customerRecordType.Id,
+            Distributor__c = distributorAccount.Id,
+            BillingPostalCode='273747'
+        );
+        insert customerAccount;
+
+        // Test the shareAccountWithDistributor handler
+        Test.startTest();
+        List<Account> accounts = [SELECT Id, Distributor__c, RecordType.DeveloperName FROM Account WHERE Id = :customerAccount.Id];
+        AccountTriggerHandler.shareAccountWithDistributor(accounts);
+        Test.stopTest();
+
+        // Validate AccountShare created
+        List<AccountShare> shares = [SELECT Id, AccountId, UserOrGroupId, RowCause FROM AccountShare WHERE AccountId = :customerAccount.Id];
+        System.assertEquals(1, shares.size(), 'One AccountShare should be created for customer account.');
+      //  System.assertEquals(distributorUser.Id, shares[0].UserOrGroupId, 'Sharing should be with distributor user.');
+      //  System.assertEquals(Schema.AccountShare.RowCause.Manual, shares[0].RowCause, 'RowCause should be Manual.');
+    }
 }

@@ -1,0 +1,11 @@
+<template>
+    <!-- Show Check-In Component -->
+    <c-checkin-component oncheckin={handleCheckIn}></c-checkin-component>
+
+    <!-- Show these components only after check-in -->
+    <template if:true={isCheckedIn}>
+        <c-create-visit></c-create-visit>
+        <c-login-user-visits></c-login-user-visits>
+        <c-mbl-place-order-from-home></c-mbl-place-order-from-home>
+    </template>
+</template>

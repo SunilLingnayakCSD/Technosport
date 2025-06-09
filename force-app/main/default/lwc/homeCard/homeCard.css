@@ -49,3 +49,20 @@
 .custom-card button:hover {
     background-color: #e66627; /* Darker orange on hover */
 }
+
+@media(max-width: 768px)
+{
+    .card-container{
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    }
+    .custom-card img {
+        width: 100px;
+        height: 90px;
+        margin-top: 12px;
+        align-items: center;
+        align-content: center;
+        margin-left: 130px;
+    }
+}

@@ -1,0 +1,23 @@
+.invoice {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 10px;
+    background: #fff;
+    color: #000;
+}
+
+.lines         { width:100%; border-collapse:collapse; font-size:10px; }
+.lines td      { padding:2px 4px; }
+.hdr           { text-align:center; font-weight:bold; }
+.center        { text-align:center; }
+.right         { text-align:right; }
+.bold          { font-weight:bold; }
+
+.lbl { text-align:left; padding-right:8px; }
+
+.btn-row {
+    display:flex;
+    justify-content:flex-end;
+    margin-top:0.75rem;
+}

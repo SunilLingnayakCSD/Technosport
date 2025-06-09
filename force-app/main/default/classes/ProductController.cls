@@ -1,10 +1,12 @@
-public class ProductController {
+public class ProductController {  
   @AuraEnabled(Cacheable=true)
   public static List<Product2> getProducts(
     String filterValue,
     String categoryValue,
     Integer limitSize,
-    Integer offset
+    Integer offset,
+    Boolean isfuture,
+    String catval
   ) {
     Id customRecTypeId = Schema.SObjectType.Product2.getRecordTypeInfosByName()
       .get('Product')
@@ -19,9 +21,9 @@ public class ProductController {
     List<Product2> products;
 
     String query =
-      'SELECT Id, Name, Image_url__c,isActive, Video_Url__c, Product_Type__c, cgcloud__Category__c, Boxes__c, Product_Category__c,Number_of_pieces_in_Box__c, RecordTypeId,GoogleDrive_Field__c, ' +
-      '(SELECT Id, Product2Id, UnitPrice, Pricebook2Id FROM PricebookEntries WHERE Pricebook2Id = :selectedPricebookId),(Select Id,Color__c,Variant_ExternalId__c,Size__c From Products1__r Where isActive=true )' +
-      'FROM Product2 WHERE   RecordTypeId = :customRecTypeId AND isActive=true AND Product_Template__c=null';
+      'SELECT Id, Name, Image_url__c,isActive, Video_Url__c, Product_Type__c, cgcloud__Category__c, Boxes__c, Product_Category__c,Number_of_pieces_in_Box__c, RecordTypeId,URL__c,Discount__c,isFutureProduct__c,Next_Available_Date__c, ' +
+      '(SELECT Id, Product2Id, UnitPrice, Pricebook2Id FROM PricebookEntries WHERE Pricebook2Id = :selectedPricebookId),(Select Id,Color__c,Variant_ExternalId__c,Size__c,Is_Upcoming_Variant__c,(Select Id,Free_Quantity__c From Inventories__r limit 1) From Products1__r Where isActive=true ORDER BY Size__c ASC)' +
+      'FROM Product2 WHERE   RecordTypeId = :customRecTypeId AND isActive=true  AND Product_Template__c=null ';
 
     if (categoryValue != null) {
       query += ' AND Product_Category__c = :categoryValue';
@@ -30,19 +32,26 @@ public class ProductController {
     if (filterValue != 'ALL' && filterValue != null) {
       query += ' AND cgcloud__Category__c = :filterValue';
     }
+    if(catval != null){
+      query += ' AND Product_Type__c = :catval';
+    }if (isfuture != null) {
+      query += ' AND isFutureProduct__c = :isfuture';
+    }
+   
 
     query += ' LIMIT :limitSize OFFSET :offset';
-
+	System.debug('Query------->'+query);
     products = Database.query(query);
-   
+   System.debug(products);
     return products;
   }
 
-  @AuraEnabled(cacheable=true)
+ @AuraEnabled(cacheable=true)
   public static List<Account> getAccountsForLoggedInUser(Id recordId) {
     System.debug('Logged-in User Id: ' + recordId);
 
     List<User> userList = [SELECT Id, Email FROM User WHERE Id = :recordId];
+      
     if (userList.isEmpty()) {
       System.debug('No User found for the provided Id.');
       return new List<Account>();
@@ -97,7 +106,8 @@ public class ProductController {
     System.debug('Accounts: ' + accounts);
 
     return accounts;
-  }
+  } 
+  
   @AuraEnabled(cacheable=true)
   public static List<AccountStatsWrapper> userCounts(Id recordId) {
     System.debug('Logged-in User Id: ' + recordId);
@@ -275,4 +285,27 @@ public class ProductController {
     System.debug(JSON.serializePretty(accountStatsWrappers));
     return accountStatsWrappers;
   }
+    @AuraEnabled(cacheable=true)
+    public static List<Assigned_Distributor__c> getAssignedDistributor(String recordId){
+        List<Assigned_Distributor__c> assignedDistributor=[SELECT Id,Name,Distributor_Account__c,Distributor_Account__r.Name,User__c  From Assigned_Distributor__c Where User__c =:recordId];
+        System.debug(assignedDistributor);
+       return assignedDistributor;
+    } 
+    
+   /* @AuraEnabled(cacheable=true)
+public static String getUserProductType(Id recordId) {
+    User user = [SELECT Id, Select_Product_Type__c FROM User WHERE Id = :recordId LIMIT 1];
+    return user.Select_Product_Type__c;
+}  */
+    public class UserAccountWrapper {
+    @AuraEnabled public Boolean isBlank;
+    @AuraEnabled public Boolean isCatalogue;
+    @AuraEnabled public List<Account> accounts;
+
+    public UserAccountWrapper(Boolean isBlank, Boolean isCatalogue, List<Account> accounts) {
+        this.isBlank = isBlank;
+        this.isCatalogue = isCatalogue;
+        this.accounts = accounts;
+    }
+}
 }

@@ -1,7 +1,14 @@
 import { LightningElement, wire, track } from 'lwc';
 import getInventoryRecords from '@salesforce/apex/InventoryController.getInventoryRecords';
 import getSearchRecords from '@salesforce/apex/InventoryController.getSearchRecords';
-import getPicklistValues from '@salesforce/apex/InventoryController.getPicklistValues';
+
+import INV_OBJ from '@salesforce/schema/Inventory__c';
+import Product_Category1__c from '@salesforce/schema/Inventory__c.Product_Category1__c';
+import Product_Category__c from '@salesforce/schema/Inventory__c.Product_Category__c';
+import Stock_Status__c from '@salesforce/schema/Inventory__c.Stock_Status__c'
+
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 
 export default class InventoryDetails extends LightningElement {
     @track records = [];
@@ -15,41 +22,59 @@ export default class InventoryDetails extends LightningElement {
     @track stockStatusOptions = [];
     @track isLoading = false;
 
-    connectedCallback() {
-        this.loadPicklistValues();
-    }
+ @wire(getObjectInfo, { objectApiName: INV_OBJ })
+    invInfo;
 
-    loadPicklistValues() {
-        this.isLoading = true;
-        
-        Promise.all([
-            getPicklistValues({
-                objectName: 'Inventory__c',
-                fieldName: 'Product_Category__c'
-            }),
-            getPicklistValues({
-                objectName: 'Inventory__c',
-                fieldName: 'Product_Category1__c'
-            }),
-            getPicklistValues({
-                objectName: 'Inventory__c',
-                fieldName: 'Stock_Status__c'
-            })
-        ])
-        .then(([category, category1, status]) => {
-            this.productCategoryOptions = category;
-            this.productCategory1Options = category1;
-            this.stockStatusOptions = status;
-            this.isLoading = false;
-        })
-        .catch(error => {
-            this.error = error;
-            this.isLoading = false;
-            console.error('Error loading picklist values:', error);
-        });
+    @wire(getPicklistValues, {
+        recordTypeId: '$invInfo.data.defaultRecordTypeId',
+        fieldApiName: Product_Category__c
+    })
+    getProductSection({ error, data }) {
+        if (data) {
+            this.productCategoryOptions = data.values.map(item => ({
+                label: item.label,
+                value: item.value
+            }));
+        } else {
+            console.error('Error fetching Product_Category__c picklist', error);
+        }
     }
+    @wire(getPicklistValues, {
+            recordTypeId: '$invInfo.data.defaultRecordTypeId',
+            fieldApiName:Stock_Status__c})
+            getstockSection({ error, data }) {
+                if (data) {
+                    this.stockStatusOptions = data.values.map(item => ({
+                        label: item.label,
+                        value: item.value
+                    }));
+                } else {
+                    console.error('Error fetching Product_Category__c picklist', error);
+                }
+            }    
 
-    // Wire method to load initial data
+    dependentRawData;
+    controllerValuesMap;
+
+    @wire(getPicklistValues, {
+        recordTypeId: '$invInfo.data.defaultRecordTypeId',
+        fieldApiName: Product_Category1__c
+    })
+
+    getProductCategory({ error, data }) {
+        if (data) {
+            console.log('=================data===================');
+            console.log(JSON.stringify(data));
+            console.log('====================================');
+            this.dependentRawData = data.values;
+            this.controllerValuesMap = data.controllerValues;
+           
+
+        } else {
+            console.error('Error fetching Product_Type__c picklist', error);
+        }
+    }
+    
     @wire(getInventoryRecords)
     wiredRecords({ error, data }) {
         if (data) {
@@ -65,30 +90,34 @@ export default class InventoryDetails extends LightningElement {
     }
 
  handleSearchChange(event) {
-    this.searchTerm = event.target.value;
+    this.searchTerm = event.target.value;   
+    clearTimeout(this.delayTimeout);
+    this.delayTimeout = setTimeout(() => {
         this.searchInventoryRecords();
-   
+    }, 300);
 }
-
-    // Handler for product category dropdown
     handleProductCategoryChange(event) {
         this.productCategory = event.detail.value;
+        const controllerKey = this.controllerValuesMap[this.productCategory];
+        this.productCategory1Options = this.dependentRawData.filter(item =>
+            item.validFor.includes(controllerKey)
+        ).map(item => ({
+            label: item.label,
+            value: item.value
+        }));
         this.searchInventoryRecords();
     }
 
-    // Handler for product category1 dropdown
     handleProductCategory1Change(event) {
         this.productCategory1 = event.detail.value;
         this.searchInventoryRecords();
     }
 
-    // Handler for stock status dropdown
     handleStockStatusChange(event) {
         this.stockStatus = event.detail.value;
         this.searchInventoryRecords();
     }
 
-    // Main search method that works with all filters
     searchInventoryRecords() {
         getSearchRecords({
             searchTerm: this.searchTerm,
@@ -110,7 +139,6 @@ export default class InventoryDetails extends LightningElement {
         });
     }
 
-    // Method to clear all filters
   clearFilters() {
         this.searchTerm = '';
         this.productCategory = '';
@@ -126,17 +154,16 @@ export default class InventoryDetails extends LightningElement {
         this.searchInventoryRecords();
     }
 
-    // Method to determine the stock level color based on Inventory_Stock_Status__c
     getStockLevelStyle(record) {
         if (record.Inventory_Stock_Status__c) {
             if (record.Inventory_Stock_Status__c.includes('High')) {
-                return `background-color: green;`; // Green for High stock
+                return `background-color: green;`;
             } else if (record.Inventory_Stock_Status__c.includes('Medium')) {
-                return `background-color: orange;`; // Orange for Medium stock
+                return `background-color: orange;`; 
             } else if (record.Inventory_Stock_Status__c.includes('Low')) {
-                return `background-color: red;`; // Red for Low stock
+                return `background-color: red;`; 
             }
         }
-        return null; // Default no style
+        return null; 
     }
 }

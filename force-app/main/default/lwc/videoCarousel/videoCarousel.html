@@ -1,0 +1,28 @@
+<template>
+    <lightning-card title="Recent Product Videos">
+        <div class="slds-carousel">
+            <div class="slds-carousel__stage">
+                <span class="slds-carousel__autoplay">
+                    <button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small" aria-pressed="true" title="Stop auto-play" onclick={stopAutoPlay}>
+                        <svg class="slds-button__icon" aria-hidden="true">
+                            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#right"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Stop auto-play</span>
+                    </button>
+                </span>
+                <div class="slds-carousel__panels">
+                    <!-- Dynamically render video panels -->
+                    <template for:each={products} for:item="product">
+                        <div key={product.Id} class="slds-carousel__panel">
+                            <h3>{product.Name}</h3>
+                            <video class="slds-carousel__video" controls>
+                                <source src={product.Image_url__c} type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>

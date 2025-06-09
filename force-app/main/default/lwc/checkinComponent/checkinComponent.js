@@ -1,4 +1,4 @@
-import { LightningElement, track ,wire} from 'lwc';
+import { LightningElement, track, wire } from 'lwc';
 import { createRecord, updateRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import USER_ID from '@salesforce/user/Id';
@@ -9,14 +9,14 @@ import USER_FIELD from '@salesforce/schema/Attendance__c.User__c';
 import LATITUDE_TEXT_FIELD from '@salesforce/schema/Attendance__c.Latitude__c'; 
 import LONGITUDE_TEXT_FIELD from '@salesforce/schema/Attendance__c.Longitude__c'; 
 import CHECKBOX_CLICKED from '@salesforce/schema/Attendance__c.Is_Checked_In__c';
+import ABSENT_FIELD from '@salesforce/schema/Attendance__c.absent__c';
 import getCheckedAttendances from '@salesforce/apex/AttendanceController.getCheckedAttendances';
 import { refreshApex } from '@salesforce/apex';
 
 export default class CheckinComponent extends LightningElement {
-    // Tracked properties
     @track checkInTime = null;
     @track checkOutTime = null;
-    @track timerRunning ;    
+    @track timerRunning = false;    
     @track startTime = null;
     @track elapsedTimeInSeconds = 0;
     @track timerInterval;
@@ -24,29 +24,65 @@ export default class CheckinComponent extends LightningElement {
     @track currentLocation = null;
     @track locationError = null;
     @track isGettingLocation = false;
-    @track attendanceRecords = [];
+    attendanceRecords ;
     @track error;
     @track userId = USER_ID;
     @track records = false;
+ 
+@track recordIdofattendednce
+ 
+    connectedCallback(){
+        this.getattendencedetailsonrefresh()
+    }
 
 
-    // Wire method to fetch records
-    @wire(getCheckedAttendances, { ownerId: '$userId' })
-    wiredAttendances(result) {
-          this.attendanceRecords = result;
-        const{error,data}=result
-        if (data && data.length > 0) {
+    getattendencedetailsonrefresh() {
+        getCheckedAttendances({ ownerId: this.userId }).then(data => {
             this.attendanceRecords = data;
-            this.records = this.attendanceRecords[0].Is_Checked_In__c;
-            this.checkInTime = new Date(this.attendanceRecords[0].Check_In__c);
-            this.recordIdofattendednce=this.attendanceRecords[0].Id
-            if (this.records) {
-                this.calculateInitialDifference();
-                this.startTimer();
+            if (this.attendanceRecords && this.attendanceRecords.length > 0) {
+                const record = this.attendanceRecords[0];
+                this.records = record.Is_Checked_In__c;
+                this.recordIdofattendednce = record.Id;
+                this.checkInTime = new Date(record.Check_In__c);
+    
+                // If still checked in, check if it's been more than 24 hours
+                if (this.records) {
+                    const now = new Date();
+                    const checkInDate = new Date(record.Check_In__c);
+                    const hoursElapsed = (now - checkInDate) / (1000 * 60 * 60);
+
+                    // const minutesElapsed = (now - checkInDate) / (1000 * 60); // minutes
+                    // if (minutesElapsed >= 1) {
+                    
+                    // console.log('after 1 minute');
+                    
+
+                    
+                   if (hoursElapsed >= 24 && !record.Check_Out__c && !record.Absent__c) {
+                        // Mark as absent
+                        const fields = {
+                            Id: record.Id,
+                            [ABSENT_FIELD.fieldApiName]: true,
+                            [CHECKBOX_CLICKED.fieldApiName]: false
+                        };
+                        updateRecord({ fields })
+                            .then(() => {
+                                this.showToast('Info', 'User marked as absent (no checkout in 24 hrs)', 'info');
+                            })
+                            .catch(error => {
+                                console.error('Error marking absent:', error);
+                            });
+                    }
+    
+                    this.calculateInitialDifference();
+                    this.startTimer();
+                } else {
+                    this.stopTimer();
+                }
             }
-        } else if (error) {
-            console.error('Error:', error);
-        }
+        }).catch(error => {
+            console.log('Error in refresh:', error);
+        });
     }
 
     calculateInitialDifference() {
@@ -66,41 +102,19 @@ export default class CheckinComponent extends LightningElement {
             this.timerInterval = null;
         }
     }
-
-    // Formatting getters
-    get formattedDays() {
-        const days = Math.floor(this.elapsedTimeInSeconds / (3600 * 24));
-        return days.toString().padStart(2, '0');
+    refreshData() {
+        console.log('==================refresh==================');
+        console.log('refresh logged');
+        console.log('====================================');
+      
+        this.getattendencedetailsonrefresh()
     }
-
-    get formattedHours() {
-        const hours = Math.floor((this.elapsedTimeInSeconds % (3600 * 24)) / 3600);
-        return hours.toString().padStart(2, '0');
-    }
-
-    get formattedMinutes() {
-        const minutes = Math.floor((this.elapsedTimeInSeconds % 3600) / 60);
-        return minutes.toString().padStart(2, '0');
-    }
-
-    get formattedSeconds() {
-        const seconds = this.elapsedTimeInSeconds % 60;
-        return seconds.toString().padStart(2, '0');
-    }
-
-    // disconnectedCallback() {
-    //     this.stopTimer();
-    // }
-
     
-
-    // Handle check-in with location
     handleCheckIn() {
         this.isGettingLocation = true;
         this.getCurrentLocation()
             .then(coords => {
                 this.currentLocation = coords;
-                
                 const fields = {
                     [CHECKIN_FIELD.fieldApiName]: new Date().toISOString(),
                     [USER_FIELD.fieldApiName]: USER_ID,
@@ -108,93 +122,75 @@ export default class CheckinComponent extends LightningElement {
                     [LONGITUDE_TEXT_FIELD.fieldApiName]: coords.longitude.toString(),
                     [CHECKBOX_CLICKED.fieldApiName]: true
                 };
-                
+
                 return createRecord({
                     apiName: ATTENDANCE_OBJECT.objectApiName,
                     fields
                 });
             })
             .then(record => {
-                
-                this.recordIdofattendednce = record.id;
+                this.recordIdofattendednce = record.Id;
                 this.checkInTime = new Date().toLocaleString();
                 this.startTime = Date.now();
                 this.elapsedTimeInSeconds = 0;
                 this.timerRunning = true;
                 this.isGettingLocation = false;
+                this.startTimer();
+            })
+            .then(() => {
                 
-                // Start timer
-                this.timerInterval = setInterval(() => {
-                    this.elapsedTimeInSeconds = Math.floor((Date.now() - this.startTime) / 1000);
-                }, 1000);
-                refreshApex(this.attendanceRecords).then(result=>{
-                    console.log(result);
-                    this.showToast('Success', 'Attendance refreshed recorded successfully', 'success')
-                    
-                }).catch(error=>{
-                    console.log(error);
-                    this.showToast('Error', 'Attendance not refreshed recorded successfully', 'Error')
-                    
-                })
-                this.showToast('Success', 'Checked in with location coordinates', 'success');
+                console.log('================start refreshing====================');
+                console.log();
+                console.log('====================================');
+                this.refreshData()
+                this.showToast('Success', 'Attendance refreshed successfully', 'success');
+                this.dispatchEvent(new CustomEvent('checkin'));
+
+                    // Add page reload here after everything is done
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000); // Delay reload slightly to ensure toast shows
+
             })
             .catch(error => {
-                console.error('Error:', error);
                 this.isGettingLocation = false;
                 this.showToast('Warning', error.message || 'Check-in recorded without location', 'warning');
             });
     }
 
-    // Handle check-out with location
     handleCheckOut() {
-        console.log(this.recordIdofattendednce,'iiiiiiiiiiiiiiiiii');
-        
         if (!this.recordIdofattendednce) return;
-        console.log('hiiiiiiiiiiii');
-        
+
         this.isGettingLocation = true;
         this.getCurrentLocation()
             .then(coords => {
                 this.currentLocation = coords;
-                
                 const fields = {
                     'Id': this.recordIdofattendednce,
                     [CHECKOUT_FIELD.fieldApiName]: new Date().toISOString(),
                     [CHECKBOX_CLICKED.fieldApiName]: false
                 };
-                
+
                 return updateRecord({ fields });
             })
             .then(() => {
                 this.checkOutTime = new Date().toLocaleString();
                 this.timerRunning = false;
                 this.isGettingLocation = false;
-                // this.stopTimer();
-                
-                if (this.timerInterval) {
-                    clearInterval(this.timerInterval);
-                    this.timerInterval = null;
-                }
-                refreshApex(this.attendanceRecords).then(result=>{
-                    console.log(result);
-                    this.showToast('Success', 'Attendance refreshed recorded successfully', 'success')
-                    
-                }).catch(error=>{
-                    console.log(error);
-                    this.showToast('Error', 'Attendance not refreshed recorded successfully', 'Error')
-                    
-                })
-                
-                this.showToast('Success', 'Checked out with location coordinates', 'success');
+                this.stopTimer();
+                this.records = false;   
+            })
+            .then(() => {
+                this.refreshData()
+                this.showToast('Success', 'Attendance updated successfully', 'success');
             })
             .catch(error => {
-                console.error('Error:', error);
                 this.isGettingLocation = false;
                 this.showToast('Warning', error.message || 'Check-out recorded without location', 'warning');
             });
     }
 
-    // Get current location using browser geolocation
+   
     getCurrentLocation() {
         return new Promise((resolve, reject) => {
             if (!navigator.geolocation) {
@@ -218,7 +214,7 @@ export default class CheckinComponent extends LightningElement {
                 },
                 error => {
                     let message = 'Could not get location';
-                    switch(error.code) {
+                    switch (error.code) {
                         case error.PERMISSION_DENIED:
                             message = 'Location permission denied. Please enable location services.';
                             break;

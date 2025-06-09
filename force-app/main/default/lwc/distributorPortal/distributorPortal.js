@@ -4,12 +4,22 @@ import BackIcon from '@salesforce/resourceUrl/BackIcon';
 import DownArrow from '@salesforce/resourceUrl/DownArrow';
 import getProducts from '@salesforce/apex/ProductController.getProducts';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import getInvoicesForLoggedInUser from '@salesforce/apex/InvoiceControllerForPortal.getInvoicesForLoggedInUser';
+import getInvoicesForLoggedInUserdue from '@salesforce/apex/InvoiceControllerForPortal.getInvoicesForLoggedInUserdue';
 import getAccountsForLoggedInUser from '@salesforce/apex/ProductController.getAccountsForLoggedInUser'
 import Id from '@salesforce/user/Id'
 import insertCarts from '@salesforce/apex/CartController.insertCarts'
 import getAllCartItems from '@salesforce/apex/CartController.getAllCartItems'
 import deleteFromCart from '@salesforce/apex/CartController.deleteFromCart'
+import LightningAlert from 'lightning/alert';
+import PRODUCT_OBJECT from '@salesforce/schema/Product2';
+import Product_Category__c from '@salesforce/schema/Product2.Product_Category__c';
+import Product_Type__c from '@salesforce/schema/Product2.Product_Type__c';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+import Is_Blank__c from '@salesforce/schema/User.Is_Blank__c';
+import Is_Catalogue_c__c from '@salesforce/schema/User.Is_Catalogue_c__c';
+import { getRecord } from 'lightning/uiRecordApi';
+
 export default class DistributorPortal extends LightningElement {
     userId = Id
     scrollingMessage = [];
@@ -17,15 +27,121 @@ export default class DistributorPortal extends LightningElement {
     @track threshholdAmount;
     @track totalResidualAmount
     @track threshholddays;
+    @track isFutureProducts = false;
     days
+
+    @track productSectionOptions = [];
+    @track productcategoryOptions = [];
+    @track selectedProductSection;
+    @track filteredProductCategoryOptions = [];
+    @track dependentSelectedval = null
+
+
+    @track productOptions
+    @track isblank
+    @track isCatalogue
+    @wire(getRecord, { recordId: '$userId', fields: [Is_Blank__c, Is_Catalogue_c__c] })
+    getuserdetails({ error, data }) {
+        if (data) {
+
+            this.isblank = data.fields.Is_Blank__c.value
+            this.isCatalogue = data.fields.Is_Catalogue_c__c.value
+            console.log('===========data-------=========================');
+            console.log(data);
+            console.log('====================================');
+            console.log(this.isblank);
+            console.log('====================================', this.isCatalogue);
+            console.log('====================================');
+            let options = [];
+            if (data.fields.Is_Catalogue_c__c.value === true && data.fields.Is_Blank__c.value === true) {
+                options.push({ label: 'Catalogue Products', value: 'CATALOUGE PRODUCT' }, { label: 'Blank Products', value: 'BLANKS PRODUCT' });
+
+                this.pickval = 'CATALOUGE PRODUCT'
+                this.showCatalogueButton = true;
+                this.showsizes = true;
+
+                this.selectingProducts = false;
+            }
+            else if (data.fields.Is_Catalogue_c__c.value === true) {
+                options.push({ label: 'Catalogue Products', value: 'CATALOUGE PRODUCT' });
+                this.pickval = 'CATALOUGE PRODUCT'
+                console.log('=============isCatalogue=======================');
+                console.log(this.pickval);
+                console.log('====================================');
+                this.showCatalogueButton = true;
+                this.showsizes = true;
+
+                this.selectingProducts = false;
+            }
+            else if (data.fields.Is_Blank__c.value === true) {
+                options.push({ label: 'Blank Products', value: 'BLANKS PRODUCT' });
+                this.pickval = 'BLANKS PRODUCT'
+                console.log('=============isBlank=======================');
+                console.log(this.pickval);
+                console.log('====================================');
+                this.showCatalogueButton = false;
+                this.selectingProducts = true;
+
+                this.showsizes = false;
+            }
+
+            this.productOptions = options;
+            this.getProductsBasedOnCondition(this.pickval, this.categoryval, this.isFutureProducts, this.dependentSelectedval)
+
+
+        } else {
+            console.log('====================================');
+            console.log(error);
+            console.log('====================================');
+        }
+    }
+    @wire(getObjectInfo, { objectApiName: PRODUCT_OBJECT })
+    productInfo;
+
+    @wire(getPicklistValues, {
+        recordTypeId: '$productInfo.data.defaultRecordTypeId',
+        fieldApiName: Product_Category__c
+    })
+    getProductSection({ error, data }) {
+        if (data) {
+            this.productSectionOptions = data.values.map(item => ({
+                label: item.label,
+                value: item.value
+            }));
+        } else {
+            console.error('Error fetching Product_Category__c picklist', error);
+        }
+    }
+
+    dependentRawData;
+    controllerValuesMap;
+
+    @wire(getPicklistValues, {
+        recordTypeId: '$productInfo.data.defaultRecordTypeId',
+        fieldApiName: Product_Type__c
+    })
+
+    getProductCategory({ error, data }) {
+        if (data) {
+            console.log('=================data===================');
+            console.log(JSON.stringify(data));
+            console.log('====================================');
+            this.dependentRawData = data.values;
+            this.controllerValuesMap = data.controllerValues;
+
+        } else {
+            console.error('Error fetching Product_Type__c picklist', error);
+        }
+    }
+
     getAccountsForLoggedInUsermethod() {
         getAccountsForLoggedInUser({ recordId: this.userId }).then(result => {
             this.accountDetails = result
             this.threshholdAmount = this.accountDetails[0].Overdue_Threshold_Limit__c
             this.totalResidualAmount = this.accountDetails[0].Total_Invoice_Amount__c
-            this.threshholddays=this.accountDetails[0].Threshold_days__c
+            this.threshholddays = this.accountDetails[0].Threshold_days__c
             let number = this.threshholddays.match(/\d+/);
-             this.dayss=number !=null?number[0]:0
+            this.dayss = number != null ? number[0] : 0
             console.log('===================days=================');
             console.log(this.dayss);
             console.log('====================================');
@@ -39,13 +155,27 @@ export default class DistributorPortal extends LightningElement {
     @track duedateForLastInvoice
 
     fetchInvoices() {
-        getInvoicesForLoggedInUser()
+        getInvoicesForLoggedInUserdue()
             .then((data) => {
                 if (data && data.length > 0) {
                     this.duedateForLastInvoice = data[0]?.Due_Date__c || null;
                     console.log('==============duedateForLastInvoice======================');
                     console.log(this.duedateForLastInvoice);
                     console.log('====================================');
+                    console.log('================this.threshholdAmount ====================');
+                    console.log(this.threshholdAmount);
+                    console.log('====================================');
+                    console.log('=============this.totalResidualAmount=======================');
+                    console.log(this.totalResidualAmount);
+                    console.log('====================================');
+                    if (this.totalResidualAmount >= this.threshholdAmount && this.getDueDate() > this.getDatePlus15Days()) {
+                        LightningAlert.open({
+                            message: 'Your invoice is overdue. Please make the payment.',
+                            theme: 'warning', // Possible values: 'info', 'success', 'error', 'warning'
+                            label: 'Overdue Invoice'
+
+                        });
+                    }
                     this.error = undefined;
                 } else {
                     console.warn('No invoices returned');
@@ -71,7 +201,7 @@ export default class DistributorPortal extends LightningElement {
         if (!(this.duedateForLastInvoice instanceof Date)) {
             this.duedateForLastInvoice = new Date(this.duedateForLastInvoice);
         }
-       
+
         this.duedateForLastInvoice.setDate(this.duedateForLastInvoice.getDate() + this.dayss);
         const year = this.duedateForLastInvoice.getFullYear();
         const month = String(this.duedateForLastInvoice.getMonth() + 1).padStart(2, '0');
@@ -84,47 +214,43 @@ export default class DistributorPortal extends LightningElement {
         return `${year}-${month}-${day}`;
     }
     @track rows = [];
-    @track colorOptions = []
-    @track SelectedColor = ''
     @track cart = false;
-    @track products = false;
     techno = techno;
     BackIcon = BackIcon;
     DownArrow = DownArrow;
     @track products = [];
     @track isLoading = true;
-    @track selectedVariants = [];
-    @track isVariantView = false;
-    @track counter = 0;
-    @track arr = [];
     @track selectedProductsVarient = [];
     @track sizes = {};
     @track filterType = [];
     @track filteredProducts = [];
-    @track pickval = "CATALOUGE PRODUCT"
+    @track pickval;
     @track selectedProduct = null;
-    @track categoryval;
-    @track AddCartVisible = true;
-    @track removeBtnVisible = false;
-    @track ViewOnProductvarient = false;
-    @track quantityValue = 0;
+    @track categoryval='Men';
     @track showCatalogueButton = true;
     @track removeCatalogueButton = false;
-    @track selectedFilter = [];
+    @track selectedFilter = '';
     @track showsizes = true;
-    @track showsizes1 = false;
-    @track filteredProducts1 = [];
     @track selectingProducts = false;
     @track ismodalopen = false;
-    @track selectedProduct1 = {};
-    subscription = null;
 
     connectedCallback() {
-        this.fetchInvoices()
-        this.getdefaultProducts();
+
         this.getAccountsForLoggedInUsermethod()
+        this.fetchInvoices()
+        // this.getdefaultProducts();
+        console.log('==============pickval======================');
+        console.log(this.pickval);
+        console.log('====================================');
         this.getAllcartDetailsFromAccount();
-       
+        // if (this.getDueDate() > this.getDatePlus15Days()) {
+        //     LightningAlert.open({
+        //         message: 'Your invoice is overdue. Please make the payment.',
+        //         theme: 'warning',
+        //         label: 'Overdue Invoice'
+        //     });
+        // }
+
     }
     getAllcartDetailsFromAccount() {
         getAllCartItems({ recordId: this.userId }).then(result => {
@@ -139,12 +265,18 @@ export default class DistributorPortal extends LightningElement {
                     quantity: item.Bundle_Quantity__c != null ? item.Bundle_Quantity__c : 0,
                     type: item.Product_type__c != null ? item.Product_type__c : '',
                     total: item.Total__c != null ? item.Total__c : 0,
-                    sizes: item.Cart_Items__r != null ? item.Cart_Items__r : []
+                    sizes: item.Cart_Items__r != null ? item.Cart_Items__r.map(size => ({
+                        ...size,
+                        statusLabel: size.isUpcomingVarient__c ? 'Upcoming' : 'Current'
+                    })) : [],
+                    isFutureProduct: item.isFutureProduct__c,
+                    isFutureQuoShouuldteCreate: item.isFutureQuoShouuldteCreate__c
                 }
             })
         })
 
     }
+    @track total;
 
     handleQuantityAndSize(event) {
         const productId = event.target.dataset.id;
@@ -152,6 +284,13 @@ export default class DistributorPortal extends LightningElement {
         const key = event.target.dataset.varid;
         const color = event.target.dataset.color;
         const value = parseFloat(event.target.value);
+
+        console.log('=============value=======================');
+        console.log(value);
+        console.log(JSON.stringify(this.rows, null, 2));
+        console.log(productId);
+        console.log('====================================');
+
         const row = this.rows.find(r => r.productId === productId);
         if (!row.sizes) {
             row.sizes = {};
@@ -161,10 +300,9 @@ export default class DistributorPortal extends LightningElement {
             row.sizes[size] = {};
         }
 
-        row.sizes[size][key] = { quantity: value, color: color };
+        row.sizes[size][key] = { quantity: value, color: color, isUpcomingVariant: false };
+
         let totalQuantity = 0;
-
-
         for (const sizeKey in row.sizes) {
             if (row.sizes.hasOwnProperty(sizeKey)) {
                 for (const varKey in row.sizes[sizeKey]) {
@@ -172,34 +310,36 @@ export default class DistributorPortal extends LightningElement {
                 }
             }
         }
-
         row.quantity = totalQuantity;
+
+        this.groupedVariants = this.groupedVariants.map(group => {
+            if (group.color === color) {
+                let colorTotal = 0;
+
+                group.sizes.forEach(sizeItem => {
+
+                    const matchingRow = this.rows.find(r => r.productId === sizeItem.productTemplateId);
+                    const sizeData = matchingRow?.sizes?.[sizeItem.size]?.[sizeItem.id];
+                    const val = sizeData?.quantity || 0;
+
+                    sizeItem.quantity = val;
+                    colorTotal += val;
+                });
+
+                group.totalQuantitycolor = colorTotal;
+            }
+            return group;
+        });
+
+        this.total = this.groupedVariants.reduce((accumulator, item) => {
+            return accumulator + item.totalQuantitycolor;
+        }, 0);
+
+        console.log('====================this.groupedVariants================');
+        console.log(JSON.stringify(this.groupedVariants, null, 2));
+        console.log('====================================');
     }
 
-    handleQuantityInputChnge(event) {
-        const productId = event.target.dataset.id;
-        const value = event.target.value;
-        const key = event.target.dataset.key;
-
-        const row = this.rows.find(row => row.key == key);
-        if (!row) {
-            console.error('Row not found for productId:', key);
-            return;
-        }
-
-
-        row.bundlequantity = value;
-
-        console.log('Updated Rows:', JSON.stringify(this.rows));
-    }
-
-    handleQuantityChange(event) {
-        const index = event.target.dataset.id;
-        const value = event.detail.value;
-        const key = parseInt(event.target.dataset.key, 10);
-        this.rows[key].quantity = value;
-
-    }
     @track cartlength
     addToCart() {
         console.log('====================================');
@@ -209,9 +349,9 @@ export default class DistributorPortal extends LightningElement {
         if (this.checkConditions() === true) {
             const sizeInputs = this.template.querySelectorAll('.size-input');
             const selectedItems = [];
-            
+
             sizeInputs.forEach(input => {
-                const quantity = parseInt(input.value) || 0;
+                const quantity = parseInt(input.value, 10) || 0;
                 if (quantity > 0) {
                     selectedItems.push({
                         size: input.dataset.size,
@@ -220,7 +360,7 @@ export default class DistributorPortal extends LightningElement {
                         productTemplateId: input.dataset.id,
                         variantId: input.dataset.varid
                     });
-                    
+
                 }
             });
             if (selectedItems.length === 0) {
@@ -233,7 +373,7 @@ export default class DistributorPortal extends LightningElement {
                 );
                 return;
             }
-           
+
             console.log("Selected items before adding to cart:", selectedItems);
             const sizesObject = {};
             selectedItems.forEach(item => {
@@ -242,7 +382,8 @@ export default class DistributorPortal extends LightningElement {
                 }
                 sizesObject[item.size][item.variantId] = {
                     quantity: item.quantity,
-                    color: item.color
+                    color: item.color,
+                    isUpcomingVariant: false
                 };
             });
 
@@ -259,8 +400,13 @@ export default class DistributorPortal extends LightningElement {
                 boxes: this.selectedProduct.boxes != null ? String(this.selectedProduct.boxes) : String('0'),
                 bundlequantity: this.selectedProduct.bundlequantity != null ? this.selectedProduct.bundlequantity : 0,
                 type: this.selectedProduct.type || 'Blank',
-                total:  calculatedQuantity
+                total: calculatedQuantity,
+                isFutureProduct: this.selectedProduct.isFutureProduct,
+                isFutureQuoShouuldteCreate: this.selectedProduct.isFutureQuoShouuldteCreate
             };
+            console.log('====================================');
+            console.log(JSON.stringify(cartItem, null, 2));
+            console.log('====================================');
             insertCarts({ cartData: cartItem, recordId: this.userId })
                 .then(result => {
                     this.dispatchEvent(
@@ -275,7 +421,7 @@ export default class DistributorPortal extends LightningElement {
                     this.cartlength = result;
                     this.ismodalopen = false;
                     sizeInputs.forEach(input => {
-                        if (parseInt(input.value) > 0) {
+                        if (parseInt(input.value, 10) > 0) {
                             input.value = '';
                         }
                     });
@@ -312,10 +458,21 @@ export default class DistributorPortal extends LightningElement {
     initializeAccordion() {
 
         const acc = this.template.querySelectorAll('.accordion');
-
+        const nxt = this.template.querySelectorAll('.next');
 
         if (acc.length > 0) {
             acc.forEach((element) => {
+
+                if (!element.hasAttribute('data-listener')) {
+                    element.addEventListener('click', () => this.toggleAccordion(element));
+
+                    element.setAttribute('data-listener', 'true');
+                }
+            });
+        }
+        if (nxt.length > 0) {
+            nxt.forEach((element) => {
+                console.log('called nxt');
 
                 if (!element.hasAttribute('data-listener')) {
                     element.addEventListener('click', () => this.toggleAccordion(element));
@@ -341,129 +498,108 @@ export default class DistributorPortal extends LightningElement {
     @track AllProducts
     @track catalogueProducts
     @track rowOffset = 0;
-    rowLimit = 400;
+    rowLimit = 500;
     isDataComplete = false;
-    getdefaultProducts() {
-        this.isLoading = true;
-        getProducts({
-            filterValue: this.pickval,
-            categoryValue: this.categoryval,
-            limitSize: this.rowLimit,
-            offset: this.rowOffset
-        })
-            .then(result => {
-                if (result.length === 0) {
-                    this.isDataComplete = true;
-                }
-                this.products = [...this.products, ...result.map(product => {
-                    const price = product.PricebookEntries && product.PricebookEntries.length > 0
-                        ? product.PricebookEntries[0].UnitPrice
-                        : 0;
-                    const imageUrl = product.Image_url__c;
-                    const videoUrl = product.Video_Url__c;
-                    const Productcategory = product.Product_Category__c;
-                    const pricebookEntryId = product.PricebookEntries && product.PricebookEntries.length > 0
-                        ? product.PricebookEntries[0].Id
-                        : '';
-                    const boxes = product.Boxes__c != null ? product.Boxes__c : 0;
-                    const varients = product.Products1__r && product.Products1__r.length > 0 ? product.Products1__r : []
-                    return {
-                        Id: product.Id,
-                        Name: product.Name,
-                        Price: price,
-                        ImageUrl: imageUrl != null ? imageUrl : '',
-                        videourl: videoUrl,
-                        boxes: boxes,
-                        Type: product.cgcloud__Category__c,
-                        pCategory: Productcategory,
-                        pricebookEntryId: pricebookEntryId,
-                        quantity: 0,
-                        total: 0,
-                        varients: varients,
-                        noofpieces: product.Number_of_pieces_in_Box__c
-                    };
-                })];
 
-
-                this.rowOffset += this.rowLimit;
-                this.AllProducts = this.products
-                this.isLoading = false;
-            })
-            .catch(error => {
-                console.error('Error filtering products:', error);
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error!',
-                        message: 'Error filtering products.',
-                        variant: 'Error',
-                    })
-                );
-                this.isLoading = false;
-            });
-    }
     handleScroll(event) {
         // const bottomOfList = event.target.scrollHeight === event.target.scrollTop + event.target.clientHeight;
         let bottomOfList = event.target.scrollHeight - event.target.scrollTop <= event.target.clientHeight + 10;
         if (bottomOfList && !this.isLoading && !this.isDataComplete) {
-            this.getdefaultProducts();
+
+            this.getProductsBasedOnCondition(this.pickval, this.categoryval, this.isFutureProducts, this.dependentSelectedval)
 
         }
     }
-    getProductsBasedOnCondition(filterval, categoryval) {
+
+    async getProductsBasedOnCondition(filterval, categoryval, isfuture, catval) {
+
         this.isLoading = true;
-        console.log('Fetching products for filter:', filterval, 'category:', categoryval);
-        getProducts({
-            filterValue: filterval,
-            categoryValue: categoryval,
-            limitSize: this.rowLimit,
-            offset: this.rowOffset
-        })
-            .then(data => {
+        console.log('Fetching products for filter:', filterval, 'category:', categoryval, isfuture, catval);
 
-                if (data.length === 0) {
-                    this.isDataComplete = true;
-                } else {
-                    this.products = [...this.products, ...data.map(product => {
-                        const price = product.PricebookEntries && product.PricebookEntries.length > 0
-                            ? product.PricebookEntries[0].UnitPrice
-                            : 0;
-                        const imageUrl = product.Image_url__c != null ? product.Image_url__c : '';
-                        const category = product.cgcloud__Category__c;
-                        const Productcategory = product.Product_Category__c;
-                        const pricebookEntryId = product.PricebookEntries && product.PricebookEntries.length > 0
-                            ? product.PricebookEntries[0].Id
-                            : '';
-                        const varients = product.Products1__r && product.Products1__r.length > 0 ? product.Products1__r : [];
-
-                        return {
-                            Id: product.Id,
-                            Name: product.Name,
-                            Price: price,
-                            ImageUrl: imageUrl,
-                            Type: category,
-                            pCategory: Productcategory,
-                            boxes: product.Boxes__c !== null ? product.Boxes__c : 0,
-                            pricebookEntryId: pricebookEntryId,
-                            quantity: 0,
-                            total: 0,
-                            varients: varients,
-                            noofpieces: product.Number_of_pieces_in_Box__c
-                        };
-                    })];
-
-                    this.rowOffset += this.rowLimit;
-                }
-
-                this.filteredProducts = [...this.products];
-                this.catalogueProducts = this.products;
-                this.cart = false;
-                this.isLoading = false;
-            })
-            .catch(error => {
-                console.error('Error filtering products:', error);
-                this.isLoading = false;
+        try {
+            const data = await getProducts({
+                filterValue: filterval,
+                categoryValue: categoryval,
+                limitSize: this.rowLimit,
+                offset: this.rowOffset,
+                isfuture: isfuture,
+                catval: catval
             });
+            console.log(data.length,'length');
+            
+            if (data.length === 0) {
+                this.isDataComplete = true;
+            } else {
+                this.products = [...this.products, ...data.map(product => {
+                    const price = product.PricebookEntries && product.PricebookEntries.length > 0
+                        ? product.PricebookEntries[0].UnitPrice
+                        : 0;
+                    const imageUrl = product.Image_url__c != null ? product.Image_url__c : '';
+                    const category = product.cgcloud__Category__c;
+                    const Productcategory = product.Product_Category__c;
+                    const pricebookEntryId = product.PricebookEntries && product.PricebookEntries.length > 0
+                        ? product.PricebookEntries[0].Id
+                        : '';
+                    const isFutureProduct = product.isFutureProduct__c;
+                    const availabledate = product.Next_Available_Date__c
+                    let varients = product.Products1__r && product.Products1__r.length > 0 ? product.Products1__r.filter(item => item.Is_Upcoming_Variant__c === false) : [];
+
+                    let nxtAvailableProducts = Array.isArray(product.Products1__r)
+                        ? product.Products1__r.filter(item => item.Is_Upcoming_Variant__c === true)
+                        : [];
+
+                        varients = varients
+                        .filter(item => {
+                            return item.Inventories__r && item.Inventories__r.length > 0 &&
+                                   item.Inventories__r[0].Free_Quantity__c > 0;
+                        })
+                        .map(item => {
+                            let invfreeqty = item.Inventories__r[0].Free_Quantity__c >= 50
+                                ? 50
+                                : item.Inventories__r[0].Free_Quantity__c;
+                    
+                            return {
+                                ...item,
+                                freeqty: parseFloat(invfreeqty).toFixed()
+                            };
+                        });
+                    
+                    return {
+                        Id: product.Id,
+                        Name: product.Name,
+                        Price: price,
+                        ImageUrl: imageUrl,
+                        Type: category,
+                        pCategory: Productcategory,
+                        boxes: product.Boxes__c !== null ? product.Boxes__c : 0,
+                        pricebookEntryId: pricebookEntryId,
+                        quantity: 0,
+                        total: 0,
+                        varients: varients,
+                        noofpieces: product.Number_of_pieces_in_Box__c,
+                        isFutureProduct: isFutureProduct,
+                        nxtAvailableProducts: nxtAvailableProducts,
+                        availabledate: availabledate
+                    };
+                })];
+
+                this.rowOffset += this.rowLimit;
+            }
+
+            this.filteredProducts = [...this.products];
+            this.catalogueProducts = this.products;
+            this.cart = false;
+            this.isLoading = false;
+            console.log('=================dss===================');
+            console.log(JSON.stringify(this.products, null, 2));
+            console.log('====================================');
+
+        } catch (error) {
+            console.error('Error filtering products:', error);
+            this.isLoading = false;
+        }
     }
+
     handleCategoryChange(event) {
 
         event.preventDefault();
@@ -472,44 +608,96 @@ export default class DistributorPortal extends LightningElement {
             this.products = [];
             this.rowOffset = 0;
             this.categoryval = category;
-            this.getProductsBasedOnCondition(this.pickval, this.categoryval)
+            this.dependentSelectedval = null
+            const controllerKey = this.controllerValuesMap[category];
+
+            this.filteredProductCategoryOptions = this.dependentRawData.filter(item =>
+                item.validFor.includes(controllerKey)
+            ).map(item => ({
+                label: item.label,
+                value: item.value
+            }));
+            this.getProductsBasedOnCondition(this.pickval, this.categoryval, this.isFutureProducts, this.dependentSelectedval)
         }
+    }
+
+    handleDependentPicklist(event) {
+        this.products = [];
+        this.rowOffset = 0;
+        this.dependentSelectedval = event.target.value
+        console.log('============this.dependentSelectedval========================');
+        console.log(this.dependentSelectedval);
+        console.log('====================================');
+        this.getProductsBasedOnCondition(this.pickval, this.categoryval, this.isFutureProducts, this.dependentSelectedval)
     }
 
     handleFilterChange(event) {
         this.selectedFilter = event.target.value;
+        console.log('============this.selectedFilter========================');
+        console.log(this.selectedFilter);
+        console.log('====================================');
         this.products = [];
         this.rowOffset = 0;
         if (this.selectedFilter === 'CATALOUGE PRODUCT') {
             this.showCatalogueButton = true;
             this.showsizes = true;
-            this.showsizes1 = false;
+
             this.selectingProducts = false;
 
         } else if (this.selectedFilter === 'BLANKS PRODUCT') {
             this.showCatalogueButton = false;
             this.selectingProducts = true;
-            this.showsizes1 = false;
+
             this.showsizes = false;
 
         }
         this.pickval = this.selectedFilter
-        this.getProductsBasedOnCondition(this.pickval, this.categoryval)
+        this.getProductsBasedOnCondition(this.pickval, this.categoryval, this.isFutureProducts, this.dependentSelectedval)
+    }
+    toggleHamburgerMenu() {
+        const categoryLinks = this.template.querySelector('.category-links');
+        categoryLinks.classList.toggle('show');
+    }
+
+    handleFutureProducts(event) {
+        console.log('================event.target.value====================');
+        console.log(event.target.value);
+        console.log('====================================');
+        
+        this.rowOffset = 0;  
+        this.isDataComplete = false;
+        this.products = []; 
+        this.filteredProducts = [];
+        this.catalogueProducts = [];
+
+        if (event.target.value !== null && event.target.value === 'true') {
+            console.log('calling inside Future');
+         
+            this.isFutureProducts = true
+          
+            console.log(this.isFutureProducts);
+        } if (event.target.value !== null && event.target.value === 'false') {
+            console.log('calling inside old');
+            console.log(this.isFutureProducts);
+            this.isFutureProducts = false
+
+        }
+        console.log('====================================');
+        console.log(this.pickval);
+        console.log(this.categoryval);
+        console.log(this.isFutureProducts);
+        console.log(this.dependentSelectedval);
+        
+        console.log('====================================');
+        this.getProductsBasedOnCondition(this.pickval, this.categoryval, this.isFutureProducts, this.dependentSelectedval)
+
     }
     searchProduct(event) {
         const searchKey = event.target.value.toLowerCase();
-
-        // if (searchKey.length > 0 && this.pickval === "CATALOUGE PRODUCT") {
-        //     this.products = this.AllProducts.filter(product =>
-        //         product.Name.toLowerCase().includes(searchKey));
-        //     this.showsizes = true;
-        //     this.showsizes1 = false;
-
-        // } 
-         if (searchKey.length === 0 && this.pickval === "CATALOUGE PRODUCT") {
+        if (searchKey.length === 0 && this.pickval === "CATALOUGE PRODUCT") {
             this.products = this.catalogueProducts
             this.showsizes = true;
-            this.showsizes1 = false;
+
         }
         else if (this.pickval === 'CATALOUGE PRODUCT') {
             this.products = this.catalogueProducts.filter(product =>
@@ -517,21 +705,20 @@ export default class DistributorPortal extends LightningElement {
             );
             this.showCatalogueButton = true;
             this.showsizes = true;
-            this.showsizes1 = false;
+
         }
         else if (this.pickval === 'CATALOUGE PRODUCT' && searchKey === null) {
 
             this.showCatalogueButton = true;
             this.products = this.catalogueProducts;
             this.showsizes = true;
-            this.showsizes1 = false;
+
         } else if (this.pickval === 'BLANKS PRODUCT') {
             this.products = this.catalogueProducts.filter(product =>
                 product.Name.toLowerCase().includes(searchKey)
 
             );
             this.selectingProducts = true;
-            this.showsizes1 = false;
             this.showsizes = false;
         } else if (this.pickval === 'BLANKS PRODUCT' && searchKey === null) {
             this.products = this.catalogueProducts;
@@ -543,31 +730,50 @@ export default class DistributorPortal extends LightningElement {
     @track varirnts = [];
     @track groupedVariants = [];
 
-
     openModal(event) {
         console.log('OUTPUT : ', 'clicked Model open');
         const productId = event.target.dataset.id;
         const filteredproducts = this.products.find(item => item.Id === productId);
         const variants = filteredproducts.varients;
         this.varirnts = variants != null ? variants : [];
+        console.log(JSON.stringify(this.varirnts, null, 2))
+        const bool = event.target.dataset.bool
+        if (bool === 'true') {
+            this.ismodalopen = false;
 
+        } else {
+            this.ismodalopen = true;
+
+        }
+        this.total = 0
         this.groupVariantsByColor();
+        console.log('*******', JSON.stringify(this.varirnts, null, 2))
 
         const productImageUrl = event.target.dataset.imageurl;
         const productName = event.target.dataset.name;
         const productPrice = event.target.dataset.price;
         const productPriceEntryId = event.target.dataset.priceentryid;
         const productBoxes = event.currentTarget.dataset.boxes;
-
+        const isFutureProduct = event.currentTarget.dataset.future
+        const totalqty = event.target.dataset.qty
+        console.log('============totalqty========================');
+        console.log(totalqty);
+        console.log('====================================');
         this.selectedProduct = {
             id: productId,
             imageUrl: productImageUrl,
             name: productName,
             price: productPrice,
             priceEntryId: productPriceEntryId,
-            boxes: productBoxes
+            boxes: productBoxes,
+            quantity: parseFloat(totalqty),
+            isFutureProduct: isFutureProduct,
+            isFutureQuoShouuldteCreate: false
         };
 
+        console.log('=================selectedProduct===================');
+        console.log(JSON.stringify(this.selectedProduct, null, 2));
+        console.log('====================================');
         let variant = {
             productId: productId,
             productName: productName,
@@ -580,7 +786,6 @@ export default class DistributorPortal extends LightningElement {
 
         this.rows.push(variant);
 
-        this.ismodalopen = true;
     }
 
 
@@ -593,72 +798,95 @@ export default class DistributorPortal extends LightningElement {
             grouped[item.Color__c].push({
                 size: item.Size__c,
                 id: item.Id,
-                productTemplateId: item.Product_Template__c
+                productTemplateId: item.Product_Template__c,
+                quantity: 0,
+                freeqty: item.freeqty
             });
         });
         this.groupedVariants = Object.keys(grouped).map(color => ({
             color: color,
-            sizes: grouped[color]
+            sizes: grouped[color],
+            totalQuantitycolor: 0
+
         }));
+        console.log('==============groupedVariants======================');
+        console.log(JSON.stringify(this.groupedVariants, null, 2));
+        console.log('====================================');
     }
 
     closeModal() {
         this.ismodalopen = false;
+        this.total = 0
         this.rows = [];
     }
 
-    goBackToProductList() {
-        this.isVariantView = false;
-        this.selectedVariants = [];
-        this.selectedProduct = null;
-        this.ViewOnProductvarient = false;
-    }
+
 
     handleSizeInput(event) {
         const productId = event.target.dataset.id;
         const varId = event.target.dataset.varid;
         const size = event.target.dataset.size;
-   
+        const isupcomingvarient = event.target.dataset.isupcomingvarient;
+        console.log('==========isupcomingvarient==========================');
+        console.log(isupcomingvarient, typeof (isupcomingvarient));
+        console.log('====================================');
+
         const quantity = isNaN(parseFloat(event.target.value)) ? 0 : parseFloat(event.target.value);
-    
+
         if (!this.sizes[productId]) {
             this.sizes[productId] = {};
         }
-    
+
         if (!this.sizes[productId][size]) {
             this.sizes[productId][size] = {};
         }
         const product = this.products.find(i => i.Id === productId);
 
-        this.sizes[productId][size][varId] = quantity;
-        
-        let totalQuantity =0
-        for (const sizeKey in this.sizes[productId]) {
-            if (this.sizes[productId].hasOwnProperty(sizeKey)) { 
-                for (const varKey in this.sizes[productId][sizeKey]) {
-                    if (this.sizes[productId][sizeKey].hasOwnProperty(varKey)) { 
-                        const variantQuantity = this.sizes[productId][sizeKey][varKey];
-    
-                     
-                        if (!isNaN(variantQuantity)) {
-                            totalQuantity += variantQuantity;
+        this.sizes[productId][size][varId] = { quantity: quantity, isUpcomingVariant: isupcomingvarient };
+        // this.sizes[productId][size][varId] = isupcomingvarient;
+        if (isupcomingvarient === 'false') {
+            let totalQuantity = 0
+            for (const sizeKey in this.sizes[productId]) {
+                if (this.sizes[productId].hasOwnProperty(sizeKey)) {
+                    for (const varKey in this.sizes[productId][sizeKey]) {
+                        if (this.sizes[productId][sizeKey].hasOwnProperty(varKey)) {
+                            const variantData = this.sizes[productId][sizeKey][varKey];
+                            // const quavariantQuantityntity = parseFloat(variantData.quantity);
+                            // // const variantQuantity = this.sizes[productId][sizeKey][varKey];
+
+
+                            // if (!isNaN(quavariantQuantityntity)) {
+                            //     totalQuantity += quavariantQuantityntity;
+                            // }
+                            if (variantData.isUpcomingVariant === 'false') {
+                                const variantQuantity = parseFloat(variantData.quantity);
+                                if (!isNaN(variantQuantity)) {
+                                    totalQuantity += variantQuantity;
+                                }
+                            }
+                        }
                     }
                 }
             }
+            if (product) {
+                product.total = totalQuantity;
+                console.log('Product with updated total:', product.total);
+                console.log(JSON.stringify(product, null, 2));
+
+            } else {
+                console.error('Product not found');
             }
+            console.log(JSON.stringify(this.sizes, null, 2));
+
+
         }
-    
-      
-       
-        if (product) {
-            product.total = totalQuantity; 
-            console.log('Product with updated total:', product.total);
-        } else {
-            console.error('Product not found');
-        }
+
+
+
+
     }
-    
-    
+
+
 
 
     handleQuantityInput(event) {
@@ -680,6 +908,7 @@ export default class DistributorPortal extends LightningElement {
     }
     catalougeproductSelected(event) {
 
+
         if (this.checkConditions() === true) {
             const productId = event.currentTarget.dataset.id;
             const qty = event.target.dataset.qty
@@ -689,13 +918,19 @@ export default class DistributorPortal extends LightningElement {
             const productBoxes = event.currentTarget.dataset.boxes;
             const quantity = qty !== null ? qty : 0;
             let totalaty = event.target.dataset.total;
-            console.log('==============totalaty======================');
+            console.log('==============totalaty===isFutureProduct===================', productBoxes);
             console.log(totalaty);
-            console.log('====================================');
+            console.log('=================isFutureProduct===================');
+         
+            
             const productVariant = event.currentTarget.dataset.variant;
             const pricebookEntryId = event.currentTarget.dataset.priceentryid;
+            const isFutureProduct = event.target.dataset.isfuture
             const selectedSizes = this.sizes[productId] || {};
-            const variant = {
+            console.log(isFutureProduct);
+            console.log(typeof(isFutureProduct));
+            
+            let variant = {
                 id: productId,
                 name: productName,
                 price: productPrice,
@@ -705,7 +940,9 @@ export default class DistributorPortal extends LightningElement {
                 boxes: productBoxes,
                 quantity: Number(quantity),
                 pricebookEntryId: pricebookEntryId,
-                type: 'Catalogue'
+                type: 'Catalogue',
+                isFutureProduct: isFutureProduct,
+                isFutureQuoShouuldteCreate: false
 
             };
             let total = 0
@@ -713,12 +950,33 @@ export default class DistributorPortal extends LightningElement {
             console.log('==============boxQty======================');
             console.log(boxQty);
             console.log('====================================');
+            // variant.isFutureQuoShouuldteCreate = Object.values(selectedSizes).some(variants =>
+            //     Object.values(variants).some(v => v.isUpcomingVariant === true)
+            // );
             Object.keys(selectedSizes).forEach(size => {
                 const variants = selectedSizes[size];
                 Object.keys(variants).forEach(varId => {
-                    const quantityForVariant = parseInt(variants[varId], 10);
+                    const variantData = variants[varId];
+                    let quantityForVariant = parseInt(variantData.quantity, 10);
+                    let isUpcomingVariant = variantData.isUpcomingVariant;
+                    console.log('=================88888888888888888===================');
+                    console.log(isUpcomingVariant);
+                    console.log('===================variantData.isUpcomingVariant=================');
+                    console.log(variantData.isUpcomingVariant, typeof (variantData.isUpcomingVariant));
+
+                    if (variantData.isUpcomingVariant == 'true') {
+                        console.log('====================================');
+                        console.log('hiiiiiiiiiiiiii');
+                        console.log('====================================');
+                        variant.isFutureQuoShouuldteCreate = Boolean(variantData.isUpcomingVariant)
+                    }
                     if (quantityForVariant > 0) {
-                        variant.sizes[size][varId] = { quantity: quantityForVariant, color: '' };
+                        variant.sizes[size][varId] = {
+                            quantity: quantityForVariant,
+                            color: '',
+                            isUpcomingVariant: isUpcomingVariant
+
+                        };
                         variant.quantity = Number(quantity)
                         variant.total = parseFloat(totalaty)
                     }
@@ -737,29 +995,13 @@ export default class DistributorPortal extends LightningElement {
             }
 
             if (Object.keys(variant.sizes).length > 0 && variant.quantity > 0) {
+                console.log(typeof (variant.total));
+                if(isFutureProduct==='false'){
                 if (variant.total === boxQty) {
-                    insertCarts({ cartData: variant, recordId: this.userId }).then(result => {
-                        this.dispatchEvent(
-                            new ShowToastEvent({
-                                title: 'Added!',
-                                message: 'Item has been added successfully to cart.',
-                                variant: 'success',
-                            })
-                        );
-                        this.selectedProductsVarient.push(result)
-                    
-                    }).catch(error => {
-                        this.dispatchEvent(
-                            new ShowToastEvent({
-                                title: 'Error!',
-                                message: 'Something went wrong. Please try again.', error,
-                                variant: 'error',
-                            })
-                        );
-                        console.log('================error====================');
-                        console.log(error);
-                        console.log('====================================');
-                    })
+                    console.log('================variant====================');
+                    console.log(JSON.stringify(variant, null, 2));
+                    console.log('====================================');
+                    this.handleinsertCarts(variant,this.userId);
                 } else {
                     this.dispatchEvent(
                         new ShowToastEvent({
@@ -769,6 +1011,10 @@ export default class DistributorPortal extends LightningElement {
                         })
                     );
                 }
+            }else{
+                this.handleinsertCarts(variant,this.userId);
+            }
+
 
             } else {
                 this.dispatchEvent(
@@ -791,12 +1037,42 @@ export default class DistributorPortal extends LightningElement {
         }
 
     }
+    handleinsertCarts(variant,userId){
+        insertCarts({ cartData: variant, recordId: userId }).then(result => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Added!',
+                    message: 'Item has been added successfully to cart.',
+                    variant: 'success',
+                })
+            );
+            let recivedres = result != null ? result.sizes.map(size => ({
+                ...size,
+                statusLabel: size.isUpcomingVarient__c ? 'Upcoming' : 'Current'
+            })) : []
+            result.sizes = recivedres;
+            this.selectedProductsVarient.push(result)
+            console.log("8888", JSON.stringify(this.selectedProductsVarient, null, 2));
 
+        }).catch(error => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error!',
+                    message: 'Something went wrong. Please try again.', error,
+                    variant: 'error',
+                })
+            );
+            console.log('================error====================');
+            console.log(error);
+            console.log('====================================');
+        })
+    }
     handleDeleteSelectedInParent(event) {
         if (this.selectedProductsVarient.length > 0) {
             const selectedId = event.detail.selected;
 
             deleteFromCart({ cartId: selectedId, recordId: this.userId }).then(result => {
+
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
@@ -804,7 +1080,6 @@ export default class DistributorPortal extends LightningElement {
                         variant: 'success',
                     })
                 )
-               // this.selectedProductsVarient = this.selectedProductsVarient.filter(item => item.id !== selectedId)
             }).catch(error => {
                 this.dispatchEvent(
                     new ShowToastEvent({
@@ -812,7 +1087,11 @@ export default class DistributorPortal extends LightningElement {
                         message: 'Something went wrong',
                         variant: 'error',
                     })
+
                 )
+                console.log('====================================');
+                console.log(error);
+                console.log('====================================');
             })
         } else {
             this.cart = false
@@ -820,14 +1099,6 @@ export default class DistributorPortal extends LightningElement {
         }
     }
 
-    showCatalogueButton() {
-        this.showCatalogueButton = false;
-        this.removeCatalogueButton = true;
-    }
-    catalougeproductRemoved() {
-        this.showCatalogueButton = true;
-        this.removeCatalogueButton = false;
-    }
 
     handleCartClick() {
         if (this.selectedProductsVarient.length > 0) {
@@ -851,5 +1122,21 @@ export default class DistributorPortal extends LightningElement {
         this.cart = false;
         this.template.querySelector('.main').style.display = 'block'
         this.products = this.catalogueProducts != null ? this.catalogueProducts : this.AllProducts;
+
+    }
+    // hidden
+    toggleVariants(event) {
+        const productId = event.currentTarget.dataset.target;
+        const variantRows = this.template.querySelectorAll(`tr[data-variants="${productId}"]`);
+        const arrow = event.currentTarget.querySelector('.arrow');
+
+        variantRows.forEach(row => {
+            row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+        });
+
+        // Rotate arrow animation
+        arrow.style.transform = arrow.style.transform === 'rotate(180deg)'
+            ? 'rotate(0deg)'
+            : 'rotate(180deg)';
     }
 }

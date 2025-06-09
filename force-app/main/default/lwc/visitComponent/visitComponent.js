@@ -11,6 +11,7 @@ import CHECKBOX_CLICKED from '@salesforce/schema/Visit.Is_Checked_In__c';
 import CHECKBOX_CHECKOUT from '@salesforce/schema/Visit.Is_Checked_out__c'
 import STATUS from '@salesforce/schema/Visit.Status';
 import PLANNED_END_FIELD from '@salesforce/schema/Visit.PlannedVisitEndTime';
+import COMPLETED_DATE_FIELD from '@salesforce/schema/Visit.cgcloud__Completed_Date__c';
 import getCheckedVisits from '@salesforce/apex/VisitController.getCheckedVisits';
 import { refreshApex } from '@salesforce/apex';
 
@@ -198,7 +199,8 @@ wiredAttendances(result) {
                     [LATITUDE_TEXT_FIELD.fieldApiName]: coords.latitude.toString(),
                     [LONGITUDE_TEXT_FIELD.fieldApiName]: coords.longitude.toString(),
                     [CHECKBOX_CHECKOUT.fieldApiName]: true,
-                    [STATUS.fieldApiName]: 'Completed'
+                    [STATUS.fieldApiName]: 'Completed',
+                    [COMPLETED_DATE_FIELD.fieldApiName]: new Date().toISOString()
                 };
     
                 // Update the record with checkout time

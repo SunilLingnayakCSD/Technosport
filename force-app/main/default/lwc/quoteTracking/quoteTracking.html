@@ -1,0 +1,115 @@
+<template>
+    <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium">
+        <div class="slds-col slds-size_1-of-4">
+            <lightning-input
+                type="datetime"
+                label="Order Created Start Date"
+                placeholder="DD/MMM/YYYY"
+                value={startDate}
+                onchange={handleStartDateChange}>
+            </lightning-input>
+        </div>
+        <div class="slds-col slds-size_1-of-4">
+            <lightning-input
+                type="datetime"
+                label="Order Created End Date"
+                placeholder="DD/MMM/YYYY"
+                value={endDate}
+                onchange={handleEndDateChange}>
+            </lightning-input>
+        </div>
+        <div style="margin:23px;">
+            <lightning-button
+                label="Fetch Orders"
+                variant="brand"
+                onclick={handleFetchOrders}>
+            </lightning-button>
+        </div>
+    </div>
+
+    <template if:true={orderDetails}>
+        <div class="scroll">
+            <div class="order-tracking-container slds-p-around_medium">
+                <h1 class="slds-text-heading_large slds-m-bottom_medium">Order Tracking</h1>
+
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th scope="col" rowspan="2">
+                                <div class="slds-truncate" title="Order Date"><b>Order Date</b></div>
+                            </th>
+                            <th scope="col" rowspan="2">
+                                <div class="slds-truncate" title="Product Name"><b>Product Name</b></div>
+                            </th>
+                            <th scope="col" colspan="3">
+                                <div class="slds-truncate" style="text-align: center;" title="Order Received"><b>Order Received</b></div>
+                            </th>
+                            <th scope="col" colspan="2">
+                                <div class="slds-truncate" style="text-align: center;" title="Dispatch"><b>Dispatch</b></div>
+                            </th>
+                            <th scope="col" rowspan="2">
+                                <div class="slds-truncate" title="Cancelled"><b>Cancelled</b></div>
+                            </th>
+                        </tr>
+                        <tr class="slds-line-height_reset">
+                            <th scope="col" style="border-left:1px solid #292927ed">
+                                <div class="slds-truncate" title="Ratio"><b>Ratio</b></div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate1" title="Selected Sizes"><b>Selected Sizes</b></div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate1" title="No of Bundles"><b>No of Bundles</b></div>
+                            </th>
+                           
+                            <th scope="col">
+                                <div class="slds-truncate" title="Dispatch Ratio"><b>Ratio</b></div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Dispatch Bundles"><b>No of Bundles</b></div>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <template for:each={processedOrders} for:item="order">
+                            <tr class="slds-hint-parent" key={order.key}>
+                                <template if:true={order.isFirstRow}>
+                                    <th data-label="Order Date" scope="row" rowspan={order.rowSpan}>
+                                        <div class="slds-truncate" title={order.formattedDate}>{order.formattedDate}</div>
+                                    </th>
+                                </template>
+                                <template if:false={order.isFirstRow}>
+                                    <td style="display: none;"></td>
+                                </template>
+
+                                <td data-label="Product Name">
+                                    <div class="slds-truncate1" title={order.productName}>{order.productName}</div>
+                                </td>
+                                <td data-label="Ratio">
+                                    <div class="slds-truncate" title={order.receivedRatio}>{order.quoteDescription}</div>
+                                </td>
+                                <td data-label="Selected Sizes">
+                                    <div class="slds-truncate" title={order.sizes}>{order.sizes}</div>
+                                </td>
+                                <td data-label="No of Bundles">
+                                    <div class="slds-truncate" title={order.receivedBundles}>{order.receivedBundles}</div>
+                                </td>
+                               
+                                <td data-label="Dispatch Ratio">
+                                    <div class="slds-truncate" title={order.dispatchRatio}>{order.quoteRatio}</div>
+                                </td>
+                                <td data-label="Dispatch Bundles">
+                                    <div class="slds-truncate" title={order.dispatchBundles}>{order.dispatchBundles}</div>
+                                </td>
+                                <td data-label="Cancelled">
+                                    <div class="slds-truncate" title={order.cancelledCount}>{order.cancelledCount}</div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </template>
+</template>

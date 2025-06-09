@@ -7,7 +7,6 @@ private class Odoo_SaleOrder_details_Test {
         Test.startTest();
         Test.setMock(HttpCalloutMock.class, new OdooAuthenticationMock());
 
-        // Simulate data for your webhook
         cgcloud__Account_Template__c testCustomerTemplate = new cgcloud__Account_Template__c(
             Name='Retailer',
             cgcloud__Description_Language_1__c='Retailer',
@@ -20,7 +19,8 @@ private class Odoo_SaleOrder_details_Test {
             Name = 'Test Account',
             Customer_Category__c = 'R1',
             cgcloud__Account_Template__c=testCustomerTemplate.id,
-            External_Id__c='12345'
+            External_Id__c='12345',
+            BillingPostalCode='273747',BillingCity='xys',BillingStreet='Karnataka'
         );
         insert testAccount;
 

@@ -1,0 +1,73 @@
+<template>
+    <template if:false={isSubmitted}>
+        <template if:true={sections}>
+            <template for:each={sections} for:item="section">
+                <div key={section.name} class="section slds-box slds-m-around_medium">
+                    <h2 class="slds-text-heading_medium slds-m-bottom_small">{section.name}</h2>
+
+                    <template for:each={section.questions} for:item="question">
+                        <template if:true={question.isVisible}> <!-- ✳️ Only show visible questions -->
+                            <div key={question.Id} class="question-container slds-m-bottom_medium">
+                                <label class="slds-form-element__label">
+                                    {question.Name}
+                                    <template if:true={question.Required__c}>
+                                         <span class="slds-text-color_error"> *</span>
+                                    </template>
+                                    <template if:true={question.Take_Picture__c}>
+                                        
+                                        <lightning-icon
+                                            icon-name="utility:photo"
+                                            alternative-text="Take Photo"
+                                            onclick={handlePhotoCapture}
+                                            data-id={question.Id}
+                                            size="small"
+                                            class="slds-m-left_x-small"
+                                        ></lightning-icon>
+                                    </template>
+                                </label>
+
+                                <template if:true={question.isPicklist}>
+                                    <select class="custom-select" data-id={question.Id} onchange={handleInputChange} value={question.selectedValue} required={question.Required__c}>
+                                        <option value="">-- Select an option --</option>
+                                        <template for:each={question.picklistValues} for:item="option">
+                                            <option key={option} value={option}>{option}</option>
+                                        </template>
+                                    </select>
+                                </template>
+
+                                <template if:true={question.isDate}>
+                                    <input type="date" class="custom-date" data-id={question.Id} onchange={handleInputChange} value={question.selectedValue} required={question.Required__c}  />
+                                </template>
+
+                                <template if:true={question.isNumber}>
+                                    <input type="number" class="custom-input" data-id={question.Id} onchange={handleInputChange} value={question.selectedValue} required={question.Required__c} />
+                                </template>
+
+                                <template if:true={question.isText}>
+                                    <input type="text" class="custom-input" data-id={question.Id} onchange={handleInputChange} value={question.selectedValue} required={question.Required__c} />
+                                </template>
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </template>
+            <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+   
+            <div class="submit-button-container slds-m-around_medium ">
+                <button class="slds-button slds-button_brand" onclick={handleSubmit}>Submit</button>
+            </div>
+        </template>
+
+        <template if:false={sections}>
+            <p class="slds-text-body_regular slds-m-around_medium">Loading questions...</p>
+        </template>
+    </template>
+
+    <template if:true={isSubmitted}>
+        <div class="slds-box slds-theme_success slds-m-around_medium">
+            <p class="slds-text-heading_medium">✅ Store check done for the visit.</p>
+        </div>
+    </template>
+</template>

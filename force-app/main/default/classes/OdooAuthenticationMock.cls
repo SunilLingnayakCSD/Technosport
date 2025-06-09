@@ -4,8 +4,8 @@ public class OdooAuthenticationMock implements HttpCalloutMock {
         HttpResponse res = new HttpResponse();
         // Simulating a successful authentication response
         res.setStatusCode(200);
-        res.setBody('{"jsonrpc": "2.0", "id": 1, "result": "fake_session_cookie"}');
-        res.setHeader('Set-Cookie', 'fake_session_cookie=123456; Path=/; HttpOnly');
+        res.setBody('{"jsonrpc": "2.0", "id": 1, "result": "session_cookie"}');
+        res.setHeader('Set-Cookie', 'session_cookie=123456; Path=/; HttpOnly');
         return res;
     }
 }

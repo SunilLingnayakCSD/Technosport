@@ -17,10 +17,12 @@
         width: 100%;
     }
     .portalbtn{
-        width: 80%;
-        padding: 8px;
-        margin-left: 30px;
+        width: 100%;
+        padding: 8px 8px;
+        
     }
-    
+    lightning-tab{
+        font-size: 16px;
+    }
     
 }

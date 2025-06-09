@@ -1,53 +1,117 @@
 <template>
     <lightning-card title="Survey Activities with Products">
+        <div class="header">
+            <input type="search" placeholder="Search Product" oninput={handleSearch} />
+            <select onchange={handleFilterChange}>
+                <option value="all products">Select</option>
+                <option value="all products">All Products</option>
+                <option value="Survey Product">Survey Product</option>
+            </select>
+        </div>
         <div class="slds-p-around_medium">
             <!-- Loading Spinner -->
             <template if:true={isLoading}>
                 <lightning-spinner alternative-text="Loading"></lightning-spinner>
             </template>
-            
+
             <!-- Error Message -->
             <template if:true={error}>
                 <div class="slds-notify slds-notify_alert slds-theme_error">
                     {error}
                 </div>
             </template>
-            
+
             <!-- Survey Activities List -->
             <template if:false={isLoading}>
                 <template if:true={surveyActivities.length}>
                     <template for:each={surveyActivities} for:item="activity">
                         <div key={activity.Id} class="display">
                             <!-- Product Information -->
-                            <div style="display: flex; flex-direction:row;">
                             <div>
-                                <img src={activity.Product__r.URL__c} class="img"/>
+                                <div class="img-container">
+                                    <img src={activity.Product__r.URL__c} class="img" />
+                                </div>
+
                             </div>
-                           
-                            </div>
-                            <div style="display: flex; flex-direction:column;">
+                            <div style="display: flex; flex-direction:column;align-items: center;">
                                 <div>
                                     <p class="paragragh"><b>{activity.Product__r.Name}</b></p>
-                                    </div>
-                               <div>  
-                                <lightning-textarea 
-                                name="input1" 
-                                placeholder="Feedback" 
-                                class="feedback" 
-                                onchange={handleChange} 
-                                data-activity-id={activity.Id} 
-                                data-product-id={activity.Product__r.Id}>
-                            </lightning-textarea> 
+                                </div>
                             </div>
                             <div>
-                                <button class="btn1" onclick={handleSubmit} 
-                                        data-id={activity.Id} 
-                                        data-product-id={activity.Product__r.Id} 
-                                        data-product-name={activity.Product__r.Name}>
-                                    Submit
-                                </button>
+                                <button class="accordion"> Give Feedback <img src={DownArrow} height="20px" width="20px"
+                                        style="margin-left: 60px;" /></button>
+                                <div class="panel">
+
+
+                                    <template if:false={activity.isvisit}>
+                                    <div class="slds-m-top_small">
+                                        <label class="slds-form-element__label">
+                                            Product Batch <span class="required">*</span>
+                                        </label>
+                                        <input type="text" name="Product Batch" class="slds-input"
+                                            onchange={productBatchChange} data-activity-id={activity.Id}
+                                            data-product-id={activity.Product__r.Id} />
+                                    </div>
+
+                                    <div class="slds-m-top_medium">
+                                        <label class="slds-form-element__label" for="upload-file">
+                                            Tag Image<span class="required">*</span>
+                                        </label>
+                                        <input type="file" id="upload-file" class="slds-input" data-file-type="tag"
+                                            accept="image/*" onchange={handleFileUpload}
+                                            data-activity-id={activity.Id} />
+                                    </div>
+
+                                    <div class="slds-m-top_medium">
+                                        <label class="slds-form-element__label">
+                                            Feedback <span class="required">*</span>
+                                        </label>
+                                        <input type="text" name="Feedback" class="slds-input" onchange={handleChange}
+                                            data-activity-id={activity.Id} data-product-id={activity.Product__r.Id} />
+                                    </div>
+                                </template>
+                                    <template if:true={activity.isvisit}>
+                                        <div class="slds-m-top_medium" style="text-align: center;">Upload Supporting Images</div>
+                                        <div class="slds-m-top_medium">
+                                            <label class="slds-form-element__label" for="upload-file">
+                                                Supporting Image 1
+                                            </label>
+                                            <input type="file" id="supporting-file-1" class="slds-input"
+                                                accept="image/*" data-file-type="supporting1" onchange={handleIndividualFileUpload}
+                                                data-activity-id={activity.Id} data-visitid={activity.visitTask} />
+                                        </div>
+                                        <div class="slds-m-top_medium">
+                                            <label class="slds-form-element__label" for="upload-file">
+                                                Supporting Image 2
+                                            </label>
+                                            <input type="file" id="supporting-file-2" class="slds-input"
+                                                accept="image/*" data-file-type="supporting2" onchange={handleIndividualFileUpload}
+                                                data-activity-id={activity.Id} data-visitid={activity.visitTask} />
+                                        </div>
+                                        <div class="slds-m-top_medium">
+                                            <label class="slds-form-element__label" for="upload-file">
+                                                Supporting Image 3
+                                            </label>
+                                            <input type="file" id="supporting-file-3" class="slds-input"
+                                                accept="image/*" data-file-type="supporting3" onchange={handleIndividualFileUpload}
+                                                data-activity-id={activity.Id} data-visitid={activity.visitTask} />
+                                        </div>
+                                    </template>
+                                    <template if:false={activity.isvisit}>
+                                    <div class="button-container">
+                                        <button class="btn1" onclick={handleSubmit} data-id={activity.Id}
+                                            data-product-id={activity.Product__r.Id}
+                                            data-product-name={activity.Product__r.Name}>
+                                            Submit
+                                        </button>
+                                    </div>
+                                </template>
+
+
+
+                                </div>
                             </div>
-                        </div>
                         </div>
                     </template>
                 </template>

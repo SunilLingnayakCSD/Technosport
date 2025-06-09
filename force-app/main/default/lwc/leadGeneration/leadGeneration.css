@@ -1,0 +1,461 @@
+.background-container {
+    display: flex;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color:white;
+    flex-direction: column;
+    font-family: 'century gothic';
+    margin: 0% 0%;
+}
+ 
+.form {
+    background: rgb(255 255 255);
+    padding: 2rem;
+    box-shadow: 0 4px 6px 5px rgba(0, 0, 0, 0.1);
+    width: 40%;
+    font-family: 'century gothic';
+    margin: 0% 53%;
+    border-radius: 0px;
+}
+ 
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 14px;
+    background-color: #fdfbec;
+    border: 0px solid;
+    color: #747474;
+    font-weight: 200;
+}
+ 
+.submit-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+ 
+.clippy_button {
+    height: 30px;
+    background: #ce0d0d;
+    border: none;
+    color: #fff;
+    margin: auto;
+    font-weight: 800;
+}
+
+ .clippy_button:hover {
+    background-color: #7f2006;;
+}
+ 
+.request-button {
+    width: 153px; /* Increased width by 3px */
+    margin: -8.5% auto;
+    -webkit-clip-path: polygon(0 19px, 19px 0, 153px 0, 153px 33px, 137px 53px, 0 53px); /* Adjusted clip-path */
+    clip-path: polygon(0 19px, 19px 0, 153px 0, 153px 33px, 137px 53px, 0 53px); /* Adjusted clip-path */
+    font-size: 18px;
+    padding-bottom: 13px;
+}
+ 
+.button:hover {
+    background-color: #004b8a;
+}
+ 
+.slds-scope .slds-input {
+    padding: 38px 30px;
+}
+ 
+.img{
+    padding-bottom: 20px;
+}
+ 
+.get-in-touch p.contact-head {
+    font-family: TitilliumWeb_bold;
+    font-size: 3.5em;
+    line-height: 1.05;
+    letter-spacing: normal;
+    text-align: center;
+    color: #0e1053;
+    margin: 0;
+    padding-bottom: 10px;
+ 
+}
+.g{
+    font-family: TitilliumWeb_bold;
+    font-size: 3.5em;
+    line-height: 1.05;
+    letter-spacing: normal;
+    text-align: center;
+    color: #0e1053;
+    margin: 0;
+    padding-bottom: 10px;
+    font-weight: 600;
+    font-family: 'century gothic';
+ 
+ 
+}
+
+.trailing-word {
+    display: inline-block;
+}
+ 
+p.contact-desc{
+    font-family: TitilliumWeb_bold;
+    font-size: 1em;
+    line-height: 1.05;
+    letter-spacing: normal;
+    text-align: center;
+    color: #0e1053;
+    margin: 0;
+    padding-bottom: 10px;
+}
+ 
+.footer{
+    margin: 1% 5%;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+ 
+ 
+ /* New Css */
+.other-contacts p.other-head {
+    font-family: TitilliumWeb_bold;
+    font-size: 2em;
+    line-height: 1.25;
+    letter-spacing: normal;
+    text-align: center;
+    color: #18181899;
+    margin: 0;
+}
+ 
+.contact-row .card p.method-head {
+    font-family: FivoSans_medium;
+    font-size: 1em;
+    line-height: 1.38;
+    letter-spacing: normal;
+    text-align: center;
+    color: #0e1053;
+    text-transform: uppercase;
+    margin: 0;
+    padding-top: 30px;
+    padding-bottom: 10px;
+}
+ 
+.contact-row .card p.method-email a {
+    font-family: RationalTWDisplay_semiBold;
+    font-size: 1em;
+    line-height: 1.56;
+    letter-spacing: normal;
+    color: #e65965;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+ 
+ 
+.other-contacts p.other-head {
+    font-family: TitilliumWeb_bold;
+    font-size: 2em;
+    line-height: 1.25;
+    letter-spacing: normal;
+    text-align: center;
+    color: #18181899;
+    margin: 0;
+}
+.other-contacts .content {
+    padding-top: 4vw;
+}
+.contact-row {
+    padding-top: 9vw;
+    padding-left: 2vw;
+    padding-right: 2vw;
+}
+.contact-row .card {
+    padding-bottom: 40px;
+    border: none;
+}
+.contact-row .card .inner {
+    padding: 20px;
+    border-radius: 2px;
+    box-shadow: 0 0 15px 0 rgba(23, 20, 82, .1);
+    background-color: #fff;
+    margin: 15px;
+}
+.contact-row .card .contact-icon {
+    width: 11.8vw;
+    height: 11.8vw;
+    box-shadow: 0 0 10px 0 rgba(92, 93, 126, .2);
+    background-color: #fff;
+    border-radius: 50%;
+    margin: -5.9vw auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.contact-row .card .contact-icon svg {
+    font-size: 3.5em;
+}
+.contact-row .card p.method-head {
+    font-family: FivoSans_medium;
+    font-size: 1em;
+ 
+    line-height: 1.38;
+    letter-spacing: normal;
+    text-align: center;
+    color: #0e1053;
+    text-transform: uppercase;
+    margin: 0;
+    padding-top: 30px;
+    padding-bottom: 10px;
+}
+.row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.contact-row .card-1 .column-1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+ 
+.contact-row .card p.method-email {
+    margin: 0;
+    padding-bottom: 15px;
+    text-align: center;
+}
+.contact-row .card-2 p.method-desc, .contact-row .card-3 p.method-desc {
+    width: 22vw;
+    text-align: center;
+    margin: 0 auto;
+}
+.contact-row .card p.method-desc {
+    opacity: .8;
+    font-family: FivoSans_regular;
+    font-size: 1em;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: #0e1053;
+    margin: 0;
+}
+.contact-row .card p.contact-num, .contact-row .card p.locate-map {
+    text-align: center;
+    margin: 0;
+}
+.contact-row .card p.contact-num, .contact-row .card p.locate-map a, .contact-row .card p.method-email a {
+    font-family: RationalTWDisplay_semiBold;
+    font-size: 1em;
+    line-height: 1.56;
+    letter-spacing: normal;
+    color: #e65965;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+ 
+.other-contacts {
+    background-image: url(/static/dots_small-236c8f9….png);
+    background-repeat: no-repeat;
+    background-position: 50px 50px;
+    margin-bottom: 10vh;
+}
+ 
+ 
+.contact-row {
+    padding-top: 9vw;
+    padding-left: 2vw;
+    padding-right: 2vw;
+}
+.row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    display: flex;
+    flex-direction: row;
+}
+  
+.sechead{
+    padding-top: 20px;
+    font-family: 'century gothic';
+}
+ 
+/*------------------------------------------------Benz Lead Form Css---------------------------------------------*/
+ 
+.logocontainer
+{
+    background-color: black;
+    width: 100%;
+    display: flex;
+    align-content: space-around;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    justify-content: center;
+    padding: 1%;
+    gap:10px
+}
+
+.slds-scope img {
+    max-width: 100%;
+    height: auto;
+    color: black;
+    padding: -2%;
+    size: 12px;
+    width: 6%;
+}
+ 
+.HeaderContent
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 1% 5%;
+    font-family: var(--wb-font-text);
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0.0125rem;
+    line-height: 2.5rem;
+    padding: 0;
+}
+ 
+.DecConsent
+{
+   
+    font-family: var(--wb-font-text);
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0.0125rem;
+    line-height: 1.5rem;
+    padding: 0;
+}
+ 
+ 
+.postal-code-list-formatting {
+    font-variant-numeric: tabular-nums;
+    column-count: 9;
+    margin: 1% -6.5%;
+    width: 100%;
+}
+.form-radio__legend
+{
+    margin: 1% 5%;
+}
+ 
+.form-input option {
+    padding: 15px;
+    margin: 2% 1%;
+    font-size: 20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+ 
+.enquirynow{
+    color: white;
+    align-items: center;
+    text-align: center;
+    font-size: larger;
+    background: rgb(0 0 0);
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px 5px rgba(0, 0, 0, 0.1);
+    width: 40%;
+    font-family: 'century gothic';
+    margin: 0% 53%;
+   
+}
+.footer
+{
+    color: white;
+    align-items: center;
+    text-align: center;
+    font-size: larger;
+    background: rgb(206, 13, 13);
+    border-bottom-left-radius: 9px;
+    border-bottom-right-radius: 9px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px 5px rgba(0, 0, 0, 0.1);
+    width: 40%;
+    font-family: 'century gothic';
+    margin: 0% 53%;
+   
+}
+.footer:hover {
+    background-color: #7f2006;;
+}
+.packagecontainer
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 3% 0%;
+    font-family: var(--wb-font-text);
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0.0125rem;
+    line-height: 2.5rem;
+    padding: 0;
+}
+ 
+ 
+/* custom radio button css */
+ 
+input[type="radio"] {
+    display: none;
+}
+ 
+input[type="radio"] + label {
+    font-weight: 400;
+    font-size: 14px;
+}
+ 
+input[type="radio"] + label span {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    margin: -2px 10px 0 0;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    position: relative;
+    background-color: #d9d7d7; /* Light color background for unselected state */
+}
+ 
+input[type="radio"]:checked + label span {
+    background-color: #711e1ed7; /* Black background for selected state */
+}
+ 
+input[type="radio"]:checked + label span::before {
+    content: '';
+    display: block;
+    width: 30%; /* Adjust the size of the white circle */
+    height: 30%; /* Adjust the size of the white circle */
+    border-radius: 50%;
+    background-color: #ffffff;; /* White color for the inner circle */
+    position: absolute;
+    top: 35%; /* Position it at the center */
+    left: 35%; /* Position it at the center */
+}
+ 
+input[type="radio"] + label span,
+input[type="radio"]:checked + label span {
+    transition: background-color 0.24s linear;
+}
+ 
+.saltitle
+{
+    color: #747474;
+    font-weight: 200;
+}
+ 
+.logoplacer
+{
+    width: 22%;
+    margin: auto 2%;
+}

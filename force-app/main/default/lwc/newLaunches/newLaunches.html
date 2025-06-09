@@ -33,9 +33,7 @@
                             <img class="mainimg" src={product.ImageUrl} alt="">
                             <p style="font-size: 16px; font-weight:bold; text-align:center;color:white;max-height: 40px">{product.Name}
                             </p>
-                            <!-- <button class="btn" data-id={product.Id} data-imageurl={product.ImageUrl}
-                        data-name={product.Name} data-price={product.Price} data-boxes={product.boxes}
-                        data-priceentryid={product.pricebookEntryId} onclick={openModal} >Details</button> -->
+                           
                             <template if:true={showsizes}>
                                 <div class="accordion-container" key={product.Id}>
                                     <button class="accordion">Select Sizes and Bundle<img class="im" src={DownArrow}
@@ -63,57 +61,7 @@
                                                         </tr>
                                                     </template>
                                                 </template>
-                                                <!-- <tr>
-                                                <td>S</td>
-                                                <td>
-                                                    <input type="number" class="size-input" data-size="S"
-                                                        data-id={product.Id} oninput={handleSizeInput}
-                                                        min="0" />
-                                                </td>
-                                            </tr>
-        
-                                            <tr>
-                                                <td>M</td>
-                                                <td>
-                                                    <input type="number" class="size-input" data-size="M"
-                                                        data-id={product.Id} oninput={handleSizeInput}
-                                                        min="0" />
-                                                </td>
-                                            </tr>
-        
-                                            <tr>
-                                                <td>L</td>
-                                                <td>
-                                                    <input type="number" class="size-input" data-size="L"
-                                                        data-id={product.Id} oninput={handleSizeInput}
-                                                        min="0" />
-                                                </td>
-                                            </tr>
-        
-                                            <tr>
-                                                <td>XL</td>
-                                                <td>
-                                                    <input type="number" class="size-input" data-size="XL"
-                                                        data-id={product.Id} oninput={handleSizeInput}
-                                                        min="0" />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>XXL</td>
-                                                <td>
-                                                    <input type="number" class="size-input" data-size="XXL"
-                                                        data-id={product.Id} oninput={handleSizeInput}
-                                                        min="0" />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>XXXL</td>
-                                                <td>
-                                                    <input type="number" class="size-input" data-size="XXXL"
-                                                        data-id={product.Id} oninput={handleSizeInput}
-                                                        min="0" />
-                                                </td>
-                                            </tr> -->
+                                               
                                             </tbody>
                                             <tbody>
 
@@ -142,23 +90,13 @@
                                                 <tr>
                                                     <td>Bundle Quantity</td>
                                                     <td>
-                                                        <!-- <input type="number" class="size-input" data-size="M" 
-                                       data-id={variant.Id} oninput={handleSizeInput} min="0" />  -->
+                                                       
                                                         <input type="number" class="size-input" data-id={product.Id}
                                                             value={product.quantity} oninput={handleQuantityInput}
                                                             min="0" />
                                                     </td>
                                                 </tr>
-                                                <!-- <tr>
-                                                 <td>Reserve Bundle</td>
-                                                
-                                                   <td>
-                                                    <input type="number" class="size-input" 
-                                                        data-id={product.Id} oninput={handleQuantityInput}
-                                                        min="0" />
-                                                      </td>
-
-                                                 </tr> -->
+                                              
                                                 <tr>
                                                     <td>Are you intrested in this Product</td>
                                                     <td>
@@ -169,6 +107,12 @@
                                                         </lightning-radio-group>
                                                     </td>
                                                 </tr>
+                                                <template if:true={product.availabledate}>
+                                                    <tr class="next tabrow" style="text-align: center;font-weight:600;font-size:16px;">
+                                                        <th colspan="2">Next Launch Date- {product.availabledate}</th>
+                                                        <!-- <th></th> -->
+                                                    </tr>
+                                                    </template>
                                             </tbody>
                                         </table>
                                     </div>
@@ -205,6 +149,25 @@
                                 Your browser does not support the video tag.
                             </video>
 
+                        </div>
+                    </div>
+                </template>
+
+            </template>
+
+        </div>
+        <div class="secondDiv" onscroll={handleScroll}>
+            <template for:each={products} for:item="product">
+                <template if:true={product.pdfurl}>
+                    <div key={product.Id}>
+                        <div class="video-container">
+                            <!-- <video controls class="video">
+                                <source src={product.VideoUrl} type="video/mp4">
+                                <p style="font-size: 16px; font-weight: bold; text-align: center; color: white;">
+                                    {product.Name}</p>
+                                Your browser does not support the video tag.
+                            </video> -->
+                            <iframe src={product.pdfurl} width="600" height="400" ></iframe>
                         </div>
                     </div>
                 </template>

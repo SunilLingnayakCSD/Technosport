@@ -1,0 +1,25 @@
+.slds-grid {
+    display: flex;
+    align-items: center;
+}
+
+.slds-col {
+    display: flex;
+    justify-content: center;
+}
+
+.slds-avatar {
+    margin: 0 auto;
+}
+
+.slds-text-align_center {
+    text-align: center;
+}
+
+.slds-m-around_medium {
+    margin: 1rem;
+}
+
+.slds-tabset {
+    margin-top: 10px;
+}

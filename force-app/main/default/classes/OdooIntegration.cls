@@ -4,7 +4,7 @@ public class OdooIntegration {
     private static final String ODOO_DB;
     private static final String ODOO_USERNAME;
     private static final String ODOO_PASSWORD;
-    private static String sessionId;
+    public static  String sessionId;
 
     static {
         OdooSettings__mdt odooSettings = [SELECT MasterLabel, ODOO_API_URL__c, ODOO_AUTH_URL__c, ODOO_DB__c, ODOO_USERNAME__c, ODOO_PASSWORD__c
@@ -71,7 +71,7 @@ public class OdooIntegration {
     public static String createSalesOrder(String sessionCookie, Id quoteId) {
         try {
             Quote quote = [
-                SELECT Id, Name, QuoteAccountId,QuoteAccount.External_Id__c, Delivery_Date__c, QuoteNumber, TotalPrice, BillingAddress, ShippingAddress,ExpirationDate,CreatedDate
+                SELECT Id, Name, QuoteAccountId,QuoteAccount.External_Id__c, Delivery_Date__c, QuoteNumber, TotalPrice, BillingAddress, ShippingAddress,ExpirationDate,CreatedDate,isNextAvailbleProductQuote__c
                 FROM Quote
                 WHERE Id = :quoteId
                 LIMIT 1
@@ -82,13 +82,15 @@ public class OdooIntegration {
             }
 
             List<QuoteLineItem> lineItems = [
-                SELECT Id, Product2Id, Product2.Name,Product2.Variant_ExternalId__c,Product2.Product_Template__r.UOM_ID__c,Product2.Product_Template__r.Product_External_ID__c, Quantity, UnitPrice, Description
+                SELECT Id, Product2Id, Product2.Name,Product2.Variant_ExternalId__c,Product2.Product_Template__r.isFutureProduct__c,Product2.Product_Template__r.Product_Launch_Date__c, Quantity, UnitPrice, Description
                 FROM QuoteLineItem
                 WHERE QuoteId = :quoteId
             ];
             if(lineItems.isEmpty()){
                 throw new CustomException('Quote lineItems are Empty. ');
             }
+            Date createdDate;
+            DateTime createdDateTime = quote.CreatedDate;
             List<Object> orderLines = new List<Object>();
             for (QuoteLineItem item : lineItems) {
                 orderLines.add(new List<Object> {
@@ -98,11 +100,12 @@ public class OdooIntegration {
                         'name' => item.Product2.name+'-'+item.Description            
                     }
                 });
+                createdDate =item.Product2.Product_Template__r.isFutureProduct__c==true?item.Product2.Product_Template__r.Product_Launch_Date__c: createdDateTime.date();
             }
             System.debug('orderLines----'+orderLines);
 			System.debug('order date---->'+quote.CreatedDate);
-            		 DateTime createdDateTime = quote.CreatedDate;
-                Date createdDate = createdDateTime.date();
+            		 
+                
             DateTime expirationdatetime=quote.ExpirationDate != null ?quote.ExpirationDate:null  ;
              Date expireDate;
             if(expirationdatetime != null){
@@ -126,7 +129,8 @@ public class OdooIntegration {
                             'salesforce_id' => quote.Id,
                             'order_line' => orderLines,
                             'validity_date'=>expireDate !=null ?expireDate:null,
-                            'date_order'=>createdDate
+                            'date_order'=>createdDate,
+                            'upcoming'=>Boolean.valueOf(quote.isNextAvailbleProductQuote__c)
                             //  'pricelist_id'=>17
                         }
                     },
