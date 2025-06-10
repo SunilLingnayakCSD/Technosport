@@ -51,6 +51,7 @@ global without sharing class Odoo_Invoice_lineItems_Details {
 
             try {
                 upsert lineItems ExternalId__c;
+                
                 System.debug('Invoice Line Item created with ID: ' + lineItems.Id);
             } catch (DmlException dmlEx) {
                 throw new CustomException('DML Error during insert: ' + dmlEx.getMessage());

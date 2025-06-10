@@ -98,8 +98,8 @@ global without sharing class Odoo_Invoice_details {
                     invoice.Invoice_Date__c = payload.invoice_date !=null ?payload.invoice_date:null;
                     invoice.Delivery_Address__c = payload.delivery_address !=null ?payload.delivery_address:'';
                     Quote attachedQuote;
-                 
-                    if (payload.salesforce_id != 'false') {
+                    Order o;
+                    if (payload.salesforce_id != null) {
                         try {
                             attachedQuote = [SELECT Id,OrderId__c,Status FROM Quote WHERE Id = :payload.salesforce_id LIMIT 1];
                             
@@ -173,8 +173,8 @@ global without sharing class Odoo_Invoice_details {
                         
                     }
                     
-                    if( invoice.id != null && attachedQuote!=null){
-                        // update o;
+                    if(o!=null && invoice.id != null){
+                        update o;
                         update attachedQuote;
                     }
                     

@@ -5,9 +5,9 @@ public class InsertOrderMain {
         if(!isAdmin){
             return InsertOrder.CreateOrder(productsList,recordId);
         }
-        else{
+        /*else{
             return InsertreatilerOrder.CreateOrder(productsList,recordId,visitId,distributorId);
-        }
-      // return false;
+        }*/
+       return false;
     }
 }

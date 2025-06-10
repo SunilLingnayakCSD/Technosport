@@ -22,7 +22,7 @@ get invoiceCount() {
     }
     
     columns = [
-        { label: 'Ledger Name', fieldName: 'Name' },
+        { label: 'Ledger Name', fieldName: 'Ledger_Name__c' },
         { label: 'Credit', fieldName: 'Credit__c', type: 'currency'
             // ,cellAttributes: {
             //     alignment: 'left',

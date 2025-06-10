@@ -7,7 +7,7 @@ public class QuotationTrackerControllerTest {
         Profile adminProfile = [SELECT Id FROM Profile WHERE Name = 'System Administrator' LIMIT 1];
         User adminUser = new User(
             LastName='test',
-            Username = 'adminuser@example.com',
+            Username = 'adminuserzzz@example.com',
             Email = 'adminuser@example.com',
             Alias = 'admin',
             ProfileId = adminProfile.Id,
@@ -23,7 +23,7 @@ public class QuotationTrackerControllerTest {
         Profile standardProfile = [SELECT Id FROM Profile WHERE Name = 'Standard User' LIMIT 1];
         User standardUser = new User(
             LastName='test',
-            Username = 'standarduser@example.com',
+            Username = 'standarduserzzz@example.com',
             Email = 'standarduser@example.com',
             Alias = 'stdusr',
             ProfileId = standardProfile.Id,

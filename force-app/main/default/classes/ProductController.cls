@@ -40,7 +40,7 @@ public class ProductController {
    
 
     query += ' LIMIT :limitSize OFFSET :offset';
-	System.debug('Query------->'+query);
+
     products = Database.query(query);
    System.debug(products);
     return products;

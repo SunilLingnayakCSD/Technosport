@@ -8,7 +8,7 @@ public class ContactDetailPage {
         
         // Query the contact
         List<Contact> contacts = [
-            SELECT Id, LastName, FirstName, Salutation, Name, Title, Account.Name, Phone, Email,Birthdate,MobilePhone,
+            SELECT Id, LastName, FirstName, Salutation, Name, Title, Account.Name, Phone, Email,Birthdate,
             MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry,Picture__c
             FROM Contact
             WHERE Id = :contactId

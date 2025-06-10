@@ -106,17 +106,7 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
     
         return `${year}-${month}-${day}`;
     }
-    checkConditions(){
-     if(this.threshholdAmount===0 ||this.totalResidualAmount===0){
-            return true;
-        }
-        else if(this.threshholdAmount >= this.totalResidualAmount){
-           return true;
-       }else if(this.getDueDate() > this.getDatePlus15Days()){
-           return true
-       }
-          return false
-   }
+  
     @track invoices
     @track duedateForLastInvoice
 
@@ -137,7 +127,7 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
                     console.log('=============this.totalResidualAmount=======================');
                     console.log(this.totalResidualAmount);
                     console.log('====================================');
-                   
+                 
                     this.error = undefined;
                 } else {
                     console.warn('No invoices returned');
@@ -362,7 +352,7 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
    
     catalougeproductSelected(event) {
 
-        if (this.checkConditions()===true) {
+       
             
             
                 const productId = event.currentTarget.dataset.id;
@@ -528,15 +518,7 @@ export default class NewLaunches extends NavigationMixin(LightningElement) {
             );
           }
              
-        } else {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Error!',
-                    message: 'Order cannot be placed as outstanding invoices exceed the limit.',
-                    variant: 'Error',
-                })
-            );
-        }
+       
    
 
     }

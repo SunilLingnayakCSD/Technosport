@@ -123,9 +123,7 @@ export default class DistributorPortal extends LightningElement {
 
     getProductCategory({ error, data }) {
         if (data) {
-            console.log('=================data===================');
-            console.log(JSON.stringify(data));
-            console.log('====================================');
+            
             this.dependentRawData = data.values;
             this.controllerValuesMap = data.controllerValues;
 
@@ -346,7 +344,7 @@ export default class DistributorPortal extends LightningElement {
         console.log(this.threshholdAmount, '*******', this.totalResidualAmount);
         console.log('====================================');
 
-        if (this.checkConditions() === true) {
+        
             const sizeInputs = this.template.querySelectorAll('.size-input');
             const selectedItems = [];
 
@@ -436,15 +434,7 @@ export default class DistributorPortal extends LightningElement {
                         })
                     );
                 });
-        } else {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Error!',
-                    message: 'Order cannot be placed as outstanding invoices exceed the limit.',
-                    variant: 'error',
-                })
-            );
-        }
+       
     }
 
     get background() {
@@ -590,9 +580,7 @@ export default class DistributorPortal extends LightningElement {
             this.catalogueProducts = this.products;
             this.cart = false;
             this.isLoading = false;
-            console.log('=================dss===================');
-            console.log(JSON.stringify(this.products, null, 2));
-            console.log('====================================');
+            
 
         } catch (error) {
             console.error('Error filtering products:', error);
@@ -895,21 +883,10 @@ export default class DistributorPortal extends LightningElement {
         const newQuantity = event.target.value;
         qty.quantity = newQuantity;
     }
-    checkConditions() {
-        if (this.threshholdAmount === 0 || this.totalResidualAmount === 0) {
-            return true;
-        }
-        else if (this.threshholdAmount >= this.totalResidualAmount) {
-            return true;
-        } else if (this.getDueDate() < this.getDatePlus15Days()) {
-            return true
-        }
-        return false
-    }
+    
     catalougeproductSelected(event) {
 
 
-        if (this.checkConditions() === true) {
             const productId = event.currentTarget.dataset.id;
             const qty = event.target.dataset.qty
             const productName = event.currentTarget.dataset.name;
@@ -1026,15 +1003,7 @@ export default class DistributorPortal extends LightningElement {
                 );
             }
 
-        } else {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Error!',
-                    message: 'Order cannot be placed as outstanding invoices exceed the limit.',
-                    variant: 'Error',
-                })
-            );
-        }
+        
 
     }
     handleinsertCarts(variant,userId){
